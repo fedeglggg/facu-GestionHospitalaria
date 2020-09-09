@@ -1,2 +1,1 @@
-"# GestionHospitalaria" 
-# GestionHospitalaria
+# Gestion Hospitalaria
