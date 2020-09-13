@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'appGestionHospitalaria.apps.AppgestionhospitalariaConfig', 
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -118,3 +119,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# En vez de mandar el usuario a /profile lo redirije a /
+LOGIN_REDIRECT_URL = '/accounts/login/'
+
+# el tuto no implementa email todavia asi que para usar el reset mientras tanto
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
