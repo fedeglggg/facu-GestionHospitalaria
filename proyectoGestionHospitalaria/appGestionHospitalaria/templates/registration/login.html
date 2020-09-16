@@ -45,6 +45,7 @@
       <input type="password" class="form-control" name="password" autocomplete="current-password" required="" id="id_password">
     </div>
     <button type="submit" class="btn btn-outline-primary">Iniciar sesión</button>
+    <input type="hidden" name="next" value="{{ next }}" />
   </form>
 
   {# Assumes you setup the password_reset view in your URLconf #}
