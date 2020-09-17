@@ -27,7 +27,7 @@ class Patient(models.Model):
     date_of_birth = models.DateField(null=True, blank=True)
     obra_Social = models.CharField(max_length=100)
     phone_number  = models.IntegerField()
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
 
     def get_absolute_url(self):
         """

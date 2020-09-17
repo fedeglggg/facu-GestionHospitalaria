@@ -18,35 +18,52 @@
 
 <body>
 
-<div class="d-flex flex-row bd-highlight mb-3">
+
 <div class="p-2 bd-highlight">
     {% block sidebar %}
-    <ul class="nav flex-column">
+    <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+    <a class="navbar-brand" href="#">Gestion Hospitalaria</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+    <ul class="navbar-nav">
         {% if user.is_authenticated %}
             <li class="nav-item">
                 <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Bienvenido, {{ user.get_username }}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link active" href="{% url 'logout'%}?next={{request.path}}">Logout</a>
-            </li>   
+                <a class="nav-link active" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="#">Medicos</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="{% url 'patients'%}?next={{request.path}}">Pacientes</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="#">Historias</a>
+            </li>
+            <li class="nav-item" >
+                <a class="nav-link "  href="{% url 'logout'%}?next={{request.path}}">Logout</a>
+            </li>
         {% else %}
             <li class="nav-item">
-                <a class="nav-link active" href="{% url 'login'%}?next={{request.path}}">Login</a>
-            </li>   
-        {% endif %} 
-        <li class="nav-item">
-            <a class="nav-link active" href="#">Noticias</a>
-        </li>
+                <a class="nav-link "  href="{% url 'login'%}?next={{request.path}}">Login</a>
+            </li>
+        {% endif %}
     </ul>
+    </div>
+    </nav>
     {% endblock %}
 </div> 
     
 
     <!--- un template que tenga extend va a entrar aca ---> 
-<div class="p-2 bd-highlight" id="content"> 
+<div class="container-fluid"  style="text-align: center">
     {% block content %}{% endblock %}
 </div>
-</div>
+
 
     
 </body>

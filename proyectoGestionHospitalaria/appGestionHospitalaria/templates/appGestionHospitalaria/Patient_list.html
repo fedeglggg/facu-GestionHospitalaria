@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+<title>{% block title %}Pacientes{% endblock %}</title>
+
+{% block content %}
+    <h1>Lista de pacientes</h1>
+
+    {% if patient_list %}
+    <div class="list-group" style="width: fit-content; display: inline-grid">
+
+      {% for patient in patient_list %}
+            <a class="list-group-item list-group-item-action" href="{{ patient.get_absolute_url }}">{{ patient.first_name }} {{patient.last_name}} ({{patient.dni}})</a>
+      {% endfor %}
+
+    </div>
+    {% else %}
+      <p>No existen pacientes.</p>
+    {% endif %}
+{% endblock %}

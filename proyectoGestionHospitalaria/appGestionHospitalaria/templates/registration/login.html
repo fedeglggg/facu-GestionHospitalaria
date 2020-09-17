@@ -1,7 +1,11 @@
+
 {% extends "base.html" %}
-<title>{% block title %}login{% endblock %}</title>
+<title>{% block title %}Login{% endblock %}</title>
+{% block sidebar %} {% endblock %}
 
 {% block content %}
+<div class="container border"  style="max-width: fit-content"  >
+  <h1>Sistema De Gestión</h1>
 
   {% if form.errors %}
     <p>Your username and password didn't match. Please try again.</p>
@@ -45,11 +49,10 @@
       <input type="password" class="form-control" name="password" autocomplete="current-password" required="" id="id_password">
     </div>
     <button type="submit" class="btn btn-outline-primary">Iniciar sesión</button>
-    <input type="hidden" name="next" value="{{ next }}" />
   </form>
 
   {# Assumes you setup the password_reset view in your URLconf #}
   <p><a href="{% url 'password_reset' %}">¿Olvidaste tu contraseña?</a></p>
- 
-{% endif %} 
+{% endif %}
+  </div>
 {% endblock %}
