@@ -121,7 +121,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # En vez de mandar el usuario a /profile lo redirije a /
-LOGIN_REDIRECT_URL = '/appGestionHospitalaria/'
+LOGIN_REDIRECT_URL = '/app/'
 
 # el tuto no implementa email todavia asi que para usar el reset mientras tanto
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

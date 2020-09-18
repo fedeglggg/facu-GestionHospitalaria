@@ -1,5 +1,18 @@
-{% extends 'base.html' %}
+
+{% extends "base.html" %}
+<title>{% block title %}Sistema de Gestion{% endblock %}</title>
+
 
 {% block content %}
+{% if user.is_authenticated %}
+    <h1>Sistema de gestion hospitalaria y turnos</h1>
+    <p>
+        <strong>Cantidad de Medicos: </strong> {{num_medicos}}   
+        <strong>Cantidad de Pacientes: </strong> {{num_pacientes}}    
+        <strong>Cantidad de Estudios: </strong> {{num_estudios}}
+    </p>
+{% else %}
+    
+{% endif %}
 
 {% endblock %}

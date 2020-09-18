@@ -25,24 +25,12 @@ def index(request):
 
     return render(request, 'index.html', context ={'num_medicos':num_medicos, 'num_pacientes':num_pacientes, 'num_estudios':num_estudios})
 
-
-
-def usuarios(request):
-    #latest_question_list = Question.objects.order_by('-pub_date')[:5]
-    #context = {'latest_question_list': latest_question_list}
-    #return render(request, 'appGestionHospitalaria/index.html', context)
-
-    # return render(request, 'appGestionHospitalaria/index.html')
-    return HttpResponse("Hello, world. You're at the users index.")
-
-
 class patientsListView(generic.ListView):
     model = patient
     paginate_by = 10
 
 class patientDetailView(generic.DetailView):
     model = patient
-
 
 def signup(request):
     if request.method == 'POST':
@@ -58,4 +46,27 @@ def signup(request):
         form = SignUpForm()
     return render(request, 'signup.html', {'form': form})
 
+@login_required
+def medicosSignin(request):
+    """
+        Función vista para la página inicio del sitio.
+    
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('Inicio')
+    else:
+        form = SignUpForm()
+    """
+    return render(request, 'medicos.html', {'form': form})
 
+def medicos(request):
+
+    """
+        Función vista para la página inicio del sitio.
+    
+    medicos = doctor.objects.all()
+    return render(request, 'medicos.html', context = {'medicos':medicos})
+    """
+    return HttpResponse('lala')
