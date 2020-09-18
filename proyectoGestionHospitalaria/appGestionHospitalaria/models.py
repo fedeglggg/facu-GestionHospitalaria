@@ -3,6 +3,7 @@ from django.urls import reverse #Used to generate URLs by reversing the URL patt
 from django.contrib.auth.models import User
 
 
+
 # Create your models here.
 
 class obra_social(models.Model):
@@ -78,3 +79,6 @@ class estudio(models.Model):
         String para representar el Objeto del Modelo
         """
         return '%s (%s)' % (self.name, self.patient.__str__())
+
+
+

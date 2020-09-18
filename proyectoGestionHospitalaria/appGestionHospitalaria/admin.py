@@ -8,3 +8,4 @@ admin.site.register(doctor)
 admin.site.register(estudio)
 admin.site.register(especialidad)
 admin.site.register(obra_social)
+
