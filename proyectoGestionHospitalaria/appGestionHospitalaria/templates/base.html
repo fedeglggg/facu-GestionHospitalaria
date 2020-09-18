@@ -36,6 +36,9 @@
 
                 <a class="nav-link active" href="{% url 'index'%}">Home</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="{% url 'signup'%}">Nuevo usuario</a>
+            </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Medicos
@@ -48,7 +51,7 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link active" href="{% url 'patients'%}?next={{request.path}}">Pacientes</a>
+                <a class="nav-link active" href="{% url 'pacientes'%}?next={{request.path}}">Pacientes</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link active" href="#">Historias</a>

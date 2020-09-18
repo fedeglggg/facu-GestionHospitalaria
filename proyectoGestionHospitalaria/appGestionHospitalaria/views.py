@@ -4,7 +4,6 @@ from .models import patient, doctor, estudio
 from django.views import generic
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView
@@ -47,10 +46,7 @@ def signup(request):
     return render(request, 'signup.html', {'form': form})
 
 @login_required
-def medicosSignin(request):
-    """
-        Función vista para la página inicio del sitio.
-    
+def medicosSignup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
@@ -58,9 +54,9 @@ def medicosSignin(request):
             return redirect('Inicio')
     else:
         form = SignUpForm()
-    """
-    return render(request, 'medicos.html', {'form': form})
+    return render(request, 'medicosSignup.html', {'form': form})
 
+@login_required
 def medicos(request):
 
     """

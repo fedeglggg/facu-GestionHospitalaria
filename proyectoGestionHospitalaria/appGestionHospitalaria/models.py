@@ -10,7 +10,6 @@ class obra_social(models.Model):
     name = models.CharField(max_length=100, help_text="Ingrese el nombre de la especialidad (p. ej. Neurología, Traumatología etc.)")
 
     def __str__(self):
-
         return self.name
 
 
@@ -18,7 +17,6 @@ class especialidad(models.Model):
     name = models.CharField(max_length=100, help_text="Ingrese el nombre de la especialidad (p. ej. Neurología, Traumatología etc.)")
 
     def __str__(self):
-
         return self.name
 
 class doctor(models.Model):
