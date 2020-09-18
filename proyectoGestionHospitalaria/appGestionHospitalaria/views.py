@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import Patient, Doctor, Estudio
+from .models import patient, doctor, estudio
 from django.views import generic
 
 # Create your views here.
@@ -10,9 +10,9 @@ def index(request):
     """
         Función vista para la página inicio del sitio.
     """
-    num_medicos = Doctor.objects.all().count()
-    num_pacientes = Patient.objects.all().count()
-    num_estudios = Estudio.objects.all().count()
+    num_medicos = doctor.objects.all().count()
+    num_pacientes = patient.objects.all().count()
+    num_estudios = estudio.objects.all().count()
 
     return render(request, 'index.html', context ={'num_medicos':num_medicos, 'num_pacientes':num_pacientes, 'num_estudios':num_estudios})
 
@@ -26,7 +26,10 @@ def usuarios(request):
 
 
 class patientsListView(generic.ListView):
-    model = Patient
+    model = patient
+    paginate_by = 10
 
 class patientDetailView(generic.DetailView):
-    model = Patient
+    model = patient
+
+

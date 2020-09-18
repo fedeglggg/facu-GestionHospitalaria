@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container border" style="width: fit-content" >
+  <h1>Nombre: {{ patient.first_name }} {{ patient.last_name }}</h1>
+
+  <p><strong>Dni:</strong> {{ patient.dni }}</p>
+  <p><strong>Fecha de Nacimiento:</strong> {{ patient.date_of_birth }}</p>
+  <p><strong>Obra:</strong> {% for genre in patient.obra_Social.all %} {{ obra_Social }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+  <p><strong>Telefono:</strong> {{ patient.phone_number }}</p>
+
+
+  <div style="margin-left:20px;margin-top:20px">
+    <h4>Estudios</h4>
+
+    {% for estudioItem in patient.estudio_set.all %}
+    <hr>
+    <p><strong>Nombre:</strong> {{estudioItem.name}}</p>
+    <p><strong>Fecha:</strong> {{estudioItem.date}}</p>
+    <p><strong>Description:</strong> {{estudioItem.description}}</p>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}
