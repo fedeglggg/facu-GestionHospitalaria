@@ -18,9 +18,7 @@ from django.urls import include, path
 from django.views.generic import RedirectView
 
 urlpatterns = [
-
-    path('app/', include('appGestionHospitalaria.urls')),
-    path('', RedirectView.as_view(url='/app/', permanent=True)),
+    path('', include('appGestionHospitalaria.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
 ]

@@ -1,16 +1,16 @@
 from django.urls import path
 from django.urls import include
-from . import views
 from django.conf.urls import url
+from . import views
+
 
 
 urlpatterns = [
-    url(r'^$', views.index, name='index'),
-    url(r'^Medicos/$', views.medicos, name='medicos'),
-    url('signup/', views.signup, name='signup'),
-    url(r'^signup/$', views.signup, name='signup'),
-    url(r'^Medicos/registro/$', views.medicosSignup, name='registro de medicos'),
-    url(r'^Pacientes/$', views.patientsListView.as_view(), name='pacientes'),
-    url(r'^Paciente/(?P<pk>\d+)$', views.patientDetailView.as_view(), name='patient-detail')
+    path('', views.index, name='index'),
+    path('medicos/', views.medicos, name='medicos'),
+    path('signup/paciente/', views.signup_paciente, name='signup'),
+    path('signup/medico/', views.signup_medico, name='signup'),
+    path('pacientes/', views.pacientes, name='listado de pacientes'),
+    path('paciente/<int:paciente_id>/', views.paciente, name='paciente')
 ]
 

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-{% if not user.is_authenticated %}
+{% if user.is_authenticated %}
 
   <h2>Registrarse</h2>
   <p></p>
@@ -42,5 +42,6 @@
 
     <button type="submit" class="btn btn-outline-primary">Iniciar sesión</button>
   </form>
+  
 {% endif %} 
 {% endblock %}
