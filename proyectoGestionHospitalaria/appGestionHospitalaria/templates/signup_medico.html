@@ -6,7 +6,7 @@
 {% if user.is_authenticated %}
 
 <h2>Registro de medicos</h2>
-<form method="post" action="{% url 'login' %}">
+<form method="post" action="/signup/medico/">
     {% csrf_token %}
 
     <div class="form-group">
@@ -44,16 +44,17 @@
 
     <div class="form-group">
         <label for="id_matricula">Matricula</label>
-        <input type="text" class="form-control" name="username" autofocus="" autocapitalize="none" autocomplete="username" maxlength="150" required="" id="id_username">
+        <input type="text" class="form-control" name="matricula" autofocus="" autocapitalize="none" autocomplete="matricula" maxlength="150" required="" id="id_matricula">
     </div>
 
     {% if especialidades %}
       <div class="form-group">
-        <label for="id_especialidad">Seleccionar especialidad</label>
-        <select class="form-control" id="id_especialidad">
-        {% for especialidad in especialidades %}
-          <option> {{ especialidad.name }} </option>
-        {% endfor %}
+        <label for="id_especialidades">Seleccionar especialidad</label>
+        <select class="form-control" id="id_especialidad" name="especialidad" required="">
+          <option value="" selected disabled hidden>Elija una especialidad</option>
+          {% for especialidad in especialidades %}
+            <option> {{ especialidad.name }} </option>
+          {% endfor %}
         </select>
       </div>
     {% else %} 
@@ -66,6 +67,15 @@
 
     <button type="submit" class="btn btn-outline-primary">Registrar</button>
   </form>
+  <!--la otra form
+  <p>OTRO FORM</p>
+  <h2>Sign up</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Sign up</button>
+  </form>
+  -->
 {% else %}
     
 {% endif %}

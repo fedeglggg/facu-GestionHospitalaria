@@ -2,6 +2,8 @@ from django.db import models
 from django.urls import reverse # Used to generate URLs by reversing the URL patterns
 from django.contrib.auth.models import User
 
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 
@@ -15,7 +17,7 @@ class Obra_social(models.Model):
 
 
 class Especialidad(models.Model):
-    name = models.CharField(max_length=100, help_text="Ingrese el nombre de la especialidad (p. ej. Neurología, Traumatología etc.)")
+    name = models.CharField(max_length=100, unique=True, help_text="Ingrese el nombre de la especialidad (p. ej. Neurología, Traumatología etc.)")
 
     def __str__(self):
         return self.name
@@ -24,7 +26,7 @@ class Doctor(models.Model):
     """
     Modelo que representa un Medico
     """
-    user = models.OneToOneField(User, on_delete=models.CASCADE) #Siempre asociado a usuario
+    user = models.ForeignKey(User, on_delete=models.CASCADE) # 
     matricula = models.CharField(max_length=100)
     especialidad = models.ManyToManyField(Especialidad, help_text="Seleccione una especialidad")
     # ManyToManyField, porque un un doctor puede tener muchas especialidades, y una especialidad puede ser tenida por muchos doctores
@@ -34,6 +36,13 @@ class Doctor(models.Model):
         String para representar el Objeto del Modelo
         """
         return '%s (%s)' % (self.user.get_full_name(), self.matricula)
+
+# @receiver(post_save, sender=User)
+# def update_user_profile(sender, instance, created, **kwargs):
+#     if created:
+#         Doctor.objects.create(user=instance)
+#     instance.doctor.save()
+
 
 class Paciente(models.Model):
     """
