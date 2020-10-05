@@ -22,66 +22,69 @@
 <div class="p-2 bd-highlight">
     {% block sidebar %}
     <nav class="navbar navbar-expand-md bg-dark navbar-dark">
-    <a class="navbar-brand" href="/">Gestion Hospitalaria</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <a class="navbar-brand" href="/">Gestion Hospitalaria</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
         <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="collapsibleNavbar">
-    <ul class="navbar-nav">
-        {% if user.is_authenticated %}
-        <!--- Menu del usuario registrado --->
-            <li class="nav-item">
-                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Bienvenido, {{ user.get_username }}</a>
-            </li>
-            <li class="nav-item">
-
-                <a class="nav-link active" href="/admin/">Admin</a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Pacientes
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="/signup/paciente">Registrar</a>
-                  <a class="dropdown-item" href="#">Modificar</a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="/pacientes/">Listar</a>
-                </div>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Medicos
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="/signup/medico">Registrar</a>
-                  <a class="dropdown-item" href="#">Modificar</a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="#">Listar</a>
-                </div>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link active" href="#">Historias</a>
-            </li>
-            <li class="nav-item" >
-                <a class="nav-link "  href="{% url 'logout'%}?next={{request.path}}">Logout</a>
-            </li>
-        {% else %}
-        <!--- Menu del usuario no registrado --->
-            <li class="nav-item">
-                <a class="nav-link "  href="/accounts/login">Login</a>
-            </li>
-        {% endif %}
-    </ul>
-    </div>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav">
+                {% if user.is_authenticated %}
+                    <!--- Menu del usuario registrado --->
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Bienvenido,
+                            {{ user.get_username }}</a>
+                    </li>
+                    {% if is_authorized %}
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/admin/">Admin</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Pacientes
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="/signup/paciente">Registrar</a>
+                                <a class="dropdown-item" href="#">Modificar</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="/pacientes/">Listar</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Medicos
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="/signup/medico">Registrar</a>
+                                <a class="dropdown-item" href="#">Modificar</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Listar</a>
+                            </div>
+                        </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Historias</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="{% url 'logout'%}?next={{request.path}}">Logout</a>
+                    </li>
+                {% else %}
+                <!--- Menu del usuario no registrado --->
+                <li class="nav-item">
+                    <a class="nav-link " href="/accounts/login">Login</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
     </nav>
     {% endblock %}
-</div> 
-    
+</div>
 
+<div class="container">
     <!--- un template que tenga extend va a entrar aca ---> 
-<div class="container-fluid"  style="text-align: center">
-
     {% block content %}{% endblock %}
+</div>
 
 <!--- Bloque para paginacion--->
 {% block pagination %}

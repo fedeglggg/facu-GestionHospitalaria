@@ -5,6 +5,8 @@
 {% block content %}
 {% if user.is_authenticated %}
 
+
+
 <h2>Registro de medicos</h2>
 <form method="post" action="/signup/medico/">
     {% csrf_token %}
@@ -12,18 +14,6 @@
     <div class="form-group">
         <label for="id_username">Usuario:</label> 
         <input type="text" class="form-control" name="username" maxlength="150" autofocus="" required="" id="id_username"> 
-    </div>
-    <div class="form-group">
-        <label for="id_first_name">Nombre:</label> 
-        <input type="text" class="form-control" name="first_name" maxlength="30" id="id_first_name"> 
-    </div>
-    <div class="form-group">
-        <label for="id_last_name">Apellido:</label> 
-        <input type="text" class="form-control" name="last_name" maxlength="30" id="id_last_name"> 
-    </div>  
-    <div class="form-group">
-        <label for="id_email">Email:</label> 
-        <input type="email" class="form-control" placeholder="nombre@ejemplo.com" name="email" maxlength="254" required="" id="id_email">
     </div>
     <div class="form-group">
         <label for="id_password1">Contraseña:</label> 
@@ -41,32 +31,42 @@
         <label for="id_password2">Confirmación de contraseña:</label> 
         <input type="password" class="form-control" name="password2" autocomplete="new-password" required="" id="id_password2"> 
     </div>
-
     <div class="form-group">
-        <label for="id_matricula">Matricula</label>
-        <input type="text" class="form-control" name="matricula" autofocus="" autocapitalize="none" autocomplete="matricula" maxlength="150" required="" id="id_matricula">
+            <label for="id_first_name">Nombre:</label> 
+            <input type="text" class="form-control" name="first_name" maxlength="30" id="id_first_name"> 
+    </div>
+    <div class="form-group">
+        <label for="id_last_name">Apellido:</label> 
+        <input type="text" class="form-control" name="last_name" maxlength="30" id="id_last_name"> 
+    </div>  
+    <div class="form-group">
+        <label for="id_email">Email:</label> 
+        <input type="email" class="form-control" placeholder="nombre@ejemplo.com" name="email" maxlength="30" required="" id="id_email">
+    </div>
+    <div class="form-group">
+        <label for="id_matricula">Matricula:</label>
+        <input type="text" class="form-control" name="matricula" autofocus="" autocapitalize="none" maxlength="30" required="" id="id_matricula">
     </div>
 
     {% if especialidades %}
       <div class="form-group">
-        <label for="id_especialidades">Seleccionar especialidad</label>
-        <select class="form-control" id="id_especialidad" name="especialidad" required="">
-          <option value="" selected disabled hidden>Elija una especialidad</option>
-          {% for especialidad in especialidades %}
-            <option> {{ especialidad.name }} </option>
-          {% endfor %}
-        </select>
-      </div>
+            <label for="id_especialidades">Seleccionar especialidad</label>
+            <select class="form-control" id="id_especialidad" name="especialidad" required="">
+            <option value="" selected disabled hidden>Elija una especialidad</option>
+            {% for especialidad in especialidades %}
+                <option> {{ especialidad.name }} </option>
+            {% endfor %}
+            </select>
+        </div>
     {% else %} 
-      <small id="especialidadHelpBlock" class="form-text text-muted">
-        <ul>
-          <li>No existen especialidades actualmente</li>
-        </ul>
-      </small>
+        <small id="obra_socialHelpBlock" class="form-text text-muted">
+            <ul>
+                <li>No existen especialidades actualmente</li>
+            </ul>
+        </small>
     {% endif %}   
-
     <button type="submit" class="btn btn-outline-primary">Registrar</button>
-  </form>
+</form>
   <!--la otra form
   <p>OTRO FORM</p>
   <h2>Sign up</h2>
@@ -76,8 +76,8 @@
     <button type="submit">Sign up</button>
   </form>
   -->
-{% else %}
-    
-{% endif %}
 
+
+{% else %}  
+{% endif %}
 {% endblock %}

@@ -1,47 +1,77 @@
 {% extends 'base.html' %}
 
 {% block content %}
-{% if user.is_authenticated %}
+{% if is_authorized %}
 
-  <h2>Registrarse</h2>
-  <p></p>
-  <form method="post">
+<h2>Registrarse paciente</h2>
+<form method="post" action="/signup/paciente/">
     {% csrf_token %}
     <div class="form-group">
-      <label for="id_username">Usuario:</label> 
-      <input type="text" class="form-control" name="username" maxlength="150" autofocus="" required="" id="id_username"> 
+        <label for="id_username">Usuario:</label>
+        <input type="text" class="form-control" name="username" maxlength="150" autofocus="" required="" id="id_username">
     </div>
     <div class="form-group">
-      <label for="id_first_name">Nombre:</label> 
-      <input type="text" class="form-control" name="first_name" maxlength="30" id="id_first_name"> 
-    </div>
-    <div class="form-group">
-      <label for="id_last_name">Apellido:</label> 
-      <input type="text" class="form-control" name="last_name" maxlength="30" id="id_last_name"> 
-    </div>  
-    <div class="form-group">
-      <label for="id_email">Email:</label> 
-      <input type="email" class="form-control" placeholder="nombre@ejemplo.com" name="email" maxlength="254" required="" id="id_email">
-    </div>
-    <div class="form-group">
-      <label for="id_password1">Contraseña:</label> 
-      <input type="password" class="form-control" name="password1" autocomplete="new-password" required="" id="id_password1"> 
+        <label for="id_password1">Contraseña:</label>
+        <input type="password" class="form-control" name="password1" autocomplete="new-password" required="" id="id_password1">
     </div>
     <small id="passwordHelpBlock" class="form-text text-muted">
-      <ul>
-        <li>Your password can’t be too similar to your other personal information.</li>
-        <li>Your password must contain at least 8 characters.</li>
-        <li>Your password can’t be a commonly used password.</li>
-        <li>Your password can’t be entirely numeric.</li>
-      </ul>
+        <ul>
+            <li>Your password can’t be too similar to your other personal information.</li>
+            <li>Your password must contain at least 8 characters.</li>
+            <li>Your password can’t be a commonly used password.</li>
+            <li>Your password can’t be entirely numeric.</li>
+        </ul>
     </small>
     <div class="form-group">
-      <label for="id_password2">Confirmación de contraseña:</label> 
-      <input type="password" class="form-control" name="password2" autocomplete="new-password" required="" id="id_password2"> 
+        <label for="id_password2">Confirmación de contraseña:</label>
+        <input type="password" class="form-control" name="password2" autocomplete="new-password" required=""
+            id="id_password2">
     </div>
+    <div class="form-group">
+        <label for="id_first_name">Nombre:</label>
+        <input type="text" class="form-control" name="first_name" maxlength="30" id="id_first_name">
+    </div>
+    <div class="form-group">
+        <label for="id_last_name">Apellido:</label>
+        <input type="text" class="form-control" name="last_name" maxlength="30" id="id_last_name">
+    </div>
+    <div class="form-group">
+        <label for="id_phone_number">Numero de telefono:</label>
+        <input type="text" class="form-control" name="phone_number" maxlength="30" id="id_phone_number">
+    </div>
+    <div class="form-group">
+        <label for="id_dni">DNI:</label>
+        <input type="text" class="form-control" name="dni" maxlength="30" id="id_dni">
+    </div>
+    {% if obras_sociales %}
+    <div class="form-group">
+        <label for="id_obras_sociales">Seleccionar Obra social</label>
+        <select class="form-control" id="id_obras_sociales" name="obra_social" required="">
+        <option value="" selected disabled hidden>Elija una obra social</option>
+            {% for obra_social in obras_sociales %}
+                <option> {{ obra_social.name }} </option>
+            {% endfor %}
+        </select>
+    </div>
+    {% else %} 
+    <small id="especialidadHelpBlock" class="form-text text-muted">
+        <ul>
+            <li>No existen obras sociales actualmente</li>
+        </ul>
+    </small>
+    {% endif %}
+    <div class="form-group">
+        <label for="id_date_of_birth">Fecha de nacimiento:</label>
+        <input class="form-control" type="date" name="date_of_birth" value="1990-01-01" id="id_date_of_birth">
+    </div>
+    <div class="form-group">
+        <label for="id_email">Email:</label>
+        <input type="email" class="form-control" placeholder="nombre@ejemplo.com" name="email" maxlength="254"
+            required="" id="id_email">
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Registrarse</button>
+</form>
 
-    <button type="submit" class="btn btn-outline-primary">Iniciar sesión</button>
-  </form>
-  
-{% endif %} 
+{% endif %}
 {% endblock %}

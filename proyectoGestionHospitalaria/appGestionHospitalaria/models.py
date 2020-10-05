@@ -29,8 +29,7 @@ class Doctor(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE) # 
     matricula = models.CharField(max_length=100)
     especialidad = models.ManyToManyField(Especialidad, help_text="Seleccione una especialidad")
-    # ManyToManyField, porque un un doctor puede tener muchas especialidades, y una especialidad puede ser tenida por muchos doctores
-
+ 
     def __str__(self):
         """
         String para representar el Objeto del Modelo
@@ -48,13 +47,12 @@ class Paciente(models.Model):
     """
     Modelo que representa un paciente
     """
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
+
     dni = models.IntegerField(unique=True, help_text="Ingrese Numero de documento")
     date_of_birth = models.DateField(null=True, blank=True)
     obra_social = models.ForeignKey(Obra_social, on_delete=models.SET_NULL, blank=True, null=True)
     phone_number  = models.IntegerField()
-    user = models.OneToOneField(User, on_delete=models.SET_NULL, blank=True, null=True)  # Puede o no tener un usuario asociado
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  # Talvez debería tener siempre asociado un usuario
 
     def get_absolute_url(self):
        pass
@@ -63,10 +61,8 @@ class Paciente(models.Model):
         """
         String para representar el Objeto Modelo
         """
-        return '%s, %s' % (self.last_name, self.first_name)
-
-    class Meta:
-        ordering = ['last_name']
+        # solo si tiene que tener obligatoriamente un usuario, sino esto rompe todo
+        return self.user.get_full_name()
 
 class Estudio(models.Model):
     """
