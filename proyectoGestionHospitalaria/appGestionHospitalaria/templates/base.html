@@ -19,7 +19,7 @@
 <body>
 
 
-<div class="p-2 bd-highlight">
+<div class="container-fluid p-0"></div>
     {% block sidebar %}
     <nav class="navbar navbar-expand-md bg-dark navbar-dark">
         <a class="navbar-brand" href="/">Gestion Hospitalaria</a>
@@ -32,7 +32,7 @@
                     <!--- Menu del usuario registrado --->
                     <li class="nav-item">
                         <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Bienvenido,
-                            {{ user.get_username }}</a>
+                        {{ user.get_username }}</a>
                     </li>
                     {% if is_authorized %}
                         <li class="nav-item">
@@ -70,6 +70,7 @@
                         <a class="nav-link " href="{% url 'logout'%}?next={{request.path}}">Logout</a>
                     </li>
                 {% else %}
+
                 <!--- Menu del usuario no registrado --->
                 <li class="nav-item">
                     <a class="nav-link " href="/accounts/login">Login</a>

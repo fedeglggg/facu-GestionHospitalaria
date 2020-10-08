@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect
 # from django.urls import reverse_lazy
 from django.http import Http404
 from django.views.generic import CreateView, UpdateView
-from .forms import SignUpFormMedico, MedicoProfileForm, SignUpFormPaciente
+from .forms import SignUpFormMedico, SignUpFormPaciente
 from django.db import transaction
 from django.contrib.auth.models import Group
 
@@ -18,6 +18,7 @@ def index(request):
     # chequeo si el user pertenece a un grupo y en base a eso defino si esta autorizado o no
     # lo mando al template para chequear que pueve ver ahi también
     is_authorized = request.user.groups.filter(name='Medicos').exists()
+    # exist se aplica a una colección por eso uso filter, con get no funciona.
     """
         Función vista para la página inicio del sitio.
     """
@@ -54,14 +55,13 @@ def pacientes(request):
 # @login_required en vez de usar esto chequeamos si el user pertenece a un grupo y mandamos
 # el si o no por el context - mas facil asi parece
 def medicos(request):
-
     """
         Función vista para la página inicio del sitio.
     
     medicos = doctor.objects.all()
     return render(request, 'medicos.html', context = {'medicos':medicos})
     """
-    return HttpResponse('lala')
+    return HttpResponse('en construccion')
 
 
 def signup_medico(request):
@@ -76,20 +76,19 @@ def signup_medico(request):
                 # new_user.refresh_from_db()  # load the profile instance created by the signal - no estoy seguro que sea necesario
                 # estoy probando sin esto y por ahora va bien
                 matricula_form = form.cleaned_data.get('matricula') # agarra por el name del input, no mira el id
-                print(matricula_form)
                 especialidad_form = form.cleaned_data.get('especialidad')
                 if Especialidad.objects.filter(name=especialidad_form).exists():
-                    print("especialdiad  form: ", especialidad_form)
                     especialidad = Especialidad.objects.get(name=especialidad_form)
-                    print("especialidad: ", especialidad.name )
-                    new_user.save() # verificar si hace falta guardar de nuevo
-                    doctor = Doctor(matricula=matricula_form, user=new_user)
-                    doctor.save()
+                    # new_user.save() # verificar si hace falta guardar de nuevo
+                    new_doctor = Doctor(matricula=matricula_form, user=new_user)
+                    new_doctor.save()
+                    new_doctor.especialidad.add(especialidad) 
+                    new_doctor.save()
                     # me paso que necesitaba guardar antes de agregar especialidades, anda pero verificar
                     # si es necesario el codigo restante, talvez no lo sea
-                    doctor.refresh_from_db()
-                    doctor.especialidad.add(especialidad) 
-                    doctor.save()
+                    # doctor.refresh_from_db()
+                    # doctor.especialidad.add(especialidad) 
+                    
                     # a todo esto hay que cambiar en la vista que te deje dar de alta un medio
                     # con mas de 1 especialidad
                 else:
@@ -109,7 +108,38 @@ def signup_medico(request):
             }       
         return render(request, 'signup_medico.html', context)
     # direccionar a una url y hacer una vista de que no tiene permisos
-    return HttpResponse('no estas autorizado - bajo construcción todavia')
+    return HttpResponse('no estas autorizado - en construccion')
+
+# def signup_medico2(request):
+#     is_authorized = request.user.groups.filter(name='Medicos').exists()
+#     if is_authorized:
+#         if request.method == 'POST':
+#             # Create a form instance from POST data.
+#             formUser = SignUpForm(request.POST)
+#             formDoctor = DoctorForm(request.POST)
+#             if formUser.is_valid() and formDoctor.is_valid():
+#                 # Save a new User object from the form's data.
+#                 new_user = formUser.save()
+#                 new_doctor = formDoctor.save()
+
+#                 # a todo esto hay que cambiar en la vista que te deje dar de alta un medio
+#                 # con mas de 1 especialidad
+
+#                 print("especialidad no existe")
+#                 # new_user.save() # no hace falta guardar devuelta el usuario al final de todo x ahora aparentemente
+#                 return redirect('index')
+#             else:
+#                 # falta agregar error por si el form es invalid
+#                 pass
+#         else:
+#             context = { 
+#                 'formUser': SignUpForm(),
+#                 'formDoctor': DoctorForm(),
+#                 'is_authorized': is_authorized
+#             }       
+#         return render(request, 'signup_medico.html', context)
+#     # direccionar a una url y hacer una vista de que no tiene permisos
+#     return HttpResponse('no estas autorizado - bajo construcción todavia')
 
 # los mismos comentarios de antes aplican aca asi que no los pongo
 def signup_paciente(request):

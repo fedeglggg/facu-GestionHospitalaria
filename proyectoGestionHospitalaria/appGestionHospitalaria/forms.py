@@ -20,11 +20,6 @@ class SignUpFormMedico(UserCreationForm):
 
 # los fields se usan en el is_valid() matcheandolos con los names de los input o los id_nombredefield ej id_username no recuerdo -> chequear esto dsp
 
-class MedicoProfileForm(ModelForm):
-    class Meta:
-        model = Doctor
-        fields = {'user','matricula','especialidad'}
-
 class SignUpFormPaciente(UserCreationForm):
     first_name = forms.CharField(max_length=30)
     last_name = forms.CharField(max_length=30)
@@ -37,3 +32,4 @@ class SignUpFormPaciente(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'phone_number' , 'dni', 'obra_social', 'date_of_birth', 'email', 'password1', 'password2')
+
