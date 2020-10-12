@@ -1,16 +1,35 @@
 
-{% extends "base.html" %}
+{% extends "baseTemplate.html" %}
 <title>{% block title %}Login{% endblock %}</title>
 {% block sidebar %} {% endblock %}
 
 {% block content %}
-<div class="container border"  style="max-width: fit-content"  >
-  <h1>Sistema De Gestión</h1>
 
+  <!-- <section id="hero" class="d-flex align-items-center">
+    <div class="container">
+      <h1>Login</h1>
+      <h2></h2>
+      <a href="#about" class="btn-get-started scrollto"></a>
+    </div>
+  </section> --> <!-- End Hero -->
+
+<main id="main">
+<section id="hero" class="d-flex align-items-center" style="margin-bottom: -100px; position: unset;">
+
+
+<section id="why-us" class="why-us" style="all: inherit">
+<!--<div class="col-lg-8 d-flex align-items-stretch">-->
+<div class="container"  style="alignment: center; inline-size: fit-content; padding-bottom: 100px" >
+  <div class="icon-boxes">
+
+  <div class="icon-box">
+    <div style="padding-bottom: 8%;">
+    <h2><b>Ingrese Sus Datos:</b></h2>
+    </div>
   {% if form.errors %}
     <p>Your username and password didn't match. Please try again.</p>
   {% endif %}
-  
+
   {% if next %}
     {% if user.is_authenticated %}
       <p>Your account doesn't have access to this page. To proceed,
@@ -19,7 +38,7 @@
       <p>Please login to see this page.</p>
     {% endif %}
   {% endif %}
-  
+
   <!---
   <form method="post" action="{% url 'login' %}">
     {% csrf_token %}
@@ -39,15 +58,15 @@
   --->
   {% if not user.is_authenticated %}
 
-  <form method="post" action="{% url 'login' %}">
+  <form method="post" action="{% url 'login' %}" style="padding-bottom: 5%">
     {% csrf_token %}
     <div class="form-group">
-      <label for="id_username">Usuario</label>
-      <input type="text" class="form-control" name="username" autofocus="" autocapitalize="none" autocomplete="username" maxlength="150" required="" id="id_username">
+     <!-- <label for="id_username">Usuario</label>-->
+      <input type="text" class="form-control" name="username" placeholder="Usuario" autofocus="" autocapitalize="none" autocomplete="username" maxlength="150" required="" id="id_username">
     </div>
     <div class="form-group">
-      <label for="id_password">Contraseña</label>
-      <input type="password" class="form-control" name="password" autocomplete="current-password" required="" id="id_password">
+     <!-- <label for="id_password">Contraseña</label>-->
+      <input type="password" class="form-control" name="password" placeholder="Contraseña" autocomplete="current-password" required="" id="id_password">
     </div>
     <button type="submit" class="btn btn-outline-primary">Iniciar sesión</button>
   </form>
@@ -55,6 +74,11 @@
   {# Assumes you setup the password_reset view in your URLconf #}
   <p><a href="{% url 'password_reset' %}">¿Olvidaste tu contraseña?</a></p>
 
-{% endif %}
-
+  {% endif %}
+  </div>
+   </div>
+</div>
+</section>
+</section>
+</main>
 {% endblock %}

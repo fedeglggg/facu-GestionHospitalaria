@@ -21,4 +21,5 @@ urlpatterns = [
     path('', include('appGestionHospitalaria.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('/', RedirectView.as_view(url='', permanent=True))
 ]
