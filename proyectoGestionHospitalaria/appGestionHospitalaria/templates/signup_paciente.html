@@ -18,7 +18,7 @@
 
 {% if is_authorized %}
 
-<form method="post" action="/signup/paciente/" class="php-email-form">
+<form method="post" action="/signup/paciente/" >  <!--class="php-email-form" class="FormButton"-->
     {% csrf_token %}
     <div class="section-title" style="padding-bottom: 0;">
           <h2>Datos de usuario</h2>
@@ -82,7 +82,7 @@
             required="" id="id_email">
     </div>
     
-    <button type="submit" >Registrarse</button>
+    <button type="submit" style="background: #1977cc; border: 0; padding: 10px 35px; color: #fff; transition: 0.4s; border-radius: 50px; " onmouseover="this.style.backgroundColor='#1c84e3'" onmouseout="this.style.backgroundColor='#1977cc'">Registrarse</button>
 </form>
 
 {% endif %}

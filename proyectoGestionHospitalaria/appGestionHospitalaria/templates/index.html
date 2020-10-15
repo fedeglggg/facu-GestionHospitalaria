@@ -224,7 +224,8 @@
           <p>Reserva tu turno sin necesidad de registrarte.</p>
         </div>
 
-        <form action="" method="post" role="form" class="php-email-form">
+        <form action="" method="post" role="form" class="php-email-form"> <!-- class="php-email-form" -->
+          {% csrf_token %}
           <div class="form-row">
             <div class="col-md-4 form-group">
               <input type="text" name="name" class="form-control" id="name" placeholder="Nombre" data-rule="minlen:4" data-msg="Por favor ingresa al menos 4 caracteres">

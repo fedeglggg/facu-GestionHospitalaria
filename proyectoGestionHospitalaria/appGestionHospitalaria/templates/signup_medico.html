@@ -30,7 +30,7 @@
 <div class="icon-box">
 
 {% if user.is_authenticated %}
-<form method="post" action="/signup/medico/" class="php-email-form">
+<form method="post" action="/signup/medico/" > <!-- class="php-email-form"  class="FormButton"-->
     {% csrf_token %}
         <div class="section-title" style="padding-bottom: 0;">
           <h2>Datos de usuario</h2>
@@ -86,9 +86,9 @@
             </ul>
         </small>
     {% endif %}
-    <div class="text-center"><button type="submit">Registrar</button></div>
+    <div class="text-center"><button type="submit" style="background: #1977cc; border: 0; padding: 10px 35px; color: #fff; transition: 0.4s; border-radius: 50px; " onmouseover="this.style.backgroundColor='#1c84e3'" onmouseout="this.style.backgroundColor='#1977cc'">Registrar</button></div>
 </form>
-
+<!--<div class="text-center"></div>-->
   <!--la otra form
   <p>OTRO FORM</p>
   <h2>Sign up</h2>
