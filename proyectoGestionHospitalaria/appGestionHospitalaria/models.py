@@ -10,7 +10,7 @@ from django.dispatch import receiver
 # Create your models here.
 
 class Obra_social(models.Model):
-    name = models.CharField(max_length=100, help_text="Ingrese el nombre de la especialidad (p. ej. Neurología, Traumatología etc.)")
+    name = models.CharField(max_length=100, help_text="Ingrese el nombre de la obra social")
 
     def __str__(self):
         return self.name
@@ -73,6 +73,8 @@ class Estudio(models.Model):
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE , null=False) # siempre se asocia a un paciente
     date = models.DateField(null=True, blank=True)
     description = models.CharField(max_length=100, help_text="Ingrese una descripcion del estudio")
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, null=False)  # siempre se asocia a un paciente
+    secretary = models.ForeignKey(User, on_delete=models.CASCADE, null=False)  # siempre se asocia a un paciente
 
     def __str__(self):
         """

@@ -1,25 +1,48 @@
-{% extends "base.html" %}
+{% extends "baseTemplate.html" %}
 <title>{% block title %}Sistema de Gestion{% endblock %}</title>
 
 
 {% block content %}
-{% if user.is_authenticated %}
+
+<section id="hero" class="d-flex align-items-center" style="position: unset; ">
+    <div class="container">
+      <h1>Registro de Medico</h1>
+      <h2>Ingrese los datos correspondientes al nuevo profesional.</h2>
+    </div>
+</section>
+
+<!--<main id="main">
+<section id="hero" class="d-flex " style="margin-bottom: -100px; position: unset;">
 
 
+<section id="why-us" class="why-us" style="all: inherit; margin-top: 8%;">
 
-<h2>Registro de medicos</h2>
-<form method="post" action="/signup/medico/">
+<div class="container"  style="alignment: center; inline-size: fit-content; padding-bottom: 100px" >
+  <div class="icon-boxes">
+
+  <div class="icon-box">
+-->
+<main id="main">
+<section id="appointment" class="appointment section-bg" style="padding: 3%;">
+<section id="why-us" class="why-us" style="all: inherit;padding: 0">
+<div class="container" style="inline-size: fit-content; text-align: center" >
+<div class="icon-boxes">
+<div class="icon-box">
+
+
+<form method="post" action="/signup/medico/" > <!-- class="php-email-form"  class="FormButton"-->
     {% csrf_token %}
-
+        <div class="section-title" style="padding-bottom: 0;">
+          <h2>Datos de usuario</h2>
+        </div>
     <div class="form-group">
-        <label for="id_username">Usuario:</label> 
-        <input type="text" class="form-control" name="username" maxlength="150" autofocus="" required="" id="id_username"> 
+        <!--<label for="id_username">Usuario:</label>-->
+        <input type="text" placeholder="Usuario" class="form-control" name="username" maxlength="150" autofocus="" required="" id="id_username">
     </div>
     <div class="form-group">
-        <label for="id_password1">Contraseña:</label> 
-        <input type="password" class="form-control" name="password1" autocomplete="new-password" required="" id="id_password1"> 
+        <input type="password" placeholder="Contraseña" class="form-control" name="password1" autocomplete="new-password" required="" id="id_password1">
     </div>
-    <small id="passwordHelpBlock" class="form-text text-muted">
+    <small id="passwordHelpBlock" class="form-text text-muted" style="text-align: left">
         <ul>
             <li>Your password can’t be too similar to your other personal information.</li>
             <li>Your password must contain at least 8 characters.</li>
@@ -28,24 +51,22 @@
         </ul>
     </small>
     <div class="form-group">
-        <label for="id_password2">Confirmación de contraseña:</label> 
-        <input type="password" class="form-control" name="password2" autocomplete="new-password" required="" id="id_password2"> 
+        <input type="password" placeholder="Confirmación de contraseña" class="form-control" name="password2" autocomplete="new-password" required="" id="id_password2">
+    </div>
+    <div class="section-title" style="padding-bottom: 0;">
+          <h2>Datos personales</h2>
     </div>
     <div class="form-group">
-            <label for="id_first_name">Nombre:</label> 
-            <input type="text" class="form-control" name="first_name" maxlength="30" id="id_first_name"> 
+            <input type="text" placeholder="Nombre" class="form-control" name="first_name" maxlength="30" id="id_first_name">
     </div>
     <div class="form-group">
-        <label for="id_last_name">Apellido:</label> 
-        <input type="text" class="form-control" name="last_name" maxlength="30" id="id_last_name"> 
-    </div>  
-    <div class="form-group">
-        <label for="id_email">Email:</label> 
-        <input type="email" class="form-control" placeholder="nombre@ejemplo.com" name="email" maxlength="30" required="" id="id_email">
+        <input type="text"  placeholder="Apellido" Apellido="" class="form-control" name="last_name" maxlength="30" id="id_last_name">
     </div>
     <div class="form-group">
-        <label for="id_matricula">Matricula:</label>
-        <input type="text" class="form-control" name="matricula" autofocus="" autocapitalize="none" maxlength="30" required="" id="id_matricula">
+        <input type="email" class="form-control" placeholder="Email" name="email" maxlength="30" required="" id="id_email">
+    </div>
+    <div class="form-group">
+        <input type="text" placeholder="Matricula" class="form-control" name="matricula" autofocus="" autocapitalize="none" maxlength="30" required="" id="id_matricula">
     </div>
 
     {% if especialidades %}
@@ -58,16 +79,16 @@
             {% endfor %}
             </select>
         </div>
-    {% else %} 
+    {% else %}
         <small id="obra_socialHelpBlock" class="form-text text-muted">
             <ul>
                 <li>No existen especialidades actualmente</li>
             </ul>
         </small>
-    {% endif %}   
-    <button type="submit" class="btn btn-outline-primary">Registrar</button>
+    {% endif %}
+    <div class="text-center"><button type="submit" style="background: #1977cc; border: 0; padding: 10px 35px; color: #fff; transition: 0.4s; border-radius: 50px; " onmouseover="this.style.backgroundColor='#1c84e3'" onmouseout="this.style.backgroundColor='#1977cc'">Registrar</button></div>
 </form>
-
+<!--<div class="text-center"></div>-->
   <!--la otra form
   <p>OTRO FORM</p>
   <h2>Sign up</h2>
@@ -78,7 +99,14 @@
   </form>
   -->
 
-
-{% else %}  
-{% endif %}
+ <!-- </div>
+   </div>
+</div>
+</section>-->
+</div>
+</div>
+ </div>
+</section>
+</section>
+</main>
 {% endblock %}
