@@ -3,7 +3,7 @@
 
 
 {% block content %}
-{% if user.is_authenticated %}
+
 
 <h2>Registro de medicos</h2>
 <form method="post" action="{% url 'login' %}">
@@ -53,8 +53,5 @@
 
     <button type="submit" class="btn btn-outline-primary">Registrar</button>
   </form>
-{% else %}
-    
-{% endif %}
 
 {% endblock %}

@@ -48,9 +48,9 @@
           {% if user.is_authenticated %}
           <li><a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Bienvenido,
               {{ user.get_username }}</a></li>
-          <li><a class="nav-link " href="{% url 'logout'%}?next={{request.path}}">Logout</a></li>
+          <li><a class="nav-link " href="{% url 'logout'%}?next={{request.path}}">Salir</a></li>
           {% else %}
-          <li class="active"><a href="/accounts/login/">Login</a>
+          <li class="active"><a href="/accounts/login/">Ingresar</a>
           <li><a href="">Registrarse</a></li>
           {% endif %}
         </ul>
@@ -90,29 +90,46 @@
           {% if user.is_authenticated %}
           <li class="active"><a href="/">Inicio</a></li>
           <li><a href="#about">Turnos</a></li>
-          <li><a href="#doctors">Historias Medicas</a></li>
-          <li class="drop-down"><a href="">Medicos</a>
-            <ul>
-              <li><a href="/signup/medico">Registrar</a></li>
-              <li><a href="#">Modificar</a></li>
-              <li><a href="#">Listar</a></li>
-            </ul>
-          </li>
-          <li class="drop-down"><a href="">Pacientes</a>
-            <ul>
-              <li><a href="/signup/paciente">Registrar</a></li>
-              <li><a href="#">Modificar</a></li>
-              <li><a href="/pacientes/">Listar</a></li>
-            </ul>
-          </li>
-          <!--<li><a href="#contact">Contact</a></li>-->
-        {% else %}
-          <li class="active"><a href="/">Inicio</a></li>
-        {% endif %}
+
+            <!-- por ahora uso view_paciente para ver si es paciente o no -->
+            {% if perms.appGestionHospitalaria.view_paciente %}
+            <li><a href="#doctors">Historias medicas</a></li>
+              {% else %}
+            <li><a href="#doctors">Mi historia medica</a></li>
+            {% endif %}
+
+            <!-- forma de chequear los permisos en el front - estos permisos estan asignados por default
+            a los grupos -->
+            {% if perms.appGestionHospitalaria.add_doctor %}
+            <li class="drop-down"><a href="">Medicos</a>
+              <ul>
+                <li><a href="/signup/medico">Registrar</a></li>
+                <li><a href="#">Modificar</a></li>
+                <li><a href="#">Listar</a></li>
+              </ul>
+            </li>
+            {% endif %}
+
+            {% if perms.appGestionHospitalaria.add_paciente %}
+            <li class="drop-down"><a href="">Pacientes</a>
+              <ul>
+                <li><a href="/signup/paciente">Registrar</a></li>
+                <li><a href="#">Modificar</a></li>
+                <li><a href="/pacientes/">Listar</a></li>
+              </ul>
+            </li>
+            {% endif %}
+            <!--<li><a href="#contact">Contact</a></li>-->
+          {% else %}
+            <li class="active"><a href="/">Inicio</a></li>
+          {% endif %}
         </ul>
       </nav><!-- .nav-menu -->
 
-      <a href="#appointment" class="appointment-btn scrollto">Reservar Turno</a>
+      {% if not perms.appGestionHospitalaria.view_paciente %}
+        <a href="#appointment" class="appointment-btn scrollto">Reservar Turno</a>
+      {% endif %}
+
 
     </div>
   </header><!-- End Header -->
