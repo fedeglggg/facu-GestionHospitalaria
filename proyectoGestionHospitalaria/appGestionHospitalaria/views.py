@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import Paciente, Doctor, Estudio, Especialidad, Obra_social
+from .models import Paciente, Doctor, Estudio, Especialidad, Obra_social, Turno, TipoEstudio
 from django.views import generic
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
@@ -8,9 +8,9 @@ from django.shortcuts import render, redirect
 # from django.urls import reverse_lazy
 from django.http import Http404
 from django.views.generic import CreateView, UpdateView
-from .forms import SignUpFormMedico, SignUpFormPaciente
+from .forms import SignUpFormMedico, SignUpFormPaciente, CreateFormTurno
 from django.db import transaction
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, User
 
 
 # funcion que valida los permisos de una vista en base a los grupos a los que pertenece el usuario
@@ -161,3 +161,34 @@ def signup_paciente(request):
             'obras_sociales': Obra_social.objects.order_by('name'),
         }
         return render(request, 'signup_paciente.html', context)
+
+def create_turno(request):
+    if not is_user_auth(request.user, ('secretarios', 'sarasa')):
+        return redirect('error_acceso')
+
+    if request.method == 'POST':
+        form = CreateFormTurno(request.POST)
+        print(form.errors)
+        if form.is_valid():
+            estudio_name = form.cleaned_data.get('name')
+            doctor = form.cleaned_data.get('doctor')
+            paciente = Paciente.objects.get(pk=1) #Tendria que obtener la pk del usuario paciente que esta creando el turno
+            secretary = User.objects.get(pk=1) #por ahora por defecto, se relaciona con un secretario (empiezo a dudar si es necesario)
+            description = ''
+            estudio1 = Estudio(type=estudio_name, doctor=doctor, paciente=paciente, secretary=secretary, description=description)
+            estudio1.save() #Crea el estudio
+            date = form.cleaned_data.get('date')
+            timeFrom = form.cleaned_data.get('timeFrom')
+            timeTo = timeFrom.replace(hour=(timeFrom.hour+estudio1.type.duration) % 24) #Suma la duracion de estudio
+            turno = Turno(estudio=estudio1, date=date, timeFrom=timeFrom, timeTo=timeTo)
+            turno.save() #Crea el turno a partir de ese estudio
+            return redirect('index')
+        else:
+            # invalid form
+            pass
+    else:
+        context = {
+            'Tipo_Estudios': TipoEstudio.objects.all(),
+            'ListaDoctores': Doctor.objects.all() #.filter(especialidad=TipoEstudio.especialidad)
+        }
+        return render(request, 'Create_Turno.html', context)

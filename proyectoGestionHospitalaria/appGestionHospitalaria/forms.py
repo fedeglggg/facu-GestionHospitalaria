@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
 from django.db import models
-from .models import Especialidad, Doctor
+from .models import Especialidad, Doctor, TipoEstudio, Turno
 
 
 class SignUpFormMedico(UserCreationForm):
@@ -32,4 +32,14 @@ class SignUpFormPaciente(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'phone_number' , 'dni', 'obra_social', 'date_of_birth', 'email', 'password1', 'password2')
+
+class CreateFormTurno(forms.ModelForm):
+    name = forms.ModelChoiceField(queryset=TipoEstudio.objects.all())
+    doctor = forms.ModelChoiceField(queryset=Doctor.objects.all())
+    date = forms.DateField(required=True)
+    timeFrom = forms.TimeField(required=True)
+    #timeTo = forms.TimeField(required=True)
+
+    class Meta:
+        fields = ('name', 'doctor', 'date', 'timeFrom')
 
