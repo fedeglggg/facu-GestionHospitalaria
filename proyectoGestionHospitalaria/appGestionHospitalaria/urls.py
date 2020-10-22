@@ -13,7 +13,7 @@ urlpatterns = [
     path('signup/medico/', views.signup_medico, name='signup_medico'),
     path('pacientes/', views.pacientes, name='listado de pacientes'),
     path('paciente/<int:paciente_id>/', views.paciente, name='paciente'),
-   path('Turnos/Crear/', views.create_turno, name='create_turno')
+   path('turnos/crear/', views.create_turno, name='create_turno')
 ]
 
 

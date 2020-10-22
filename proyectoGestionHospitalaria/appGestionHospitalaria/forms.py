@@ -18,7 +18,8 @@ class SignUpFormMedico(UserCreationForm):
         model = User
         fields = ('username', 'first_name', 'last_name', 'email', 'matricula', 'especialidad', 'password1', 'password2')
 
-# los fields se usan en el is_valid() matcheandolos con los names de los input o los id_nombredefield ej id_username no recuerdo -> chequear esto dsp
+# los fields se usan en el is_valid() matcheandolos con los names de los input 
+# no se usa los id_nombredefield ej id_username para algo, no recuerdo -> chequear esto dsp
 
 class SignUpFormPaciente(UserCreationForm):
     first_name = forms.CharField(max_length=30)
@@ -33,7 +34,8 @@ class SignUpFormPaciente(UserCreationForm):
         model = User
         fields = ('username', 'first_name', 'last_name', 'phone_number' , 'dni', 'obra_social', 'date_of_birth', 'email', 'password1', 'password2')
 
-class CreateFormTurno(forms.ModelForm):
+# viejo
+class CreateFormTurno2(ModelForm):
     name = forms.ModelChoiceField(queryset=TipoEstudio.objects.all())
     doctor = forms.ModelChoiceField(queryset=Doctor.objects.all())
     date = forms.DateField(required=True)
@@ -41,5 +43,19 @@ class CreateFormTurno(forms.ModelForm):
     #timeTo = forms.TimeField(required=True)
 
     class Meta:
+        model = Turno
         fields = ('name', 'doctor', 'date', 'timeFrom')
+
+# para que pase el .is_valid()
+class CreateFormTurno(ModelForm):
+    tipo_estudio_name = forms.CharField(max_length=30)
+    doctor_name = forms.CharField(max_length=30)
+    date = forms.DateField(required=True)
+    timeFrom = forms.TimeField(required=True)
+    #timeTo = forms.TimeField(required=True)
+
+    class Meta:
+        model = Turno
+        fields = ('tipo_estudio_name', 'doctor_name', 'date', 'timeFrom')
+
 

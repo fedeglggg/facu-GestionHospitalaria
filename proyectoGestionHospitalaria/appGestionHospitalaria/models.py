@@ -47,7 +47,6 @@ class Paciente(models.Model):
     """
     Modelo que representa un paciente
     """
-
     dni = models.IntegerField(unique=True, help_text="Ingrese Numero de documento")
     date_of_birth = models.DateField(null=True, blank=True)
     obra_social = models.ForeignKey(Obra_social, on_delete=models.SET_NULL, blank=True, null=True)
@@ -69,8 +68,8 @@ class TipoEstudio(models.Model):
     Modelo que representa un Tipo de estudio
     """
     name = models.CharField(max_length=100)
-    especialidad = models.ForeignKey(Especialidad,on_delete=models.CASCADE, null=False, help_text="Seleccione una especialidad")
-    duration = models.IntegerField()
+    especialidad = models.ForeignKey(Especialidad,on_delete=models.CASCADE, help_text="Seleccione una especialidad")
+    # duration = models.IntegerField()
 
     def __str__(self):
         """
@@ -83,20 +82,21 @@ class Estudio(models.Model):
     """
     Modelo que representa un Estudio clinico
     """
-    type = models.ForeignKey(TipoEstudio, on_delete=models.CASCADE)
+    tipo = models.ForeignKey(TipoEstudio, on_delete=models.CASCADE, null=False,)
     #name = models.CharField(max_length=100)
     #time_long = models.IntegerField()
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE , null=False) # siempre se asocia a un paciente
     #date = models.DateField(null=True, blank=True)
     description = models.CharField(max_length=100, help_text="Ingrese una descripcion del estudio")
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, null=False)  # siempre se asocia a un paciente
-    secretary = models.ForeignKey(User, on_delete=models.CASCADE, null=False)  # siempre se asocia a un paciente
+    secretary = models.ForeignKey(User, on_delete=models.CASCADE)  # siempre se asocia a un paciente
 
     def __str__(self):
         """
         String para representar el Objeto del Modelo
         """
-        return '%s (%s)' % (self.type.__str__(), self.paciente.__str__())
+        # return '%s (%s)' % (self.type.__str__(), self.paciente.__str__())
+        return 'tipo: ' + self.tipo.name + ' - paciente:' + self.paciente.user.first_name + ' - descripción:' + self.description,
 
 class Turno(models.Model):
     """
@@ -105,14 +105,11 @@ class Turno(models.Model):
     estudio = models.OneToOneField(Estudio, on_delete=models.CASCADE , null=False, primary_key=True)
     date = models.DateField(null=False)
     timeFrom = models.TimeField(null=False)
-    timeTo = models.TimeField(null=False)
-
-    class Meta:
-        unique_together = (("estudio", "date", "timeFrom", "timeTo"),)
+    timeTo = models.TimeField(null=True, blank=True)
 
     def __str__(self):
         """
         String para representar el Objeto del Modelo
         """
-        return '%s %s(%s-%s)' % (self.estudio.__str__(),self.date , self.timeFrom, self.timeTo)
-
+        #return '%s %s(%s-%s)' % (self.estudio.__str__(), self.date , self.timeFrom, self.timeTo)
+        return 'fecha: ' + str(self.date) + ' - horario:' + str(self.timeFrom)

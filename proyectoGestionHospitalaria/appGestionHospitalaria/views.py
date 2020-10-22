@@ -170,25 +170,39 @@ def create_turno(request):
         form = CreateFormTurno(request.POST)
         print(form.errors)
         if form.is_valid():
-            estudio_name = form.cleaned_data.get('name')
-            doctor = form.cleaned_data.get('doctor')
+            # creaciom del estudio
+
+            tipo_estudio_form = form.cleaned_data.get('tipo_estudio_name')
+            tipo_estudio = TipoEstudio.objects.get(name=tipo_estudio_form)
+           
+            # lo que estamos haciendo es por matricula por ahora, cambiarlo a nombre del doctor despues
+            # el nombre esta en su usuario
+            doctor_name_form = form.cleaned_data.get('doctor_name')
+            doctor = Doctor.objects.get(matricula=doctor_name_form)
+
             paciente = Paciente.objects.get(pk=1) #Tendria que obtener la pk del usuario paciente que esta creando el turno
             secretary = User.objects.get(pk=1) #por ahora por defecto, se relaciona con un secretario (empiezo a dudar si es necesario)
             description = ''
-            estudio1 = Estudio(type=estudio_name, doctor=doctor, paciente=paciente, secretary=secretary, description=description)
-            estudio1.save() #Crea el estudio
+            estudio = Estudio(tipo=tipo_estudio, doctor=doctor, paciente=paciente, secretary=secretary, description=description)
+            new_estudio = estudio.save() #Crea el estudio
+
+            # creacion del turno
+            
             date = form.cleaned_data.get('date')
             timeFrom = form.cleaned_data.get('timeFrom')
-            timeTo = timeFrom.replace(hour=(timeFrom.hour+estudio1.type.duration) % 24) #Suma la duracion de estudio
-            turno = Turno(estudio=estudio1, date=date, timeFrom=timeFrom, timeTo=timeTo)
+            # timeTo = timeFrom.replace(hour=(timeFrom.hour+estudio1.type.duration) % 24) #Suma la duracion de estudio
+            #turno = Turno(estudio=estudio1, date=date, timeFrom=timeFrom, timeTo=timeTo)
+            turno = Turno(estudio=new_estudio, date=date, timeFrom=timeFrom)
             turno.save() #Crea el turno a partir de ese estudio
+
+        
             return redirect('index')
         else:
-            # invalid form
+            return redirect('index')
             pass
     else:
         context = {
-            'Tipo_Estudios': TipoEstudio.objects.all(),
-            'ListaDoctores': Doctor.objects.all() #.filter(especialidad=TipoEstudio.especialidad)
+            'tipo_estudios': TipoEstudio.objects.all(),
+            'lista_doctores': Doctor.objects.all() #.filter(especialidad=TipoEstudio.especialidad)
         }
-        return render(request, 'Create_Turno.html', context)
+        return render(request, 'create_turno.html', context)
