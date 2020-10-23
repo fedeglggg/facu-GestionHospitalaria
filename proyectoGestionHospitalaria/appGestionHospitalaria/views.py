@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect
 # from django.urls import reverse_lazy
 from django.http import Http404
 from django.views.generic import CreateView, UpdateView
-from .forms import SignUpFormMedico, SignUpFormPaciente, CreateFormTurno
+from .forms import SignUpFormMedico, SignUpFormPaciente, CreateFormTurno, EspecialidadForm
 from django.db import transaction
 from django.contrib.auth.models import Group, User
 
@@ -162,40 +162,73 @@ def signup_paciente(request):
         }
         return render(request, 'signup_paciente.html', context)
 
-def create_turno(request):
-    if not is_user_auth(request.user, ('secretarios', 'sarasa')):
+def create_turno_1(request):
+    if not is_user_auth(request.user, ('secretarios', 'pacientes')):
         return redirect('error_acceso')
 
+ 
+    if request.method == 'POST':
+        print('entro al post')
+        form = EspecialidadForm(request.POST)
+        print(form.errors)
+        if form.is_valid(): # sino el cleaned data get no funca
+            especialidad_name = form.cleaned_data.get('name')
+            print(especialidad_name)
+            # especialidad = Especialidad.objects.get(name=especialidad_name)
+            especialidad = Especialidad.objects.get(name=especialidad_name)
+            doctores = Doctor.objects.filter(especialidad=especialidad)
+            # doc_validos = []
+            # x = 0
+            # for doc in doctores:
+            #     x = x + 1
+            #     if doc.especialidad.filter(name=especialidad_name):
+            #         doc_validos.append(doc)
+            #         print(doc.matricula)
+
+            # print('el valor de x ex:')
+            # print(x)
+            context = {
+                'doctores': doctores
+            }
+
+            return render(request, 'create_turno_2.html', context)
+        else:
+            pass
+    else:
+        context = {
+            'especialidades': Especialidad.objects.all()
+        }
+        return render(request, 'create_turno_1.html', context)
+
+
+def create_turno_3(request):
+    if not is_user_auth(request.user, ('secretarios', 'pacientes')):
+        return redirect('error_acceso')
+
+    
     if request.method == 'POST':
         form = CreateFormTurno(request.POST)
         print(form.errors)
         if form.is_valid():
             # creaciom del estudio
-
             tipo_estudio_form = form.cleaned_data.get('tipo_estudio_name')
             tipo_estudio = TipoEstudio.objects.get(name=tipo_estudio_form)
-           
             # lo que estamos haciendo es por matricula por ahora, cambiarlo a nombre del doctor despues
             # el nombre esta en su usuario
             doctor_name_form = form.cleaned_data.get('doctor_name')
             doctor = Doctor.objects.get(matricula=doctor_name_form)
-
             paciente = Paciente.objects.get(pk=1) #Tendria que obtener la pk del usuario paciente que esta creando el turno
             secretary = User.objects.get(pk=1) #por ahora por defecto, se relaciona con un secretario (empiezo a dudar si es necesario)
             description = ''
             estudio = Estudio(tipo=tipo_estudio, doctor=doctor, paciente=paciente, secretary=secretary, description=description)
             new_estudio = estudio.save() #Crea el estudio
-
             # creacion del turno
-            
             date = form.cleaned_data.get('date')
             timeFrom = form.cleaned_data.get('timeFrom')
             # timeTo = timeFrom.replace(hour=(timeFrom.hour+estudio1.type.duration) % 24) #Suma la duracion de estudio
             #turno = Turno(estudio=estudio1, date=date, timeFrom=timeFrom, timeTo=timeTo)
             turno = Turno(estudio=new_estudio, date=date, timeFrom=timeFrom)
-            turno.save() #Crea el turno a partir de ese estudio
-
-        
+            turno.save() # Crea el turno a partir de ese estudio
             return redirect('index')
         else:
             return redirect('index')

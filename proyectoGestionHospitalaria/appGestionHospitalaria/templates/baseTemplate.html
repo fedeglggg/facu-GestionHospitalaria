@@ -89,7 +89,7 @@
         <ul>
           {% if user.is_authenticated %}
           <li class="active"><a href="/">Inicio</a></li>
-          <li><a href="turnos/crear/">Turnos</a></li>
+          <li><a href="{% url 'create_turno'%}">Turnos</a></li>
 
             <!-- por ahora uso view_paciente para ver si es paciente o no -->
             {% if perms.appGestionHospitalaria.view_paciente %}
@@ -103,7 +103,7 @@
             {% if perms.appGestionHospitalaria.add_doctor %}
             <li class="drop-down"><a href="">Medicos</a>
               <ul>
-                <li><a href="/signup/medico">Registrar</a></li>
+                <li><a href="{% url 'signup_medico'%}">Registrar</a></li>
                 <li><a href="#">Modificar</a></li>
                 <li><a href="#">Listar</a></li>
               </ul>
@@ -113,9 +113,9 @@
             {% if perms.appGestionHospitalaria.add_paciente %}
             <li class="drop-down"><a href="">Pacientes</a>
               <ul>
-                <li><a href="/signup/paciente">Registrar</a></li>
+                <li><a href="{% url 'signup_paciente'%}">Registrar</a></li>
                 <li><a href="#">Modificar</a></li>
-                <li><a href="/pacientes/">Listar</a></li>
+                <li><a href="{% url 'lista_pacientes'%}">Listar</a></li>
               </ul>
             </li>
             {% endif %}
@@ -126,8 +126,8 @@
         </ul>
       </nav><!-- .nav-menu -->
 
-      {% if not perms.appGestionHospitalaria.view_paciente %}
-        <a href="#appointment" class="appointment-btn scrollto">Reservar Turno</a>
+      {% if not perms.appGestionHospitalaria.view_paciente or user.is_superuser %}
+        <a href="{% url 'create_turno'%}" class="appointment-btn scrollto">Reservar Turno</a>
       {% endif %}
 
 

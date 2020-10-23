@@ -1,6 +1,24 @@
-{% extends "base.html" %}
+{% extends "baseTemplate.html" %}
 
 {% block content %}
+
+<section id="hero" class="d-flex align-items-center" style="position: unset; ">
+  <div class="container">
+    <h1>Paciente</h1>
+    <h2>Detalles del paciente.</h2>
+  </div>
+</section>
+
+<main id="main">
+<section id="appointment" class="appointment section-bg" style="padding: 3%;">
+<section id="why-us" class="why-us" style="all: inherit;padding: 0">
+<div class="container" style="inline-size: fit-content; text-align: center" >
+<div class="icon-boxes">
+<div class="icon-box">
+  
+
+
+
 <div class="container border" style="width: fit-content" >
   <h1>Nombre: {{ paciente.first_name }} {{ paciente.last_name }}</h1>
 
@@ -21,5 +39,12 @@
     {% endfor %}
   </div>
 </div>
+
+</div>
+</div>
+</div>
+</section>
+</section>
+</main>
 
 {% endblock %}
