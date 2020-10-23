@@ -66,23 +66,40 @@ def paciente(request, paciente_id):
 def pacientes(request):
     if not is_user_auth(request.user, ('secretarios', 'medicos', 'sarasa')):
         return redirect('error_acceso')
+    
+
     paciente_list = Paciente.objects.order_by('dni')
     context = {
         'paciente_list': paciente_list
     }
     return render(request, 'paciente_list.html', context)
 
+def medico(request, doctor_id):
+    if not is_user_auth(request.user, ('secretarios', 'medicos', 'sarasa')):
+        return redirect('error_acceso')
+    try:
+        doctor = Doctor.objects.get(pk=doctor_id)
+        context = {
+        'doctor': doctor,
+        'especialidades': doctor.especialidad
+        }
+        
+    except Doctor.DoesNotExist:
+        raise Http404("El paciente no existe")
+    return render(request, 'medico_detail.html', context)
+
 
 # @login_required en vez de usar esto chequeamos si el user pertenece a un grupo y mandamos
 # el si o no por el context - mas facil asi parece
 def medicos(request):
-    """
-        Función vista para la página del listado de medicos.
-    
-    medicos = doctor.objects.all()
-    return render(request, 'medicos.html', context = {'medicos':medicos})
-    """
-    return HttpResponse('en construccion')
+    if not is_user_auth(request.user, ('secretarios', 'sarasa')):
+        return redirect('error_acceso')
+      
+    doctores = Doctor.objects.order_by('matricula')
+    context = {
+        'doctores': doctores
+    }
+    return render(request, 'medico_list.html', context)
 
 def signup_medico(request):
     # le damos a is_auth los grupos permitidos en la vista
@@ -165,15 +182,10 @@ def create_turno_1(request):
     if not is_user_auth(request.user, ('secretarios', 'pacientes')):
         return redirect('error_acceso')
 
- 
     if request.method == 'POST':
-        print('entro al post')
         form = EspecialidadForm(request.POST)
-        print(form.errors)
         if form.is_valid(): # sino el cleaned data get no funca
             especialidad_name = form.cleaned_data.get('name')
-            print(especialidad_name)
-            # especialidad = Especialidad.objects.get(name=especialidad_name)
             especialidad = Especialidad.objects.get(name=especialidad_name)
             doctores = Doctor.objects.filter(especialidad=especialidad)
             tipoEstudios = TipoEstudio.objects.filter(especialidad=especialidad)
@@ -194,7 +206,6 @@ def create_turno_1(request):
                 'lista_pacientes': Paciente.objects.all()
 
             }
-
             return render(request, 'create_turno_2.html', context)
         else:
             pass
@@ -204,12 +215,11 @@ def create_turno_1(request):
         }
         return render(request, 'create_turno_1.html', context)
 
-
-def create_turno_3(request):
+# viejo crear turno
+def create_turno_2(request):
     if not is_user_auth(request.user, ('secretarios', 'pacientes')):
         return redirect('error_acceso')
 
-    
     if request.method == 'POST':
         form = CreateFormTurno(request.POST)
         print(form.errors)

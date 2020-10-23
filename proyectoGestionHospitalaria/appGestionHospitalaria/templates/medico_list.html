@@ -1,0 +1,32 @@
+{% extends "baseTemplate.html" %}
+<title>{% block title %}Doctores{% endblock %}</title>
+
+{% block content %}
+<section id="hero" class="d-flex align-items-center" style="position: unset; ">
+    <div class="container">
+        <h1>Listado de doctores</h1>
+        <h2>Vea todos los doctores registrados del sistema</h2>
+    </div>
+</section>
+
+{% if doctores %}
+<div class="list-group">
+
+    {% for doctor in doctores %}
+    <a class="list-group-item list-group-item-action" href="/medico/{{ doctor.id }}">{{ doctor.user.first_name }}
+        {{doctor.user.last_name}} - Matricula: {{doctor.matricula}}</a>
+    {% endfor %}
+
+</div>
+{% else %}
+<p>No existen doctores.</p>
+{% endif %}
+
+</div>
+</div>
+</div>
+</section>
+</section>
+</main>
+
+{% endblock %}
