@@ -11,7 +11,7 @@ from django.views.generic import CreateView, UpdateView
 from .forms import SignUpFormMedico, SignUpFormPaciente, CreateFormTurno, EspecialidadForm
 from django.db import transaction
 from django.contrib.auth.models import Group, User
-
+import datetime
 
 # funcion que valida los permisos de una vista en base a los grupos a los que pertenece el usuario
 # y los grupos que permite la vista
@@ -26,7 +26,6 @@ def is_user_auth(user, valid_groups):
         if user.groups.filter(name=group).exists():
             return True
     return False
-  
 def error_acceso(request):
     # se podría tirar algo aca, el proble es que al desloguear te habría que redirigirlo, 
     # sino deslogueo y quedo en una vista que necesita permisos y automaticamente despues
@@ -177,6 +176,8 @@ def create_turno_1(request):
             # especialidad = Especialidad.objects.get(name=especialidad_name)
             especialidad = Especialidad.objects.get(name=especialidad_name)
             doctores = Doctor.objects.filter(especialidad=especialidad)
+            tipoEstudios = TipoEstudio.objects.filter(especialidad=especialidad)
+
             # doc_validos = []
             # x = 0
             # for doc in doctores:
@@ -188,7 +189,10 @@ def create_turno_1(request):
             # print('el valor de x ex:')
             # print(x)
             context = {
-                'doctores': doctores
+                'doctores': doctores,
+                'tipoEstudios': tipoEstudios,
+                'lista_pacientes': Paciente.objects.all()
+
             }
 
             return render(request, 'create_turno_2.html', context)
@@ -217,10 +221,16 @@ def create_turno_3(request):
             # el nombre esta en su usuario
             doctor_name_form = form.cleaned_data.get('doctor_name')
             doctor = Doctor.objects.get(matricula=doctor_name_form)
-            paciente = Paciente.objects.get(pk=1) #Tendria que obtener la pk del usuario paciente que esta creando el turno
-            secretary = User.objects.get(pk=1) #por ahora por defecto, se relaciona con un secretario (empiezo a dudar si es necesario)
+
+            if is_user_auth(request.user, ('pacientes')): #secretarios
+                paciente = Paciente.objects.get(user=request.user.id) #Obtiene el id desde el usuario
+            else:
+                paciente_form = form.cleaned_data.get('paciente_name')
+                paciente = Paciente.objects.get(dni=paciente_form) #Obtiene el dni desde un desplegable
+
+            #secretary = User.objects.get(pk=1) #por ahora por defecto, se relaciona con un secretario (empiezo a dudar si es necesario)
             description = ''
-            estudio = Estudio(tipo=tipo_estudio, doctor=doctor, paciente=paciente, secretary=secretary, description=description)
+            estudio = Estudio(tipo=tipo_estudio, doctor=doctor, paciente=paciente, description=description)
             new_estudio = estudio.save() #Crea el estudio
             # creacion del turno
             date = form.cleaned_data.get('date')
@@ -236,6 +246,7 @@ def create_turno_3(request):
     else:
         context = {
             'tipo_estudios': TipoEstudio.objects.all(),
-            'lista_doctores': Doctor.objects.all() #.filter(especialidad=TipoEstudio.especialidad)
+            'lista_doctores': Doctor.objects.all(), #.filter(especialidad=TipoEstudio.especialidad)
+            'lista_pacientes': Paciente.objects.all()
         }
-        return render(request, 'create_turno.html', context)
+        return render(request, 'create_turno3.html', context)
