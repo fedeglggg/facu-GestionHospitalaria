@@ -24,20 +24,24 @@
 
   <p><strong>Dni:</strong> {{ paciente.dni }}</p>
   <p><strong>Fecha de Nacimiento:</strong> {{ paciente.date_of_birth }}</p>
-  <p><strong>Obra:</strong> {% for genre in paciente.obra_social.all %} {{ obra_social }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+  <!--
+<p><strong>Obra Social:</strong> {% for genre in paciente.obra_social.all %} {{ obra_social }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+  -->
+  <p> <strong>Obra Social:</strong> {{ paciente.obra_social.name }} </p>
   <p><strong>Telefono:</strong> {{ paciente.phone_number }}</p>
 
-
+<!--
   <div style="margin-left:20px;margin-top:20px">
     <h4>Estudios</h4>
 
+    
     {% for estudioItem in paciente.estudio_set.all %}
     <hr>
     <p><strong>Nombre:</strong> {{estudioItem.name}}</p>
     <p><strong>Fecha:</strong> {{estudioItem.date}}</p>
     <p><strong>Description:</strong> {{estudioItem.description}}</p>
     {% endfor %}
-  </div>
+  </div>-->
 </div>
 
 </div>
