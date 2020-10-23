@@ -1,19 +1,32 @@
-{% extends "base.html" %}
+{% extends "baseTemplate.html" %}
 <title>{% block title %}Pacientes{% endblock %}</title>
 
 {% block content %}
-    <h1>Lista de pacientes</h1>
+<section id="hero" class="d-flex align-items-center" style="position: unset; ">
+  <div class="container">
+    <h1>Listado de pacientes</h1>
+    <h2>Vea todos los pacientes registrados del sistema</h2>
+  </div>
+</section>
 
-    {% if paciente_list %}
-    <div class="list-group" style="width: fit-content; display: inline-grid">
+{% if paciente_list %}
+<div class="list-group" >
 
-      {% for paciente in paciente_list %}
-            <a class="list-group-item list-group-item-action" href="/paciente/{{ paciente.id }}">{{ paciente.first_name }} {{paciente.last_name}} ({{paciente.dni}})</a>
-      {% endfor %}
+  {% for paciente in paciente_list %}
+        <a class="list-group-item list-group-item-action" href="/paciente/{{ paciente.id }}">{{ paciente.first_name }} {{paciente.last_name}} ({{paciente.dni}})</a>
+  {% endfor %}
 
-    </div>
-    {% else %}
-      <p>No existen pacientes.</p>
-    {% endif %}
+</div>
+{% else %}
+  <p>No existen pacientes.</p>
+{% endif %}
+
+</div>
+</div>
+</div>
+</section>
+</section>
+</main>
+
 {% endblock %}
 

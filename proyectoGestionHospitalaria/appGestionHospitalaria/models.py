@@ -26,7 +26,7 @@ class Doctor(models.Model):
     """
     Modelo que representa un Medico
     """
-    user = models.ForeignKey(User, on_delete=models.CASCADE) # 
+    user = models.ForeignKey(User, on_delete=models.CASCADE) #
     matricula = models.CharField(max_length=100)
     especialidad = models.ManyToManyField(Especialidad, help_text="Seleccione una especialidad")
  
@@ -34,7 +34,8 @@ class Doctor(models.Model):
         """
         String para representar el Objeto del Modelo
         """
-        return '%s (%s)' % (self.user.get_full_name(), self.matricula)
+        return self.userget_full_name()
+        #return '%s (%s)' % (self.user.get_full_name(), self.matricula)
 
 # @receiver(post_save, sender=User)
 # def update_user_profile(sender, instance, created, **kwargs):

@@ -11,9 +11,9 @@ urlpatterns = [
     path('error/acceso/', views.error_acceso, name='error_acceso'),
     path('signup/paciente/', views.signup_paciente, name='signup_paciente'),
     path('signup/medico/', views.signup_medico, name='signup_medico'),
-    path('pacientes/', views.pacientes, name='listado de pacientes'),
+    path('pacientes/', views.pacientes, name='lista_pacientes'),
     path('paciente/<int:paciente_id>/', views.paciente, name='paciente'),
-   path('turnos/crear/', views.create_turno, name='create_turno')
+    path('turnos/crear/', views.create_turno_1, name='create_turno')
 ]
 
 

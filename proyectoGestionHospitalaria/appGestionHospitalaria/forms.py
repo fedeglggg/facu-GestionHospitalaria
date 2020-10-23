@@ -34,20 +34,27 @@ class SignUpFormPaciente(UserCreationForm):
         model = User
         fields = ('username', 'first_name', 'last_name', 'phone_number' , 'dni', 'obra_social', 'date_of_birth', 'email', 'password1', 'password2')
 
-# viejo
-class CreateFormTurno2(ModelForm):
-    name = forms.ModelChoiceField(queryset=TipoEstudio.objects.all())
-    doctor = forms.ModelChoiceField(queryset=Doctor.objects.all())
+
+# para que pase el .is_valid()
+class CreateFormTurno(ModelForm):
+    tipo_estudio_name = forms.CharField(max_length=30)
+    doctor_name = forms.CharField(max_length=30)
     date = forms.DateField(required=True)
     timeFrom = forms.TimeField(required=True)
     #timeTo = forms.TimeField(required=True)
 
     class Meta:
         model = Turno
-        fields = ('name', 'doctor', 'date', 'timeFrom')
+        fields = ('tipo_estudio_name', 'doctor_name', 'date', 'timeFrom')
 
-# para que pase el .is_valid()
-class CreateFormTurno(ModelForm):
+# si usas ModelForm chequea que sea el unico existente en la bd con el is_valid() en la view
+class EspecialidadForm(forms.Form):
+    name = forms.CharField(max_length=100, help_text="Ingrese el nombre de la especialidad (p. ej. Neurología, Traumatología etc.)")
+    class Meta:
+        model = Especialidad
+        fields = ('name',)
+
+class CreateFormTurno33(ModelForm):
     tipo_estudio_name = forms.CharField(max_length=30)
     doctor_name = forms.CharField(max_length=30)
     date = forms.DateField(required=True)
