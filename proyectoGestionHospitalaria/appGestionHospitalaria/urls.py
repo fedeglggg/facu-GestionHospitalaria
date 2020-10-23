@@ -14,8 +14,8 @@ urlpatterns = [
     path('signup/medico/', views.signup_medico, name='signup_medico'),
     path('pacientes/', views.pacientes, name='lista_pacientes'),
     path('paciente/<int:paciente_id>/', views.paciente, name='paciente'),
-    path('turnos/crear/', views.create_turno_1, name='create_turno'),
-    path('turnos/crear/', views.create_turno_2, name='create_turno_2')
+    path('turnos/crear/1', views.create_turno_1, name='create_turno'),
+    path('turnos/crear/2', views.create_turno_3, name='create_turno2')
 ]
 
 

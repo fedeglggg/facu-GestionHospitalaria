@@ -89,8 +89,8 @@ class Estudio(models.Model):
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE , null=False) # siempre se asocia a un paciente
     #date = models.DateField(null=True, blank=True)
     description = models.CharField(max_length=100, help_text="Ingrese una descripcion del estudio")
-    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, null=False)  # siempre se asocia a un paciente
-    secretary = models.ForeignKey(User, on_delete=models.CASCADE)  # siempre se asocia a un paciente
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, null=False)  # siempre se asocia a doctor
+    secretary = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)  #opcional
 
     def __str__(self):
         """

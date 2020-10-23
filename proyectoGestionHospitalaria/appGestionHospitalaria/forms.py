@@ -2,7 +2,7 @@ from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-
+import datetime
 from django.db import models
 from .models import Especialidad, Doctor, TipoEstudio, Turno
 
@@ -34,12 +34,13 @@ class SignUpFormPaciente(UserCreationForm):
         model = User
         fields = ('username', 'first_name', 'last_name', 'phone_number' , 'dni', 'obra_social', 'date_of_birth', 'email', 'password1', 'password2')
 
-
 # para que pase el .is_valid()
 class CreateFormTurno(ModelForm):
     tipo_estudio_name = forms.CharField(max_length=30)
     doctor_name = forms.CharField(max_length=30)
+    paciente_name = forms.CharField(max_length=30)
     date = forms.DateField(required=True)
+    #timeFrom = forms.ChoiceField(choices=horarios, required=True, label="Seleccione su horario")
     timeFrom = forms.TimeField(required=True)
     #timeTo = forms.TimeField(required=True)
 
