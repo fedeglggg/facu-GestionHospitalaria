@@ -20,10 +20,10 @@
 
 
 <div class="container border" style="width: fit-content">
-    <h1>Nombre: {{ doctor.user.first_name }} {{ doctor.user.last_name }}</h1>
+    <h2>Nombre: {{ doctor.user.first_name }} {{ doctor.user.last_name }}</h2>
 
     <p><strong>Matricula:</strong> {{ doctor.matricula }}</p>
-    {% for especialidad in especialdiades %}
+    {% for especialidad in especialidades %}
         <p><strong>Especialidad:</strong> {{ especialidad.name }}</p>
     {% endfor %}
     <div style="margin-left:20px;margin-top:20px">

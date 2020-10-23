@@ -51,7 +51,7 @@
           <li><a class="nav-link " href="{% url 'logout'%}?next={{request.path}}">Salir</a></li>
           {% else %}
           <li class="active"><a href="/accounts/login/">Ingresar</a>
-          <li><a href="signup/paciente/">Registrarse</a></li>
+          <li><a href="{% url 'signup_paciente'%}">Registrarse</a></li>
           {% endif %}
         </ul>
       </nav><!-- .nav-menu -->
@@ -89,7 +89,7 @@
         <ul>
           {% if user.is_authenticated %}
           <li class="active"><a href="/">Inicio</a></li>
-          <li><a href="{% url 'create_turno_1'%}">Turnos</a></li>
+          <li><a href="{% url 'lista_turno'%}">Turnos</a></li>
 
             <!-- por ahora uso view_paciente para ver si es paciente o no -->
             {% if perms.appGestionHospitalaria.view_paciente %}
@@ -126,7 +126,7 @@
         </ul>
       </nav><!-- .nav-menu -->
 
-      {% if not perms.appGestionHospitalaria.view_paciente or user.is_superuser %}
+      {% if perms.appGestionHospitalaria.add_turno or user.is_superuser %}
         <a href="{% url 'create_turno_1'%}" class="appointment-btn scrollto">Reservar Turno</a>
       {% endif %}
 

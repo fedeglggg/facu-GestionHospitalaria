@@ -1,0 +1,43 @@
+{% extends "baseTemplate.html" %}
+<title>{% block title %}Turnos{% endblock %}</title>
+
+{% block content %}
+<section id="hero" class="d-flex align-items-center" style="position: unset; ">
+    <div class="container">
+        <h1>Listado de los turnos</h1>
+        <h2>Vea todos los turnos registrados del sistema</h2>
+    </div>
+</section>
+
+<main id="main">
+<section id="appointment" class="appointment section-bg" style="padding: 3%;">
+<section id="why-us" class="why-us" style="all: inherit;padding: 0">
+<div class="container" style="inline-size: fit-content; text-align: center" >
+<div class="icon-boxes">
+<div class="icon-box">
+
+
+{% if turnos %}
+<div class="list-group">
+
+    {% for turno in turnos %}
+    <a class="list-group-item list-group-item-action" href="#">
+        {{ turno.date }} - {{ turno.timeFrom}} -
+        {{ turno.estudio.paciente.user.first_name }}
+        {{turno.estudio.paciente.user.last_name}}
+    </a>
+    {% endfor %}
+
+</div>
+{% else %}
+<p>No existen turnos registrados.</p>
+{% endif %}
+
+</div>
+</div>
+</div>
+</section>
+</section>
+</main>
+
+{% endblock %}

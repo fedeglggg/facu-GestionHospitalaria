@@ -26,6 +26,7 @@ def is_user_auth(user, valid_groups):
         if user.groups.filter(name=group).exists():
             return True
     return False
+
 def error_acceso(request):
     # se podría tirar algo aca, el proble es que al desloguear te habría que redirigirlo, 
     # sino deslogueo y quedo en una vista que necesita permisos y automaticamente despues
@@ -77,13 +78,20 @@ def pacientes(request):
 def medico(request, doctor_id):
     if not is_user_auth(request.user, ('secretarios', 'medicos', 'sarasa')):
         return redirect('error_acceso')
+
+    print('1')
     try:
         doctor = Doctor.objects.get(pk=doctor_id)
+        especialidades = doctor.especialidad.all()
         context = {
         'doctor': doctor,
-        'especialidades': doctor.especialidad
+        'especialidades': especialidades
         }
-        
+    
+        for i in especialidades:
+            print('2')
+            print(i.name)
+
     except Doctor.DoesNotExist:
         raise Http404("El paciente no existe")
     return render(request, 'medico_detail.html', context)
@@ -100,6 +108,17 @@ def medicos(request):
         'doctores': doctores
     }
     return render(request, 'medico_list.html', context)
+
+def turnos(request):
+    if not is_user_auth(request.user, ('secretarios', 'medicos')):
+        return redirect('error_acceso')
+      
+    turnos = Turno.objects.all()
+    context = {
+        'turnos': turnos
+    }
+    return render(request, 'turno_list.html', context)
+
 
 def signup_medico(request):
     # le damos a is_auth los grupos permitidos en la vista
@@ -150,8 +169,9 @@ def signup_medico(request):
 
 # todos los comentarios de signup_medico aplican aca
 def signup_paciente(request):
-    if not is_user_auth(request.user, ('medicos', 'sarasa')):
-        return redirect('error_acceso')
+    # por ahora saco el permiso para registrar pacientes al sistema, que se registre cualquiera
+    # if not is_user_auth(request.user, ('pacientes')):
+    #     return redirect('error_acceso')
 
     if request.method == 'POST':
         form = SignUpFormPaciente(request.POST)
@@ -180,7 +200,7 @@ def signup_paciente(request):
 
 def create_turno_1(request):
     if not is_user_auth(request.user, ('secretarios', 'pacientes')):
-        return redirect('error_acceso')
+        return redirect('/accounts/login')
     
     # El post directamente lo hace en /2 - esta seteado desde el front
     if request.method == 'GET':
