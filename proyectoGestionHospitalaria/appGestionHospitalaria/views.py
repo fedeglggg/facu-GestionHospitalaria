@@ -188,8 +188,6 @@ def create_turno_1(request):
             especialidad_name = form.cleaned_data.get('name')
             especialidad = Especialidad.objects.get(name=especialidad_name)
             doctores = Doctor.objects.filter(especialidad=especialidad)
-<<<<<<< HEAD
-=======
             tipoEstudios = TipoEstudio.objects.filter(especialidad=especialidad)
 
             # doc_validos = []
@@ -202,7 +200,6 @@ def create_turno_1(request):
 
             # print('el valor de x ex:')
             # print(x)
->>>>>>> matias
             context = {
                 'doctores': doctores,
                 'tipoEstudios': tipoEstudios,
@@ -218,12 +215,8 @@ def create_turno_1(request):
         }
         return render(request, 'create_turno_1.html', context)
 
-
-def create_turno_2(request):
-    return HttpResponse('bajo construcción')    
-
 # viejo crear turno
-def create_turno_viejo(request):
+def create_turno_2(request):
     if not is_user_auth(request.user, ('secretarios', 'pacientes')):
         return redirect('error_acceso')
 
