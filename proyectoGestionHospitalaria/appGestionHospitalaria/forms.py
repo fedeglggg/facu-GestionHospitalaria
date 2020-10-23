@@ -55,6 +55,28 @@ class EspecialidadForm(forms.Form):
         model = Especialidad
         fields = ('name',)
 
+class DoctorNameForm(forms.Form):
+    first_name = forms.CharField(max_length=32)
+    last_name = forms.CharField(max_length=32)
+    class Meta:
+        model = User
+        fields = ('first_name','last_name',)
+
+class DoctorMatriculaForm(forms.Form):
+    matricula = forms.CharField(max_length=32)
+    especialidad = forms.CharField(max_length=32)
+    class Meta:
+        model = Doctor
+        fields = ('matricula', 'especialidad')
+
+class TurnoDateForm(forms.Form):
+    date = forms.DateField()
+    timeFrom = forms.TimeField()
+    class Meta:
+        model = Turno
+        fields = ('date','timeFrom',)
+
+
 class CreateFormTurno33(ModelForm):
     tipo_estudio_name = forms.CharField(max_length=30)
     doctor_name = forms.CharField(max_length=30)

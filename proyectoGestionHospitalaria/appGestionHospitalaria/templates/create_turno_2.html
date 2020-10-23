@@ -30,68 +30,33 @@
 <div class="icon-box">
 
 
-<form method="post" action="{% url 'create_turno2'%}" > <!-- class="php-email-form"  class="FormButton"-->
-    {% csrf_token %}
-        <div class="section-title" style="padding-bottom: 0;">
-            <h2>Datos de turno</h2>
-        </div>
+<form method="GET" action="3/" > <!-- class="php-email-form"  class="FormButton"-->
+   
+    <div class="section-title" style="padding-bottom: 0;">
+        <h2>Elija un medico de {{ especialidad.name }}</h2>
+    </div>
+
     {% if doctores %}
-        {% if tipoEstudios %}
-            <div class="form-group">
-                <label for="id_doctor_name">Seleccionar profesional para ser atendido</label>
-                <select class="form-control" id="id_doctor_name" name="doctor_name" required="" >
+        <div class="form-group">
+            <label for="id_matricula">Seleccionar profesional para ser atendido</label>
+            <select class="form-control" id="id_matricula" name="matricula" required="" onChange="this.form.submit();"> 
+                <option value="" selected disabled hidden>Elija un medico</option>
+                {% for doctor in doctores %}
+                    <option value="{{ doctor.matricula }}"> {{ doctor.user.first_name }} {{ doctor.user.last_name }} </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <input type="hidden" name="especialidad" value="{{ especialidad.name }}" />
+        </div>
 
-                    <option value="" selected disabled hidden>Elija un medico</option>
-                    {% for doctor in doctores %}
-                        <option> {{ doctor.matricula }} </option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="id_tipo_estudio_name">Seleccionar estudio a realizar</label>
-                <select class="form-control" id="id_tipo_estudio_name" name="tipo_estudio_name" required="" >
-
-                    <option value="" selected disabled hidden>Elija un estudio</option>
-                    {% for tipoEstudio in tipoEstudios %}
-                        <option> {{ tipoEstudio.name }} </option>
-                    {% endfor %}
-                </select>
-            </div>
-            {% if user.is_superuser %}
-            <div class="form-group">
-                <label for="id_paciente_name">Seleccionar paciente para ser atendido</label>
-                <select class="form-control" id="id_paciente_name" name="paciente_name" required="" >
-                    <option value="" selected disabled hidden>Elija un paciente</option>
-                    {% for paciente in lista_pacientes %}
-                        <option> {{ paciente.dni }} </option>
-                    {% endfor %}
-                </select>
-            </div>
-            {% endif %}
-            <div class="form-group">
-                <input type="date" placeholder="Fecha" class="form-control" name="date"  id="id_date">
-            </div>
-            <div class="form-group">
-                <input type="time" placeholder="Hora" class="form-control" name="timeFrom" id="id_timeFrom">
-            </div>
-            <div class="text-center"><button type="submit" style="background: #1977cc; border: 0; padding: 10px 35px; color: #fff; transition: 0.4s; border-radius: 50px; " onmouseover="this.style.backgroundColor='#1c84e3'" onmouseout="this.style.backgroundColor='#1977cc'">Crear</button></div>
-        {% else %}
-            <small id="tipo_doctorHelpBlock" class="form-text text-muted">
-            <ul>
-                <li>No existen Estudios disponibles</li>
-            </ul>
-        </small>
-            <div class="text-center"><button style="background: #1977cc; border: 0; padding: 10px 35px; color: #fff; transition: 0.4s; border-radius: 50px; " onmouseover="this.style.backgroundColor='#1c84e3'" onmouseout="this.style.backgroundColor='#1977cc'" onclick="history.back()">Volver</button></div>
-        {% endif %}
     {% else %}
         <small id="tipo_doctorHelpBlock" class="form-text text-muted">
             <ul>
                 <li>No existen doctores disponibles</li>
             </ul>
         </small>
-        <div class="text-center"><button style="background: #1977cc; border: 0; padding: 10px 35px; color: #fff; transition: 0.4s; border-radius: 50px; " onmouseover="this.style.backgroundColor='#1c84e3'" onmouseout="this.style.backgroundColor='#1977cc'" onclick="history.back()">Volver</button></div>
     {% endif %}
-
     </form>
 <!--
     {% if lista_doctores %}

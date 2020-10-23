@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect
 # from django.urls import reverse_lazy
 from django.http import Http404
 from django.views.generic import CreateView, UpdateView
-from .forms import SignUpFormMedico, SignUpFormPaciente, CreateFormTurno, EspecialidadForm
+from .forms import SignUpFormMedico, SignUpFormPaciente, CreateFormTurno, EspecialidadForm, DoctorMatriculaForm, TurnoDateForm
 from django.db import transaction
 from django.contrib.auth.models import Group, User
 import datetime
@@ -57,6 +57,7 @@ def index(request):
 def paciente(request, paciente_id):
     if not is_user_auth(request.user, ('secretarios', 'medicos', 'sarasa')):
         return redirect('error_acceso')
+
     try:
         paciente = Paciente.objects.get(pk=paciente_id)
     except Paciente.DoesNotExist:
@@ -67,7 +68,6 @@ def pacientes(request):
     if not is_user_auth(request.user, ('secretarios', 'medicos', 'sarasa')):
         return redirect('error_acceso')
     
-
     paciente_list = Paciente.objects.order_by('dni')
     context = {
         'paciente_list': paciente_list
@@ -111,7 +111,7 @@ def signup_medico(request):
     if request.method == 'POST':
         # Create a form instance from POST data.
         form = SignUpFormMedico(request.POST)
-        if form.is_valid():
+        if form.is_valid(): # sino el cleaned data get no funca - dependiendo del tipo de form chequea que las instancais no sea repetidas en la bd también
             # Save a new User object from the form's data.
             new_user = form.save()
             grupo = Group.objects.get(name='medicos')
@@ -181,66 +181,78 @@ def signup_paciente(request):
 def create_turno_1(request):
     if not is_user_auth(request.user, ('secretarios', 'pacientes')):
         return redirect('error_acceso')
-
-    if request.method == 'POST':
-        form = EspecialidadForm(request.POST)
-        if form.is_valid(): # sino el cleaned data get no funca
-            especialidad_name = form.cleaned_data.get('name')
-            especialidad = Especialidad.objects.get(name=especialidad_name)
-            doctores = Doctor.objects.filter(especialidad=especialidad)
-            tipoEstudios = TipoEstudio.objects.filter(especialidad=especialidad)
-
-            # doc_validos = []
-            # x = 0
-            # for doc in doctores:
-            #     x = x + 1
-            #     if doc.especialidad.filter(name=especialidad_name):
-            #         doc_validos.append(doc)
-            #         print(doc.matricula)
-
-            # print('el valor de x ex:')
-            # print(x)
-            context = {
-                'doctores': doctores,
-                'tipoEstudios': tipoEstudios,
-                'lista_pacientes': Paciente.objects.all()
-
-            }
-            return render(request, 'create_turno_2.html', context)
-        else:
-            pass
-    else:
+    
+    # El post directamente lo hace en /2 - esta seteado desde el front
+    if request.method == 'GET':
         context = {
             'especialidades': Especialidad.objects.all()
         }
         return render(request, 'create_turno_1.html', context)
+    else:
+        return redirect('error_acceso')
 
-# viejo crear turno
 def create_turno_2(request):
     if not is_user_auth(request.user, ('secretarios', 'pacientes')):
         return redirect('error_acceso')
 
+    if request.method == 'GET':
+        form = EspecialidadForm(request.GET)
+        if form.is_valid(): 
+            especialidad_name = form.cleaned_data.get('name')
+            especialidad = Especialidad.objects.get(name=especialidad_name)
+            doctores = Doctor.objects.filter(especialidad=especialidad)
+            # tipoEstudios = TipoEstudio.objects.filter(especialidad=especialidad)
+            context = {
+                'doctores': doctores,
+                'especialidad': especialidad,
+                # 'tipoEstudios': tipoEstudios,
+                # 'lista_pacientes': Paciente.objects.all()
+
+            }
+            return render(request, 'create_turno_2.html', context)
+        else:
+            return redirect('error_acceso')
+    else:
+        return redirect('error_acceso')
+
+# viejo crear turno
+def create_turno_3(request):
+    if not is_user_auth(request.user, ('secretarios', 'pacientes')):
+        return redirect('error_acceso')
+
     if request.method == 'POST':
-        form = CreateFormTurno(request.POST)
+        form = TurnoDateForm(request.POST)
+        form2 = DoctorMatriculaForm(request.GET)
         print(form.errors)
-        if form.is_valid():
-            # creaciom del estudio
-            tipo_estudio_form = form.cleaned_data.get('tipo_estudio_name')
-            tipo_estudio = TipoEstudio.objects.get(name=tipo_estudio_form)
+        if form.is_valid() and form2.is_valid():
+            # print('p:', request.POST)
+            # print('g:', request.GET)
+
             # lo que estamos haciendo es por matricula por ahora, cambiarlo a nombre del doctor despues
             # el nombre esta en su usuario
-            doctor_name_form = form.cleaned_data.get('doctor_name')
-            doctor = Doctor.objects.get(matricula=doctor_name_form)
+            matricula_form = form2.cleaned_data.get('matricula')
+            doctor = Doctor.objects.get(matricula=matricula_form)
 
-            if is_user_auth(request.user, ('pacientes')): #secretarios
-                paciente = Paciente.objects.get(user=request.user.id) #Obtiene el id desde el usuario
+            # faltaria agregar si es secretario tmb
+            if request.user.is_superuser:
+                paciente_dni = request.POST.get('paciente')
+                print('dni:', paciente_dni)
+                paciente = Paciente.objects.get(dni=paciente_dni) #Obtiene el dni desde un desplegable
             else:
-                paciente_form = form.cleaned_data.get('paciente_name')
-                paciente = Paciente.objects.get(dni=paciente_form) #Obtiene el dni desde un desplegable
+                paciente = request.user.paciente
+                print(paciente.dni)
+                # if is_user_auth(request.user, ('pacientes')): #secretarios
+                #     paciente = Paciente.objects.get(user=request.user.id) #Obtiene el id desde el usuario
+                # else:
+                #     paciente_form = form.cleaned_data.get('paciente')
+                #     paciente = Paciente.objects.get(dni=paciente_form) #Obtiene el dni desde un desplegable
 
             #secretary = User.objects.get(pk=1) #por ahora por defecto, se relaciona con un secretario (empiezo a dudar si es necesario)
+            
+            # esto por ahora, el tipo de estudio no deberia estar, es la especialidad la que usamos
+            tipo_de_estudio = TipoEstudio.objects.get(pk=1)
             description = ''
-            estudio = Estudio(tipo=tipo_estudio, doctor=doctor, paciente=paciente, description=description)
+            estudio = Estudio(tipo=tipo_de_estudio, doctor=doctor, paciente=paciente, description=description)
             new_estudio = estudio.save() #Crea el estudio
             # creacion del turno
             date = form.cleaned_data.get('date')
@@ -251,12 +263,24 @@ def create_turno_2(request):
             turno.save() # Crea el turno a partir de ese estudio
             return redirect('index')
         else:
-            return redirect('index')
-            pass
+            return HttpResponse('form no valid')
     else:
-        context = {
-            'tipo_estudios': TipoEstudio.objects.all(),
-            'lista_doctores': Doctor.objects.all(), #.filter(especialidad=TipoEstudio.especialidad)
-            'lista_pacientes': Paciente.objects.all()
-        }
-        return render(request, 'create_turno3.html', context)
+        # get method
+        form = DoctorMatriculaForm(request.GET) # Me quedo con la matricula por el value dentro del select
+        if form.is_valid():
+            # la especialidad la llevo en el action del form - voy a probar con method get despues
+            especialidad_name = form.cleaned_data.get('especialidad')
+            especialidad = Especialidad.objects.get(name=especialidad_name)
+            matricula = form.cleaned_data.get('matricula')
+            doctor = Doctor.objects.get(matricula=matricula)
+
+
+            # lo que habria que hacer es una vez que nos da el dia, recargar el horario con los turnos disponibles para ese dia
+            context = {
+                # 'tipo_estudios': TipoEstudio.objects.all(),
+                'lista_pacientes': Paciente.objects.all(),
+                'especialidad': especialidad,
+                'doctor': doctor 
+            }
+            
+            return render(request, 'create_turno_3.html', context)
