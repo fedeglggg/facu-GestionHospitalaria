@@ -164,16 +164,9 @@ especialidad_id</ColNames>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-<<<<<<< HEAD
     <column id="51" parent="9" name="secretary_id">
       <Position>6</Position>
       <DataType>integer|0s</DataType>
-=======
-    <column id="51" parent="9" name="tipo_id">
-      <Position>6</Position>
-      <DataType>integer|0s</DataType>
-      <NotNull>1</NotNull>
->>>>>>> matias
     </column>
     <index id="52" parent="9" name="appGestionHospitalaria_estudio_paciente_id_9425b63a">
       <ColNames>paciente_id</ColNames>
@@ -183,7 +176,6 @@ especialidad_id</ColNames>
       <ColNames>doctor_id</ColNames>
       <ColumnCollations></ColumnCollations>
     </index>
-<<<<<<< HEAD
     <index id="54" parent="9" name="appGestionHospitalaria_estudio_tipo_id_a652d43c">
       <ColNames>tipo_id</ColNames>
       <ColumnCollations></ColumnCollations>
@@ -192,16 +184,6 @@ especialidad_id</ColNames>
       <ColNames>secretary_id</ColNames>
       <ColumnCollations></ColumnCollations>
     </index>
-=======
-    <index id="54" parent="9" name="appGestionHospitalaria_estudio_secretary_id_80d00ce1">
-      <ColNames>secretary_id</ColNames>
-      <ColumnCollations></ColumnCollations>
-    </index>
-    <index id="55" parent="9" name="appGestionHospitalaria_estudio_tipo_id_a652d43c">
-      <ColNames>tipo_id</ColNames>
-      <ColumnCollations></ColumnCollations>
-    </index>
->>>>>>> matias
     <key id="56" parent="9">
       <ColNames>id</ColNames>
       <Primary>1</Primary>
@@ -221,7 +203,6 @@ especialidad_id</ColNames>
       <InitiallyDeferred>1</InitiallyDeferred>
     </foreign-key>
     <foreign-key id="59" parent="9">
-<<<<<<< HEAD
       <ColNames>tipo_id</ColNames>
       <RefTableName>appGestionHospitalaria_tipoestudio</RefTableName>
       <RefColNames>id</RefColNames>
@@ -229,24 +210,12 @@ especialidad_id</ColNames>
       <InitiallyDeferred>1</InitiallyDeferred>
     </foreign-key>
     <foreign-key id="60" parent="9">
-=======
->>>>>>> matias
       <ColNames>secretary_id</ColNames>
       <RefTableName>auth_user</RefTableName>
       <RefColNames>id</RefColNames>
       <Deferrable>1</Deferrable>
       <InitiallyDeferred>1</InitiallyDeferred>
     </foreign-key>
-<<<<<<< HEAD
-=======
-    <foreign-key id="60" parent="9">
-      <ColNames>tipo_id</ColNames>
-      <RefTableName>appGestionHospitalaria_tipoestudio</RefTableName>
-      <RefColNames>id</RefColNames>
-      <Deferrable>1</Deferrable>
-      <InitiallyDeferred>1</InitiallyDeferred>
-    </foreign-key>
->>>>>>> matias
     <column id="61" parent="10" name="id">
       <Position>1</Position>
       <DataType>integer|0s</DataType>
