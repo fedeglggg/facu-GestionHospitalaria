@@ -11,6 +11,7 @@ from django.views.generic import CreateView, UpdateView
 from .forms import SignUpFormMedico, SignUpFormPaciente, CreateFormTurno, EspecialidadForm, DoctorMatriculaForm, TurnoDateForm
 from django.db import transaction
 from django.contrib.auth.models import Group, User
+from .filters import DoctorFilter, PatientFilter
 import datetime
 
 # funcion que valida los permisos de una vista en base a los grupos a los que pertenece el usuario
@@ -70,8 +71,13 @@ def pacientes(request):
         return redirect('error_acceso')
     
     paciente_list = Paciente.objects.order_by('dni')
+
+    myFilter = PatientFilter(request.GET, queryset=paciente_list)
+    paciente_list = myFilter.qs
+
     context = {
-        'paciente_list': paciente_list
+        'paciente_list': paciente_list,
+        'myFilter': myFilter
     }
     return render(request, 'paciente_list.html', context)
 
@@ -104,8 +110,13 @@ def medicos(request):
         return redirect('error_acceso')
       
     doctores = Doctor.objects.order_by('matricula')
+
+    myFilter = DoctorFilter(request.GET, queryset=doctores)
+    doctores = myFilter.qs
+
     context = {
-        'doctores': doctores
+        'doctores': doctores,
+        'myFilter': myFilter
     }
     return render(request, 'medico_list.html', context)
 

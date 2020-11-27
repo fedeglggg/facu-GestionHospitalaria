@@ -1,6 +1,6 @@
 {% extends "baseTemplate.html" %}
 <title>{% block title %}Doctores{% endblock %}</title>
-
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
 {% block content %}
 <section id="hero" class="d-flex align-items-center" style="position: unset; ">
     <div class="container">
@@ -12,20 +12,52 @@
 <main id="main">
 <section id="appointment" class="appointment section-bg" style="padding: 3%;">
 <section id="why-us" class="why-us" style="all: inherit;padding: 0">
-<div class="container" style="inline-size: fit-content; text-align: center" >
+<div class="container" >
 <div class="icon-boxes">
 <div class="icon-box">
+<div class="row">
+	<div class="col">
+		<div class="card card-body">
 
+			<form method="get">
+				{{myFilter.form}}
 
-{% if doctores %}
-<div class="list-group">
+		    <button class="btn btn-primary" type="submit">Search</button>
+		  </form>
 
-    {% for doctor in doctores %}
-    <a class="list-group-item list-group-item-action" href="/medico/{{ doctor.id }}">{{ doctor.user.first_name }}
-        {{doctor.user.last_name}} - Matricula: {{doctor.matricula}}</a>
-    {% endfor %}
+		</div>
+	</div>
 
 </div>
+</div>
+
+<div class="icon-box">
+
+{% if doctores %}
+<table id="table_id"  class="table table-bordered"> <!--list-group -->
+    <thead>
+        <tr>
+            <td>Nombre</td>
+            <td>Apellido</td>
+            <td>Matricula</td>
+            <td>Especialidad</td>
+            <td></td>
+        </tr>
+    </thead>
+    <tbody>
+    {% for doctor in doctores %}
+        <tr>
+        <td>{{ doctor.user.first_name }}</td>
+        <td>{{doctor.user.last_name}} </td>
+        <td>{{doctor.matricula}} </td>
+        <td>{% for especialidad in doctor.especialidad.all %} {{ especialidad }}{% if not forloop.last %}, {% endif %}{% endfor %} </td>
+        <td><a class="btn btn-primary" href="/medico/{{ doctor.id }}">Detalle</a></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+
+
+</table>
 {% else %}
 <p>No existen doctores.</p>
 {% endif %}
@@ -36,5 +68,41 @@
 </section>
 </section>
 </main>
+
+
+{% endblock %}
+
+{% block js %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.18/af-2.3.0/b-1.5.2/b-colvis-1.5.2/b-flash-1.5.2/b-html5-1.5.2/b-print-1.5.2/cr-1.5.0/fh-3.1.4/r-2.2.2/datatables.min.css"/>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.18/af-2.3.0/b-1.5.2/b-colvis-1.5.2/b-flash-1.5.2/b-html5-1.5.2/b-print-1.5.2/cr-1.5.0/fh-3.1.4/r-2.2.2/datatables.min.js"></script>
+<!-- needed to use moment.js for our date sorting-->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.10.19/sorting/datetime-moment.js"></script>
+
+
+
+
+<!-- the second way to do it to integrate our buttons for export-->
+
+<script>
+    $(document).ready( function () {
+
+    $.fn.dataTable.moment( 'MMM D, YYYY' );
+    $.fn.dataTable.moment( 'D-MMM-YY' );
+    $('#table_id').DataTable({
+
+    dom: 'B<"clear">lfrtip',
+    buttons: {
+        name: 'primary',
+        buttons: [ ]
+
+        }}
+    );
+} );
+</script>
 
 {% endblock %}

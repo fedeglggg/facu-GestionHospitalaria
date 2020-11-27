@@ -1,6 +1,6 @@
 {% extends "baseTemplate.html" %}
 <title>{% block title %}Pacientes{% endblock %}</title>
-
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
 {% block content %}
 <section id="hero" class="d-flex align-items-center" style="position: unset; ">
     <div class="container">
@@ -15,17 +15,51 @@
 <div class="container" style="inline-size: fit-content; text-align: center" >
 <div class="icon-boxes">
 <div class="icon-box">
+<div class="row">
+	<div class="col">
+		<div class="card card-body">
+
+			<form method="get">
+				{{myFilter.form}}
+
+		    <button class="btn btn-primary" type="submit">Search</button>
+		  </form>
+
+		</div>
+	</div>
+
+</div>
+</div>
+<div class="icon-box">
 
 
 {% if paciente_list %}
-<div class="list-group">
 
+    <table id="table_id"  class="table table-bordered"> <!--list-group -->
+    <thead>
+        <tr>
+            <td>Nombre</td>
+            <td>Apellido</td>
+            <td>Dni</td>
+            <td>Obra social</td>
+            <td></td>
+        </tr>
+    </thead>
+    <tbody>
     {% for paciente in paciente_list %}
-    <a class="list-group-item list-group-item-action" href="/paciente/{{ paciente.id }}">{{ paciente.user.first_name }}
-        {{paciente.user.last_name}} - DNI: {{paciente.dni}}</a>
+        <tr>
+        <td>{{ paciente.user.first_name }}</td>
+        <td>{{paciente.user.last_name}} </td>
+        <td>{{paciente.dni}} </td>
+        <td>{{paciente.obra_social}} </td>
+        <td><a class="btn btn-primary" href="/paciente/{{ paciente.id }}">Detalle</a></td>
+        </tr>
     {% endfor %}
+    </tbody>
 
-</div>
+
+</table>
+
 {% else %}
 <p>No existen pacientes.</p>
 {% endif %}
@@ -36,5 +70,40 @@
 </section>
 </section>
 </main>
+
+{% endblock %}
+
+{% block js %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.18/af-2.3.0/b-1.5.2/b-colvis-1.5.2/b-flash-1.5.2/b-html5-1.5.2/b-print-1.5.2/cr-1.5.0/fh-3.1.4/r-2.2.2/datatables.min.css"/>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.18/af-2.3.0/b-1.5.2/b-colvis-1.5.2/b-flash-1.5.2/b-html5-1.5.2/b-print-1.5.2/cr-1.5.0/fh-3.1.4/r-2.2.2/datatables.min.js"></script>
+<!-- needed to use moment.js for our date sorting-->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.10.19/sorting/datetime-moment.js"></script>
+
+
+
+
+<!-- the second way to do it to integrate our buttons for export-->
+
+<script>
+    $(document).ready( function () {
+
+    $.fn.dataTable.moment( 'MMM D, YYYY' );
+    $.fn.dataTable.moment( 'D-MMM-YY' );
+    $('#table_id').DataTable({
+
+    dom: 'B<"clear">lfrtip',
+    buttons: {
+        name: 'primary',
+        buttons: [ ]
+
+        }}
+    );
+} );
+</script>
 
 {% endblock %}

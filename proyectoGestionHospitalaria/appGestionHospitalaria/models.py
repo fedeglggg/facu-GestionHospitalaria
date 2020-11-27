@@ -34,7 +34,7 @@ class Doctor(models.Model):
         """
         String para representar el Objeto del Modelo
         """
-        return self.userget_full_name()
+        return self.user.get_full_name()
         #return '%s (%s)' % (self.user.get_full_name(), self.matricula)
 
 # @receiver(post_save, sender=User)
@@ -97,7 +97,7 @@ class Estudio(models.Model):
         String para representar el Objeto del Modelo
         """
         # return '%s (%s)' % (self.type.__str__(), self.paciente.__str__())
-        return 'tipo: ' + self.tipo.name + ' - paciente:' + self.paciente.user.first_name + ' - descripción:' + self.description,
+        return 'tipo: ' + str(self.tipo.name) + ' - paciente:' + str(self.paciente.user.first_name) + ' - descripción:' + str(self.description)
 
 class Turno(models.Model):
     """
