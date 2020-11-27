@@ -28,13 +28,15 @@ class Doctor(models.Model):
     """
     user = models.ForeignKey(User, on_delete=models.CASCADE) #
     matricula = models.CharField(max_length=100)
-    especialidad = models.ManyToManyField(Especialidad, help_text="Seleccione una especialidad")
- 
+    # especialidad = models.ManyToManyField(Especialidad, help_text="Seleccione una especialidad")
+    especialidad = models.ManyToManyField(Especialidad)
+
     def __str__(self):
         """
         String para representar el Objeto del Modelo
         """
-        return self.userget_full_name()
+        # return '{} {} {}'.format(self.user.get_full_name())
+        return self.user.get_full_name()
         #return '%s (%s)' % (self.user.get_full_name(), self.matricula)
 
 # @receiver(post_save, sender=User)
@@ -62,6 +64,7 @@ class Paciente(models.Model):
         String para representar el Objeto Modelo
         """
         # solo si tiene que tener obligatoriamente un usuario, sino esto rompe todo
+        # return '{} {} {}'.format(self.user.get_full_name())
         return self.user.get_full_name()
 
 class TipoEstudio(models.Model):
@@ -83,7 +86,7 @@ class Estudio(models.Model):
     """
     Modelo que representa un Estudio clinico
     """
-    tipo = models.ForeignKey(TipoEstudio, on_delete=models.CASCADE, null=False,)
+    tipo = models.ForeignKey(TipoEstudio, on_delete=models.CASCADE, null=False)
     #name = models.CharField(max_length=100)
     #time_long = models.IntegerField()
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE , null=False) # siempre se asocia a un paciente
@@ -96,7 +99,7 @@ class Estudio(models.Model):
         """
         String para representar el Objeto del Modelo
         """
-        # return '%s (%s)' % (self.type.__str__(), self.paciente.__str__())
+        #return '%s (%s)' % (self.type.__str__(), self.paciente.__str__())
         return 'tipo: ' + self.tipo.name + ' - paciente:' + self.paciente.user.first_name + ' - descripción:' + self.description,
 
 class Turno(models.Model):
