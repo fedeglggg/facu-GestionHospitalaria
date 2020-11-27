@@ -125,11 +125,47 @@ def turnos(request):
         return redirect('error_acceso')
       
     turnos = Turno.objects.all()
+    for i in turnos:
+        print(i.estudio.doctor.user.first_name)
+        print(i.estudio.paciente.user.first_name)
     context = {
         'turnos': turnos
     }
     return render(request, 'turno_list.html', context)
 
+dict_especialidades = {
+    'traumatologia': 'Traumatología',
+    'clinica_medica': 'Clínica médica',
+    'cardiologia': 'Cardiología',
+    'dermatologia': 'Dermatología',
+    'oftalmologia': 'Oftalmologia',
+    'endocrinologia': 'Endocrinología',
+    'ginecologia': 'Ginecología',
+    'obstetricia': 'Obstetricia',
+    'psicologia': 'Psicología',
+    'diagnostico_por_imagenes': 'Diagnóstico por Imágenes',
+    'nutricion': 'Nutrición',
+    'pediatria': 'Pediatría',
+    'psiquiatria': 'Psiquiatría',
+    'neumonologia': 'Neumonología'
+}
+
+lista_especialidades_nombres = [
+    'traumatologia',
+    'clinica_medica',
+    'cardiologia',
+    'dermatologia',
+    'oftalmologia',
+    'endocrinologia',
+    'ginecologia',
+    'obstetricia',
+    'psicologia',
+    'diagnostico_por_imagenes',
+    'nutricion', 
+    'pediatria',
+    'psiquiatria',
+    'neumonologia',
+]
 
 def signup_medico(request):
     # le damos a is_auth los grupos permitidos en la vista
@@ -142,7 +178,9 @@ def signup_medico(request):
         # Create a form instance from POST data.
         form = SignUpFormMedico(request.POST)
         if form.is_valid(): # sino el cleaned data get no funca - dependiendo del tipo de form chequea que las instancais no sea repetidas en la bd también
+            print(request.POST) # para ver la post data
             # Save a new User object from the form's data.
+            # --------------------
             new_user = form.save()
             grupo = Group.objects.get(name='medicos')
             new_user.groups.add(grupo)
@@ -150,14 +188,24 @@ def signup_medico(request):
             # no estoy seguro que sea necesario, estoy probando sin esto y por ahora va bien
             matricula_form = form.cleaned_data.get('matricula') # agarra por el name del input, 
             # no mira el id
-            especialidad_form = form.cleaned_data.get('especialidad')
-            # if Especialidad.objects.filter(name=especialidad_form).exists(): 
-            # no hace falta chequear la especialidad porque la voy a buscar a la db antes de mostrarla
-            especialidad = Especialidad.objects.get(name=especialidad_form)
+            # especialidad_form = form.cleaned_data.get('especialidad')
+          
             # new_user.save() # verificar si hace falta guardar de nuevo
             new_doctor = Doctor(matricula=matricula_form, user=new_user)
             new_doctor.save()
-            new_doctor.especialidad.add(especialidad)
+
+            # añadiendo las especialidades al doctor
+            index = 0
+            for i in lista_especialidades_nombres:
+                # si el checkbox no se marco directamente no se manda y da falso aca
+                if form.cleaned_data.get(i):
+                    nombre = dict_especialidades[i]
+                    especialidad = Especialidad.objects.get(name=nombre) 
+                    new_doctor.especialidad.add(especialidad)
+                    print('especialidad:', especialidad.name)
+                index = index + 1
+            
+
             new_user.save() 
             new_doctor.save()
             # me paso que necesitaba guardar antes de agregar especialidades, anda pero verificar
@@ -170,6 +218,9 @@ def signup_medico(request):
             return redirect('index')
         else:
             # falta agregar error por si el form es invalid
+            print('form fail')
+            print(form.errors)
+            # return redirect('index')
             pass
     else:
         # envio las especialidades al front para mostrarlas en el desplegable del alta
@@ -263,15 +314,20 @@ def create_turno_3(request):
             # el nombre esta en su usuario
             matricula_form = form2.cleaned_data.get('matricula')
             doctor = Doctor.objects.get(matricula=matricula_form)
+            print('doctor:', doctor.user.first_name )
 
             # faltaria agregar si es secretario tmb
             if request.user.is_superuser:
                 paciente_dni = request.POST.get('paciente')
+
+                print()
                 print('dni:', paciente_dni)
+                pac = Paciente.objects.get(dni=paciente_dni)
+                print(pac.user.first_name)
                 paciente = Paciente.objects.get(dni=paciente_dni) #Obtiene el dni desde un desplegable
             else:
+                print('por aca no tiene que entrar')
                 paciente = request.user.paciente
-                print(paciente.dni)
                 # if is_user_auth(request.user, ('pacientes')): #secretarios
                 #     paciente = Paciente.objects.get(user=request.user.id) #Obtiene el id desde el usuario
                 # else:
@@ -281,10 +337,13 @@ def create_turno_3(request):
             #secretary = User.objects.get(pk=1) #por ahora por defecto, se relaciona con un secretario (empiezo a dudar si es necesario)
             
             # esto por ahora, el tipo de estudio no deberia estar, es la especialidad la que usamos
+            
             tipo_de_estudio = TipoEstudio.objects.get(pk=1)
             description = ''
             estudio = Estudio(tipo=tipo_de_estudio, doctor=doctor, paciente=paciente, description=description)
+            
             new_estudio = estudio.save() #Crea el estudio
+            
             # creacion del turno
             date = form.cleaned_data.get('date')
             timeFrom = form.cleaned_data.get('timeFrom')
@@ -292,6 +351,8 @@ def create_turno_3(request):
             #turno = Turno(estudio=estudio1, date=date, timeFrom=timeFrom, timeTo=timeTo)
             turno = Turno(estudio=new_estudio, date=date, timeFrom=timeFrom)
             turno.save() # Crea el turno a partir de ese estudio
+            # print('turno.estudio.doctor.user.first_name:', estudio.doctor.user.first_name, 'turno.estudio.paciente.user.first_name:', estudio.paciente.user.first_name)
+            # return HttpResponse('hala madrid')
             return redirect('index')
         else:
             return HttpResponse('form no valid')

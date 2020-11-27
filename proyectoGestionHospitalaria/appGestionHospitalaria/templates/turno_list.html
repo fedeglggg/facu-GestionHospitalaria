@@ -22,9 +22,14 @@
 
     {% for turno in turnos %}
     <a class="list-group-item list-group-item-action" href="#">
-        {{ turno.date }} - {{ turno.timeFrom}} -
+        {{ turno.date }} - {{ turno.timeFrom}} 
+        - Paciente:
         {{ turno.estudio.paciente.user.first_name }}
-        {{turno.estudio.paciente.user.last_name}}
+        {{ turno.estudio.paciente.user.last_name }}
+        - Doctor:
+        {{ turno.estudio.doctor.user.first_name }}
+        {{ turno.estudio.doctor.user.last_name }}
+
     </a>
     {% endfor %}
 

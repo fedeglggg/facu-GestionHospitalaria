@@ -6,20 +6,48 @@ import datetime
 from django.db import models
 from .models import Especialidad, Doctor, TipoEstudio, Turno
 
+# los fields se usan en el is_valid() matcheandolos con los names de los input 
+# no se usa los id_nombredefield ej id_username para algo, no recuerdo -> chequear esto dsp
 
 class SignUpFormMedico(UserCreationForm):
     first_name = forms.CharField(max_length=30)
     last_name = forms.CharField(max_length=30)
     email = forms.EmailField(max_length=254)
     matricula = forms.CharField(max_length=32)
-    especialidad = forms.CharField(max_length=30)
+    
+    traumatologia = forms.BooleanField(required = False)
+    clinica_medica = forms.BooleanField(required = False)
+    cardiologia = forms.BooleanField(required = False)
+    dermatologia = forms.BooleanField(required = False)
+    oftalmologia = forms.BooleanField(required = False)
+    endocrinologia = forms.BooleanField(required = False)
+    ginecologia = forms.BooleanField(required = False)
+    obstetricia = forms.BooleanField(required = False)
+    psicologia = forms.BooleanField(required = False)
+    diagnostico_por_imagenes = forms.BooleanField(required = False)
+    nutricion = forms.BooleanField(required = False)
+    pediatria = forms.BooleanField(required = False)
+    psiquiatria = forms.BooleanField(required = False)
+    neumonologia = forms.BooleanField(required = False)
 
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email', 'matricula', 'especialidad', 'password1', 'password2')
-
-# los fields se usan en el is_valid() matcheandolos con los names de los input 
-# no se usa los id_nombredefield ej id_username para algo, no recuerdo -> chequear esto dsp
+        fields = ('username', 'first_name', 'last_name', 'email', 'matricula', 
+        'traumatologia',
+        'clinica_medica',
+        'cardiologia',
+        'dermatologia',
+        'oftalmologia',
+        'endocrinologia',
+        'ginecologia',
+        'obstetricia',
+        'psicologia',
+        'diagnostico_por_imagenes',
+        'nutricion',
+        'pediatria',
+        'psiquiatria',
+        'neumonologia',
+        'password1', 'password2')
 
 class SignUpFormPaciente(UserCreationForm):
     first_name = forms.CharField(max_length=30)
