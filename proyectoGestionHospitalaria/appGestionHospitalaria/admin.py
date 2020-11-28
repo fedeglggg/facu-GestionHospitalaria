@@ -1,13 +1,25 @@
 from django.contrib import admin
-from .models import Paciente, Doctor, Estudio, Especialidad, Obra_social, Turno, TipoEstudio
+from .models import Paciente, Doctor, Estudio, Especialidad, Obra_social, Turno, TipoEstudio, EstudioFile
+
+
 
 # Register your models here.
+class FileEstudioInLine(admin.TabularInline):
+    model = EstudioFile
+    extra = 0
+
+
 
 admin.site.register(Paciente)
 admin.site.register(Doctor)
-admin.site.register(Estudio)
+@admin.register(Estudio)
+class EstudioAdmin(admin.ModelAdmin):
+    list_display = ('tipo', 'paciente', 'comments','diagnostic','confirmed','doctor','secretary')
+    inlines = [FileEstudioInLine]
+
 admin.site.register(Especialidad)
 admin.site.register(Obra_social)
 admin.site.register(Turno)
+
 admin.site.register(TipoEstudio)
 

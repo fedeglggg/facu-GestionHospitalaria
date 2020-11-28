@@ -91,9 +91,12 @@ class Estudio(models.Model):
     #time_long = models.IntegerField()
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE , null=False) # siempre se asocia a un paciente
     #date = models.DateField(null=True, blank=True)
-    description = models.CharField(max_length=100, help_text="Ingrese una descripcion del estudio")
+    comments = models.TextField(null=True, help_text="Ingrese comentarios (Será visible para el paciente)")
+    diagnostic = models.TextField(null=True, help_text="Ingrese un diagnóstico (No será visible para el paciente)")
+    confirmed = models.BooleanField(default=False)
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, null=False)  # siempre se asocia a doctor
     secretary = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)  #opcional
+
 
     def __str__(self):
         """
@@ -101,7 +104,22 @@ class Estudio(models.Model):
         """
 
         # return '%s (%s)' % (self.type.__str__(), self.paciente.__str__())
-        return 'tipo: ' + str(self.tipo.name) + ' - paciente:' + str(self.paciente.user.first_name) + ' - descripción:' + str(self.description)
+        return 'tipo: ' + str(self.tipo.name) + ' - paciente:' + str(self.paciente.user.first_name) +' - '
+
+
+class EstudioFile(models.Model):
+    estudio = models.ForeignKey(Estudio, on_delete=models.CASCADE, null=False)
+    file = models.FileField(upload_to ='uploads/')
+    descripcion = models.CharField(max_length=50, null=False, help_text="Ingrese descriptivo del archivo")
+
+    def __str__(self):
+        """
+        String para representar el Objeto del Modelo
+        """
+
+        # return '%s (%s)' % (self.type.__str__(), self.paciente.__str__())
+        return self.descripcion
+
 
 class Turno(models.Model):
     """
@@ -110,7 +128,7 @@ class Turno(models.Model):
     estudio = models.OneToOneField(Estudio, on_delete=models.CASCADE , null=False, primary_key=True)
     date = models.DateField(null=False)
     timeFrom = models.TimeField(null=False)
-    timeTo = models.TimeField(null=True, blank=True)
+    #timeTo = models.TimeField(null=True, blank=True)
 
     def __str__(self):
         """

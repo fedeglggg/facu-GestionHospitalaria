@@ -11,7 +11,7 @@ from django.views.generic import CreateView, UpdateView
 from .forms import SignUpFormMedico, SignUpFormPaciente, CreateFormTurno, EspecialidadForm, DoctorMatriculaForm, TurnoDateForm
 from django.db import transaction
 from django.contrib.auth.models import Group, User
-from .filters import DoctorFilter, PatientFilter
+from .filters import DoctorFilter, PatientFilter, EstudioFilter
 import datetime
 
 # funcion que valida los permisos de una vista en base a los grupos a los que pertenece el usuario
@@ -132,6 +132,22 @@ def turnos(request):
         'turnos': turnos
     }
     return render(request, 'turno_list.html', context)
+
+
+def historiasMedicas(request):
+    #if not is_user_auth(request.user, ('secretarios', 'medicos')):
+        #return redirect('error_acceso')
+
+    estudios = Estudio.objects.all()
+
+    myFilter = EstudioFilter(request.GET, queryset=estudios)
+    estudios = myFilter.qs
+
+    context = {
+        'estudios': estudios,
+        'myFilter': myFilter
+    }
+    return render(request, 'historia_list.html', context)
 
 dict_especialidades = {
     'traumatologia': 'Traumatología',

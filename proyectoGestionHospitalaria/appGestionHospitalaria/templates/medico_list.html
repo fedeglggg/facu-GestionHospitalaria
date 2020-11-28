@@ -22,7 +22,7 @@
 			<form method="get">
 				{{myFilter.form}}
 
-		    <button class="btn btn-primary" type="submit">Search</button>
+		    <button class="btn btn-primary" type="submit">Filtrar</button>
 		  </form>
 
 		</div>
@@ -31,10 +31,10 @@
 </div>
 </div>
 
-<div class="icon-box">
+<div class="icon-box"  >
 
 {% if doctores %}
-<table id="table_id"  class="table table-bordered"> <!--list-group -->
+<table id="table_id"  class="table table-bordered" > <!--list-group -->
     <thead>
         <tr>
             <td>Nombre</td>
@@ -51,7 +51,7 @@
         <td>{{doctor.user.last_name}} </td>
         <td>{{doctor.matricula}} </td>
         <!-- <td>{% for especialidad in doctor.especialidad.all %} {{ especialidad }}{% if not forloop.last %}, {% endif %}{% endfor %} </td>-->
-        <td><a class="btn btn-primary" href="/medico/{{ doctor.id }}">Detalle</a></td>
+        <td><a class="btn btn-success" href="/medico/{{ doctor.id }}">Detalle</a> <a class="btn btn-danger" href="">Borrar</a></td>
         </tr>
     {% endfor %}
     </tbody>
@@ -94,13 +94,28 @@
     $.fn.dataTable.moment( 'MMM D, YYYY' );
     $.fn.dataTable.moment( 'D-MMM-YY' );
     $('#table_id').DataTable({
-
-    dom: 'B<"clear">lfrtip',
-    buttons: {
-        name: 'primary',
-        buttons: [ ]
-
-        }}
+            "autoWidth": false,
+    responsive: true,
+    columnDefs: [
+    { responsivePriority: 1, targets: 0 },
+    { responsivePriority: 2, targets: 1 },
+    { responsivePriority: 3, targets: 2 }
+    ],
+    language: {
+            "search":         "Buscar:",
+            "lengthMenu": "Muestra _MENU_ registros por página",
+            "zeroRecords": "Vacio",
+            "info": "Página _PAGE_ de _PAGES_",
+            "infoEmpty": "Sin registros posibles",
+            "infoFiltered": "(filtrados _MAX_ registros totales)",
+            "paginate": {
+                            "first":      "Primero",
+                            "last":       "Ultimo",
+                            "next":       "Siguiente",
+                            "previous":   "Anterior"
+                        }
+        }
+    }
     );
 } );
 </script>

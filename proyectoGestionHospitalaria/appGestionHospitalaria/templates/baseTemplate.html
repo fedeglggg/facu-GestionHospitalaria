@@ -94,9 +94,9 @@
 
             <!-- por ahora uso view_paciente para ver si es paciente o no -->
             {% if perms.appGestionHospitalaria.view_paciente %}
-            <li><a href="#doctors">Historias medicas</a></li>
+            <li><a href="{% url 'lista_historia'%}">Historias medicas</a></li>
               {% else %}
-            <li><a href="#doctors">Mi historia medica</a></li>
+            <li><a href="{% url 'lista_historia'%}">Mi historia medica</a></li>
             {% endif %}
 
             <!-- forma de chequear los permisos en el front - estos permisos estan asignados por default
