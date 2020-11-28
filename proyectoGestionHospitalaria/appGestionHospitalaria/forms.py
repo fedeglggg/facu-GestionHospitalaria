@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 import datetime
 from django.db import models
-from .models import Especialidad, Doctor, TipoEstudio, Turno
+from .models import Especialidad, Doctor, TipoEstudio, Turno, Paciente
 
 # los fields se usan en el is_valid() matcheandolos con los names de los input 
 # no se usa los id_nombredefield ej id_username para algo, no recuerdo -> chequear esto dsp
@@ -15,6 +15,7 @@ class SignUpFormMedico(UserCreationForm):
     email = forms.EmailField(max_length=254)
     matricula = forms.CharField(max_length=32)
     
+    # al postear los checkboxes si no esta lleno no lo manda directamente, por eso required false
     traumatologia = forms.BooleanField(required = False)
     clinica_medica = forms.BooleanField(required = False)
     cardiologia = forms.BooleanField(required = False)
@@ -99,11 +100,29 @@ class DoctorMatriculaForm(forms.Form):
 
 class TurnoDateForm(forms.Form):
     date = forms.DateField()
+    dni = forms.IntegerField()
+    class Meta:
+        model = Turno
+        fields = ('date', 'dni')
+
+class TurnoDateForm2(forms.Form):
+    date = forms.DateField()
+    class Meta:
+        model = Turno
+        fields = ('date')
+
+class TurnoDateForm3(forms.Form):
+    date = forms.DateField()
     timeFrom = forms.TimeField()
     class Meta:
         model = Turno
         fields = ('date','timeFrom',)
 
+class DNIForm(forms.Form):
+    dni = forms.IntegerField()
+    class Meta:
+        model = Paciente
+        fields = ('dni')
 
 class CreateFormTurno33(ModelForm):
     tipo_estudio_name = forms.CharField(max_length=30)

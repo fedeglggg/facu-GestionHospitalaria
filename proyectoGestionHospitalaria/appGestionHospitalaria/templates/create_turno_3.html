@@ -18,17 +18,15 @@
 <div class="icon-boxes">
 <div class="icon-box">
 
-<form method="post" action="" > 
-    {% csrf_token %}
+<form method="GET" action="{% url 'create_turno_4' %}" > 
+    
         <div class="section-title" style="padding-bottom: 0;">
             <h2>Datos del turno</h2>
-        </div>
- 
-        
+        </div>  
             {% if user.is_superuser %}
             <div class="form-group">
                 <label for="id_paciente_name">Seleccionar paciente para ser atendido</label>
-                <select class="form-control" id="id_paciente" name="paciente" required="" >
+                <select class="form-control" id="id_paciente" name="dni" required="" >
                     <option value="" selected disabled hidden>Elija un paciente</option>
                     {% for paciente in lista_pacientes %}
                         <option value=" {{ paciente.dni }} "> {{ paciente.user.first_name }} {{ paciente.user.last_name }} DNI:{{ paciente.dni }} </option>
@@ -37,19 +35,27 @@
             </div>
             {% endif %}
             <div class="form-group" >
-                <input type="date" required="" placeholder="Fecha" class="form-control" name="date"  id="id_date">
+                <input type="date" required="" placeholder="Fecha" class="form-control" name="date" id="id_date">
             </div>
 
-            <!-- esto deberia estar en otro view devuelta, que te muestre turnos disponibles en el dia -->
+            <div class="form-group">
+                <input type="hidden" name="especialidad" value="{{ especialidad.name }}" />
+            </div>
+
+            <div class="form-group">
+                <input type="hidden" name="matricula" value="{{ doctor.matricula }}" />
+            </div>
+
+           <!--             
             <select class="form-control" id="id_timeFrom" name="timeFrom" required=""> 
                 <option value="" selected disabled hidden>Turnos disponibles</option>
                 <option> 12:00 </option>
                 <option> 12:15 </option>
                 <option> 12:30 </option>
-            </select>
+            </select> -->
             <p></p>
             <div class="text-center">
-                <button type="submit" style="background: #1977cc; border: 0; padding: 10px 35px; color: #fff; transition: 0.4s; border-radius: 50px; " onmouseover="this.style.backgroundColor='#1c84e3'" onmouseout="this.style.backgroundColor='#1977cc'">Crear</button>
+                <button type="submit" style="background: #1977cc; border: 0; padding: 10px 35px; color: #fff; transition: 0.4s; border-radius: 50px; " onmouseover="this.style.backgroundColor='#1c84e3'" onmouseout="this.style.backgroundColor='#1977cc'">Verificar disponibilidad</button>
                 <button style="background: #1977cc; border: 0; padding: 10px 35px; color: #fff; transition: 0.4s; border-radius: 50px; " onmouseover="this.style.backgroundColor='#1c84e3'" onmouseout="this.style.backgroundColor='#1977cc'" onclick="history.back()">Volver</button>
             </div>
 </form>
