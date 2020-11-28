@@ -1,0 +1,147 @@
+{% extends "baseTemplate.html" %}
+
+{% block content %}
+
+<section id="hero" class="d-flex align-items-center" style="position: unset; ">
+  <div class="container">
+    <h1>Historia Médica</h1>
+    <h2>Detalles del estudio.</h2>
+  </div>
+</section>
+
+<main id="main">
+<section id="appointment" class="appointment section-bg" style="padding: 3%;">
+<section id="why-us" class="why-us" style="all: inherit;padding: 0">
+<div class="container" style="text-align: center" >
+<div class="icon-boxes">
+  
+<div class="icon-box" style="padding: 10px;margin: 25px 0px 25px 0px;">
+ <h1> <strong>{{ estudio.tipo }} </strong></h1>
+</div>
+
+<div class="icon-box" style="padding: 10px;margin: 25px 0px 25px 0px;">
+
+    <p><strong>Datos:</strong></p>
+  <p><strong>Paciente:</strong> {{ estudio.paciente }} --
+  <strong>Médico:</strong> {{ estudio.doctor }} --
+   <strong>Dia:</strong> {{estudio.turno.date}} --
+  <strong>Hora:</strong> {{estudio.turno.timeFrom}}</p>
+</div>
+
+<div class="icon-box" style="padding: 10px; margin: 25px 0px 25px 0px;">
+    <p><strong>Diagnostico</strong></p>
+    <textarea style="width: inherit;height: 190px" disabled>{{estudio.diagnostic}}</textarea>
+
+<a class="btn btn-success" style="margin: 10px;color: #fff;" data-toggle="modal" data-target="#myModalDiagnostic">Modificar</a>
+
+</div>
+<div class="icon-box" style="padding: 10px; margin: 25px 0px 25px 0px;">
+    <p><strong>Comentarios</strong></p>
+    <textarea style="width: inherit;height: 190px" disabled>{{estudio.comments}}</textarea>
+
+<a class="btn btn-success" style="margin: 10px;color: #fff;" data-toggle="modal" data-target="#myModalComments">Modificar</a>
+
+</div>
+
+<div class="icon-box " style="padding: 10px; margin: 25px 0px 25px 0px;">
+
+    <p><strong>Adjuntos</strong></p>
+<div class="container border">
+
+<div class="row">
+    {% for file in files %} <div class="col-lg-3" style="padding: 7px"><div class="icon-box" style="width: fit-content;background-color: #e9ecef"><strong>{{ file }}:</strong></p><p><a class="btn btn-secondary" href="{{ file.file.url }}" download>Descargar</a> <a class="btn btn-danger" href="">Borrar</a></p></div></div>{% if not forloop.last %}{% endif %}{% endfor %}
+
+</div>
+</div>
+
+<a class="btn btn-success" style="margin: 10px;color: #fff;" data-toggle="modal" data-target="#myModalFile">Nuevo</a>
+
+</div>
+<!--
+  <div style="margin-left:20px;margin-top:20px">
+    <h4>Estudios</h4>
+
+    
+    {% for estudioItem in paciente.estudio_set.all %}
+    <hr>
+    <p><strong>Nombre:</strong> {{estudioItem.name}}</p>
+    <p><strong>Fecha:</strong> {{estudioItem.date}}</p>
+    <p><strong>Description:</strong> {{estudioItem.description}}</p>
+    {% endfor %}
+  </div>-->
+
+
+</div>
+</div>
+</section>
+</section>
+</main>
+
+<!-- Modals -->
+
+<!-- Modal -->
+<div class="modal fade" id="myModalFile" tabindex="-1" role="dialog" >
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Adjuntos</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        </button>
+      </div>
+      <div class="modal-body">
+       Aca iria el formulario para cargar un archivo
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-success">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="myModalComments" tabindex="-1" role="dialog" >
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Comentarios</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        </button>
+      </div>
+      <div class="modal-body">
+       <div style="text-align: center">
+          <textarea style="width: 98%;height: 300px" >{{estudio.comments}}</textarea>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-success">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="myModalDiagnostic" tabindex="-1" role="dialog" >
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Diagnóstico</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        </button>
+      </div>
+      <div class="modal-body">
+            <div style="text-align: center">
+          <textarea style="width: 98%;height: 300px" >{{estudio.diagnostic}}</textarea>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-success">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+{% endblock %}

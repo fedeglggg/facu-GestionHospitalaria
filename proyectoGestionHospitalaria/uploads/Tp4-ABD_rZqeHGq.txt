@@ -1,0 +1,27 @@
+2-
+use ABD
+mongoimport --type json --db ABD --collection Books --file books.json
+
+3-
+db.Books.count()
+
+4-
+db.Books.find({"pageCount": { $gt: 700 }},{"title":1,"pageCount":1}).pretty()
+
+5-
+db.Books.find({"shortDescription": { $exists: 0 }}).count()
+
+6-
+db.Books.find({$and: [{"pageCount": { $gte: 200 }},{"pageCount": { $lte: 350 }}]}).count()
+
+7-
+db.Books.remove({"status": { $ne: "PUBLISH" }})
+
+8-(Hice un or porque existia la categoria "Internet" y "internet")
+db.Books.find({$or: [{"categories": {$all: ["Internet"] }},{"categories": {$all: ["internet"] }}]}).pretty() 
+
+9-
+db.Books.aggregate([{$project: {"categoriesCount": {$size: "$categories"}}},{$match: {"categoriesCount": {$gte: 2}}},{$sort: {"title":1}}])
+
+10-
+db.Books.aggregate([{$unwind: "$categories"},{$group: {_id: "$categories","count": {$sum:1}}}])

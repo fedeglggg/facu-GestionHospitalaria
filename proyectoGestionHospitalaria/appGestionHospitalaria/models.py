@@ -110,7 +110,7 @@ class Estudio(models.Model):
 class EstudioFile(models.Model):
     estudio = models.ForeignKey(Estudio, on_delete=models.CASCADE, null=False)
     file = models.FileField(upload_to ='uploads/')
-    descripcion = models.CharField(max_length=50, null=False, help_text="Ingrese descriptivo del archivo")
+    descripcion = models.CharField(max_length=20, null=False, help_text="Ingrese descriptivo del archivo")
 
     def __str__(self):
         """

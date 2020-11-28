@@ -1,0 +1,13 @@
+https://forum.xda-developers.com/showthread.php?t=2588979  --> instalar drivers y adb  (ahora se abre un cmd en cualquier lado y se hace todo desde ahi)
+
+https://forum.xda-developers.com/k20-pro/development/recovery-unofficial-twrp-xiaomi-redmi-t3944363 --> TWRP para mi 9t Pro
+
+https://www.youtube.com/watch?v=TrM8iAxumuM --> drivers para Xiaomi
+
+fastboot devices
+
+fastboot flash recovery twrp.img
+
+fastboot boot twrp.img
+
+Listo

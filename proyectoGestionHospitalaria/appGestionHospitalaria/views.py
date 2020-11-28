@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import Paciente, Doctor, Estudio, Especialidad, Obra_social, Turno, TipoEstudio
+from .models import Paciente, Doctor, Estudio, Especialidad, Obra_social, Turno, TipoEstudio, EstudioFile
 from django.views import generic
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
@@ -135,8 +135,8 @@ def turnos(request):
 
 
 def historiasMedicas(request):
-    #if not is_user_auth(request.user, ('secretarios', 'medicos')):
-        #return redirect('error_acceso')
+    if not is_user_auth(request.user, ('secretarios', 'medicos', 'sarasa')):
+        return redirect('error_acceso')
 
     estudios = Estudio.objects.all()
 
@@ -148,6 +148,23 @@ def historiasMedicas(request):
         'myFilter': myFilter
     }
     return render(request, 'historia_list.html', context)
+
+def historia(request, estudio_id):
+    if not is_user_auth(request.user, ('secretarios', 'medicos', 'sarasa')):
+       return redirect('error_acceso')
+
+    try:
+        estudioAux = Estudio.objects.get(pk=estudio_id)
+        files = EstudioFile.objects.filter(estudio = estudioAux)
+
+        context = {
+            'estudio': estudioAux,
+            'files': files
+        }
+
+    except Estudio.DoesNotExist:
+        raise Http404("El estudio no existe")
+    return render(request, 'historia_detail.html', context)
 
 dict_especialidades = {
     'traumatologia': 'Traumatología',

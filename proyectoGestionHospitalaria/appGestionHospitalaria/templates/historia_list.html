@@ -16,16 +16,16 @@
 <div class="icon-boxes">
 <div class="icon-box">
 <div class="row">
-	<div class="col">
-		<div class="card card-body">
+	<div class="col" style="width: fit-content">
 
+<div class="card card-body">
 			<form method="get">
-				{{myFilter.form}}
+                {{myFilter.form}}
 
 		    <button class="btn btn-primary" type="submit">Filtrar</button>
 		  </form>
+</div>
 
-		</div>
 	</div>
 
 </div>
@@ -54,7 +54,7 @@
         <td>{{estudio.tipo}} </td>
         <td>{{estudio.paciente}} </td>
         <td>{{estudio.doctor}} </td>
-        <td><a class="btn btn-success" href="/paciente/{{ estudio.id }}">Detalle</a></td>
+        <td><a class="btn btn-success" href="/historia/{{ estudio.id }}" style="alignment: center">Detalle</a></td>
         </tr>
     {% endfor %}
     </tbody>

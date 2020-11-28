@@ -20,7 +20,8 @@ urlpatterns = [
     path('turnos/crear/1', views.create_turno_1, name='create_turno_1'),
     path('turnos/crear/2/', views.create_turno_2, name='create_turno_2'),
     path('turnos/crear/2/3/', views.create_turno_3, name='create_turno_3'),
-    path('historias/', views.historiasMedicas, name='lista_historia')
+    path('historias/', views.historiasMedicas, name='lista_historia'),
+    path('historia/<int:estudio_id>/', views.historia, name='historia')
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

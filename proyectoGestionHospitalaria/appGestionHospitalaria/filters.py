@@ -8,9 +8,9 @@ class DoctorFilter(django_filters.FilterSet):
 
     def __init__(self, *args, **kwargs):
         super(DoctorFilter, self).__init__(*args, **kwargs)
-        self.filters['user__first_name'].label = "Nombre"
-        self.filters['user__last_name'].label = "Apellido"
-        self.filters['matricula'].label = "Matrícula"
+        self.filters['user__first_name'].label = "Nombre "
+        self.filters['user__last_name'].label = "Apellido "
+        self.filters['matricula'].label = "Matrícula "
 
 
     class Meta:
@@ -22,10 +22,10 @@ class PatientFilter(django_filters.FilterSet):
 
     def __init__(self, *args, **kwargs):
         super(PatientFilter, self).__init__(*args, **kwargs)
-        self.filters['user__first_name'].label = "Nombre"
-        self.filters['user__last_name'].label = "Apellido"
+        self.filters['user__first_name'].label = "Nombre "
+        self.filters['user__last_name'].label = "Apellido "
         self.filters['dni'].label = "Dni"
-        self.filters['obra_social'].label = "Obra Social"
+        self.filters['obra_social'].label = "Obra Social "
 
 
     class Meta:
@@ -48,9 +48,9 @@ class EstudioFilter(django_filters.FilterSet):
     def __init__(self, *args, **kwargs):
         super(EstudioFilter, self).__init__(*args, **kwargs)
         self.filters['tipo'].label = "Estudio "
-        self.filters['paciente'].label = "paciente"
-        self.filters['doctor'].label = "Médico"
-        self.filters['turno__date'].label = "Día"
+        self.filters['paciente'].label = "Paciente "
+        self.filters['doctor'].label = "Médico "
+        self.filters['turno__date'].label = "Día "
         #self.filters['turno__timeFrom'].label = "Hora"
 
 
