@@ -1,0 +1,62 @@
+{% extends "baseTemplate.html" %}
+<title>{% block title %}Sistema de Gestion{% endblock %}</title>
+
+
+{% block content %}
+
+<section id="hero" class="d-flex align-items-center" style="position: unset; ">
+    <div class="container">
+      <h1>Turnos</h1>
+      <h2>Ingrese los datos correspondientes al nuevo turno</h2>
+    </div>
+</section>
+
+<main id="main">
+<section id="appointment" class="appointment section-bg" style="padding: 3%;">
+<section id="why-us" class="why-us" style="all: inherit;padding: 0">
+<div class="container" style="inline-size: fit-content; text-align: center" >
+<div class="icon-boxes">
+<div class="icon-box">
+
+
+<form method="GET" action="{% url 'create_turno_4' %}" > 
+    
+    <div class="section-title" style="padding-bottom: 0;">
+        <h2>Turnos disponibles</h2>
+    </div>  
+
+        <div class="form-group">
+            <label for="id_paciente_name">Seleccionar un turno</label>
+            <select class="form-control" id="id_turno" name="turno" required="" >
+                <option value="" selected disabled hidden>Elija un turno</option>
+                {% for i in turnos_disponibles %}
+                    <option value=" {{ i }} "> {{ i|safe }} </option>      
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- <div class="form-group" >
+            <input type="date" required="" placeholder="Fecha" class="form-control" name="date" id="id_date">
+        </div>
+
+        <div class="form-group">
+            <input type="hidden" name="especialidad" value="{{ especialidad.name }}" />
+        </div>
+
+        <div class="form-group">
+            <input type="hidden" name="matricula" value="{{ doctor.matricula }}" />
+        </div> -->
+        <p></p>
+        <div class="text-center">
+            <button type="submit" style="background: #1977cc; border: 0; padding: 10px 35px; color: #fff; transition: 0.4s; border-radius: 50px; " onmouseover="this.style.backgroundColor='#1c84e3'" onmouseout="this.style.backgroundColor='#1977cc'">Reservar Turno</button>
+            <button style="background: #1977cc; border: 0; padding: 10px 35px; color: #fff; transition: 0.4s; border-radius: 50px; " onmouseover="this.style.backgroundColor='#1c84e3'" onmouseout="this.style.backgroundColor='#1977cc'" onclick="history.back()">Volver</button>
+        </div>
+</form>
+
+</div>
+</div>
+</div>
+</section>
+</section>
+</main>
+{% endblock %}
