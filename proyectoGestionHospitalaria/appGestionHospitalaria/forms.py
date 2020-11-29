@@ -84,12 +84,6 @@ class EspecialidadForm(forms.Form):
         model = Especialidad
         fields = ('name',)
 
-class DoctorNameForm(forms.Form):
-    first_name = forms.CharField(max_length=32)
-    last_name = forms.CharField(max_length=32)
-    class Meta:
-        model = User
-        fields = ('first_name','last_name',)
 
 class DoctorMatriculaForm(forms.Form):
     matricula = forms.CharField(max_length=32)
@@ -105,33 +99,18 @@ class TurnoDateForm(forms.Form):
         model = Turno
         fields = ('date', 'dni')
 
-class TurnoDateForm2(forms.Form):
-    date = forms.DateField()
-    class Meta:
-        model = Turno
-        fields = ('date')
-
-class TurnoDateForm3(forms.Form):
-    date = forms.DateField()
-    timeFrom = forms.TimeField()
-    class Meta:
-        model = Turno
-        fields = ('date','timeFrom',)
-
-class DNIForm(forms.Form):
+class TurnoForm(forms.Form):
+    date = forms.CharField(max_length=32) # sino no lo toma, incluso cuando le devuelvo la misma date
     dni = forms.IntegerField()
-    class Meta:
-        model = Paciente
-        fields = ('dni')
+    especialidad = forms.CharField(max_length=32)
+    matricula = forms.CharField(max_length=32)
+    # turno = forms.TimeField()
+    turno = forms.CharField(max_length=32)
 
-class CreateFormTurno33(ModelForm):
-    tipo_estudio_name = forms.CharField(max_length=30)
-    doctor_name = forms.CharField(max_length=30)
-    date = forms.DateField(required=True)
-    timeFrom = forms.TimeField(required=True)
-    #timeTo = forms.TimeField(required=True)
 
-    class Meta:
-        model = Turno
-        fields = ('tipo_estudio_name', 'doctor_name', 'date', 'timeFrom')
+
+
+
+
+
 

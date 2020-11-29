@@ -87,22 +87,18 @@ class Estudio(models.Model):
     Modelo que representa un Estudio clinico
     """
     tipo = models.ForeignKey(TipoEstudio, on_delete=models.CASCADE, null=False)
-    #name = models.CharField(max_length=100)
-    #time_long = models.IntegerField()
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE , null=False) # siempre se asocia a un paciente
-    #date = models.DateField(null=True, blank=True)
     comments = models.TextField(null=True, help_text="Ingrese comentarios (Será visible para el paciente)")
     diagnostic = models.TextField(null=True, help_text="Ingrese un diagnóstico (No será visible para el paciente)")
     confirmed = models.BooleanField(default=False)
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, null=False)  # siempre se asocia a doctor
     secretary = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)  #opcional
 
-
     def __str__(self):
         """
         String para representar el Objeto del Modelo
         """
-    # return '%s (%s)' % (self.type.__str__(), self.paciente.__str__())
+        # return '%s (%s)' % (self.type.__str__(), self.paciente.__str__())
         return 'Tipo: ' + self.tipo.name + ' - Paciente: ' + self.paciente.__str__()+' - Médico: '+self.doctor.__str__()
 
 

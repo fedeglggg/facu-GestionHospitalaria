@@ -33,6 +33,12 @@
                     {% endfor %}
                 </select>
             </div>
+            {% else %}
+            <small id="tipo_doctorHelpBlock" class="form-text text-muted">
+                <ul>
+                    <li>No existen pacientes disponibles</li>
+                </ul>
+            </small>
             {% endif %}
             <div class="form-group" >
                 <input type="date" required="" placeholder="Fecha" class="form-control" name="date" id="id_date">
@@ -46,13 +52,6 @@
                 <input type="hidden" name="matricula" value="{{ doctor.matricula }}" />
             </div>
 
-           <!--             
-            <select class="form-control" id="id_timeFrom" name="timeFrom" required=""> 
-                <option value="" selected disabled hidden>Turnos disponibles</option>
-                <option> 12:00 </option>
-                <option> 12:15 </option>
-                <option> 12:30 </option>
-            </select> -->
             <p></p>
             <div class="text-center">
                 <button type="submit" style="background: #1977cc; border: 0; padding: 10px 35px; color: #fff; transition: 0.4s; border-radius: 50px; " onmouseover="this.style.backgroundColor='#1c84e3'" onmouseout="this.style.backgroundColor='#1977cc'">Verificar disponibilidad</button>

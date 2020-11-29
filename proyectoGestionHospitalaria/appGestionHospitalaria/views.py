@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from .models import *
 from django.shortcuts import render, redirect
 from django.http import Http404
-from .forms import SignUpFormMedico, SignUpFormPaciente, CreateFormTurno, EspecialidadForm, DoctorMatriculaForm, TurnoDateForm, DNIForm
+from .forms import SignUpFormMedico, SignUpFormPaciente, CreateFormTurno, EspecialidadForm, DoctorMatriculaForm, TurnoDateForm, TurnoForm
 from django.contrib.auth.models import Group, User
 from .filters import DoctorFilter, PatientFilter, EstudioFilter, TurnoFilter
 
@@ -406,26 +406,47 @@ def create_turno_4(request):
         doctorForm = DoctorMatriculaForm(request.GET)
         turnoForm = TurnoDateForm(request.GET)
         if turnoForm.is_valid() and doctorForm.is_valid():
-            mpt = 15 # mintuos por turno usado mas adelante
-            date = turnoForm.cleaned_data.get('date') 
+            mpt = 60 # mintuos por turno usado mas adelante - se puede cambiar esto y modifica todo facil
+            date = turnoForm.cleaned_data.get('date')  
             dia = dict_dias[str(date.weekday())]  # date.weekday() traduce date a dias -> 0 es lunes y 7 domingo 
             matricula = doctorForm.cleaned_data.get('matricula')
             doctor = Doctor.objects.get(matricula=matricula)
             turnos_de_jornadas = TurnoJornada.objects.filter(doctor=doctor)
 
+            # creacion de lista de horarios de la jornada de ese dia del doctor (a mas posiciones mas veces va a trabajar en un horario)
             atiende_ese_dia = False
             turnos_jornada = []
             for i in turnos_de_jornadas:
                 if i.dia.nombre == dia:
                     atiende_ese_dia = True
                     turnos_jornada.append(i)
-            
+
+           # cuantos turnos tiene en cada uno de los horarios de esa jornada
+           # ej [10,2] sería que puede atender 10 veces en el primer turno del dia y 2 veces en el segundo
+           # haría doble turno en este caso 
             cantidad_de_turnos = []
             for i in turnos_jornada:
                 a = operate_timefields(i.horario_inicio, i.horario_fin, 'resta')
-                a = int(a//mpt) # 15 minutos por turno, esto lo podriamos cambiar
+                a = int(a//mpt)
                 cantidad_de_turnos.append(a) # total de min de turnos / m por turno
 
+            # agarro los turnos tomados de ese dia (faltan de ese medico) 
+            # y los transformo en min (los date) 
+            turnos_tomados_todos = Turno.objects.filter(date=date) # turnos de la fecha
+            estudios = Estudio.objects.filter(doctor=doctor)
+            turnos_tomados = [] # va a contener turnos de ese dia Y turnos de ese medico
+            aux = []
+            for i in estudios:
+                aux = turnos_tomados_todos.filter(estudio=i)
+                for i in aux:
+                    turnos_tomados.append(i)
+           
+            turnos_tomados_minutos = []
+            for i in turnos_tomados:
+                turnos_tomados_minutos.append(timefields_to_min(i.timeFrom))
+
+            # va a listar todos los turnos en minutos de la jornada que tiene disponibles
+            # ej [600, 700] serian 600/60 = 6am el otro las 7am, etc
             turnos_disponibles = []
             index_i = 0
             for i in cantidad_de_turnos:
@@ -433,20 +454,14 @@ def create_turno_4(request):
                 index_i = index_i + 1
                 for x in range(i):
                     horario = base + x*mpt
-                    horario = int(horario)
-                    turnos_disponibles.append(horario)
+                    for x in turnos_tomados_minutos:
+                        if not x == horario:
+                            horario = int(horario)
+                            turnos_disponibles.append(horario)
+                        else:
+                            print('se cansela un turno al ya estar tomado')
 
-            # esta forma hace 12:00pm = noon y es re molesto   
-            # index_i = 0
-            # for i in turnos_disponibles:
-            #     horas = i/60
-            #     minutos = int(horas % 1 * 60)
-            #     horas = int(horas)
-            #     turno = datetime.time(horas, minutos, 0)
-            #     turnos_disponibles[index_i] = turno
-            #     print(turno)
-            #     index_i = index_i + 1
-
+            # conversión a de min a horas y en formato str para poder publicar en el template
             index_i = 0
             lista_turnos = []
             for i in turnos_disponibles:
@@ -458,15 +473,22 @@ def create_turno_4(request):
                     minutos = round(minutos,2)
                 horas = int(horas)
                 if horas >= 12:
-                   lista_turnos.append(str(horas) + ':' + str(minutos) + 'pm')
+                   lista_turnos.append(str(horas) + ':' + str(minutos) + ' pm')
                 else:
-                    lista_turnos.append(str(horas) + ':' + str(minutos) + 'am')
+                    lista_turnos.append(str(horas) + ':' + str(minutos) + ' am')
                 index_i = index_i + 1
-            print(lista_turnos)
 
-            # Turno.objects.filter(date=date).exists() 
+            date = str(date)
+            dni = turnoForm.cleaned_data.get('dni')
+            paciente = Paciente.objects.get(dni=dni)
+            especialidad = doctorForm.cleaned_data.get('especialidad')
+            especialidad = Especialidad.objects.get(name=especialidad)
             context = {
-                'turnos_disponibles': lista_turnos
+                'turnos_disponibles': lista_turnos,
+                'doctor': doctor,
+                'paciente': paciente,
+                'especialidad': especialidad,
+                'date': date
             }
             return render(request, 'create_turno_4.html', context) 
         else:
@@ -476,85 +498,39 @@ def create_turno_4(request):
             print('errores del form de turno')
             print(turnoForm.errors)
             print('-------------------------------')
-            
+            return redirect('error_acceso')
+    else:
+        turno_form = TurnoForm(request.POST)
+        if turno_form.is_valid():
+            dni = turno_form.cleaned_data.get('dni')
+            matricula = turno_form.cleaned_data.get('matricula')
+            date = turno_form.cleaned_data.get('date')
+            especialidad = turno_form.cleaned_data.get('especialidad')
+            turno = turno_form.cleaned_data.get('turno')
+            paciente = Paciente.objects.get(dni=dni)
+            doctor = Doctor.objects.get(matricula=matricula)
+            tipo = TipoEstudio.objects.get(pk=1) # ver como hacer este 
+            aux_1 = str(turno).split(' ')
+            aux_2 = aux_1[0].split(':')
 
-
-# viejo crear turno
-def create_turno_3_old(request):
-    if not is_user_auth(request.user, ('secretarios', 'pacientes')):
-        return redirect('error_acceso')
-
-    if request.method == 'POST':
-        form = TurnoDateForm(request.POST)
-        form2 = DoctorMatriculaForm(request.GET)
-        print(form.errors)
-        if form.is_valid() and form2.is_valid():
-            # print('p:', request.POST)
-            # print('g:', request.GET)
-
-            # lo que estamos haciendo es por matricula por ahora, cambiarlo a nombre del doctor despues
-            # el nombre esta en su usuario
-            matricula_form = form2.cleaned_data.get('matricula')
-            doctor = Doctor.objects.get(matricula=matricula_form)
-            print('doctor:', doctor.user.first_name )
-
-            # faltaria agregar si es secretario tmb
-            if request.user.is_superuser:
-                paciente_dni = request.POST.get('paciente')
-
-                print()
-                print('dni:', paciente_dni)
-                pac = Paciente.objects.get(dni=paciente_dni)
-                print(pac.user.first_name)
-                paciente = Paciente.objects.get(dni=paciente_dni) #Obtiene el dni desde un desplegable
+            # conversion a timefield
+            if int(aux_2[1]) >= 10:
+                if str(int(aux_2[1])) == '0':
+                    time = str(int(aux_2[0])) + ':00:00'
+                else:
+                    time = str(int(aux_2[0])) + ':' + str(int(aux_2[1])) + ':00'
             else:
-                print('por aca no tiene que entrar')
-                paciente = request.user.paciente
-                # if is_user_auth(request.user, ('pacientes')): #secretarios
-                #     paciente = Paciente.objects.get(user=request.user.id) #Obtiene el id desde el usuario
-                # else:
-                #     paciente_form = form.cleaned_data.get('paciente')
-                #     paciente = Paciente.objects.get(dni=paciente_form) #Obtiene el dni desde un desplegable
+                if str(int(aux_2[1])) == '0':
+                    time = '0' + str(int(aux_2[0])) + ':00:00'
+                else:
+                    time = '0' + str(int(aux_2[0])) + ':' + str(int(aux_2[1])) + ':00'
 
-            #secretary = User.objects.get(pk=1) #por ahora por defecto, se relaciona con un secretario (empiezo a dudar si es necesario)
-            
-            # esto por ahora, el tipo de estudio no deberia estar, es la especialidad la que usamos
-            
-            tipo_de_estudio = TipoEstudio.objects.get(pk=1)
-            description = ''
-            estudio = Estudio(tipo=tipo_de_estudio, doctor=doctor, paciente=paciente, description=description)
-            
-            new_estudio = estudio.save() #Crea el estudio
-            
-            # creacion del turno
-            date = form.cleaned_data.get('date')
-            timeFrom = form.cleaned_data.get('timeFrom')
-            # timeTo = timeFrom.replace(hour=(timeFrom.hour+estudio1.type.duration) % 24) #Suma la duracion de estudio
-            #turno = Turno(estudio=estudio1, date=date, timeFrom=timeFrom, timeTo=timeTo)
-            turno = Turno(estudio=new_estudio, date=date, timeFrom=timeFrom)
-            turno.save() # Crea el turno a partir de ese estudio
-            # print('turno.estudio.doctor.user.first_name:', estudio.doctor.user.first_name, 'turno.estudio.paciente.user.first_name:', estudio.paciente.user.first_name)
-            # return HttpResponse('hala madrid')
+
+            new_estudio = Estudio(paciente=paciente, doctor=doctor, tipo=tipo)
+            new_estudio.save()
+            new_turno = Turno(estudio=new_estudio, date=date, timeFrom=time)
+            new_turno.save()
             return redirect('index')
         else:
-            return HttpResponse('form no valid')
-    else:
-        # get method
-        form = DoctorMatriculaForm(request.GET) # Me quedo con la matricula por el value dentro del select
-        if form.is_valid():
-            # la especialidad la llevo en el action del form - voy a probar con method get despues
-            especialidad_name = form.cleaned_data.get('especialidad')
-            especialidad = Especialidad.objects.get(name=especialidad_name)
-            matricula = form.cleaned_data.get('matricula')
-            doctor = Doctor.objects.get(matricula=matricula)
-
-
-            # lo que habria que hacer es una vez que nos da el dia, recargar el horario con los turnos disponibles para ese dia
-            context = {
-                # 'tipo_estudios': TipoEstudio.objects.all(),
-                'lista_pacientes': Paciente.objects.all(),
-                'especialidad': especialidad,
-                'doctor': doctor 
-            }
-            
-            return render(request, 'create_turno_3.html', context)
+            print('error')
+            print(turno_form.errors)
