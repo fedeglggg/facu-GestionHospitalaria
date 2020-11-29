@@ -100,7 +100,7 @@ class Estudio(models.Model):
         String para representar el Objeto del Modelo
         """
         #return '%s (%s)' % (self.type.__str__(), self.paciente.__str__())
-        return 'tipo: ' + self.tipo.name + ' - paciente:' + self.paciente.user.first_name + ' - descripción:' + self.description,
+        return 'tipo: ' + self.tipo.name + ' - paciente:' + self.paciente.__str__() + ' - descripción:' + self.description
 
 class Turno(models.Model):
     """
