@@ -430,7 +430,7 @@ def create_turno_4(request):
                 a = int(a//mpt)
                 cantidad_de_turnos.append(a) # total de min de turnos / m por turno
 
-            # agarro los turnos tomados de ese dia (faltan de ese medico) 
+            # agarro los turnos tomados de ese dia
             # y los transformo en min (los date) 
             turnos_tomados_todos = Turno.objects.filter(date=date) # turnos de la fecha
             estudios = Estudio.objects.filter(doctor=doctor)
@@ -454,13 +454,19 @@ def create_turno_4(request):
                 index_i = index_i + 1
                 for x in range(i):
                     horario = base + x*mpt
-                    for x in turnos_tomados_minutos:
-                        if not x == horario:
-                            horario = int(horario)
-                            turnos_disponibles.append(horario)
-                        else:
-                            print('se cansela un turno al ya estar tomado')
+                    aux = False
 
+                    # chequea si hay al menos 1 turno tomado que es = a un horario que daria de los turnos
+                    for j in turnos_tomados_minutos:
+                        if j == horario:
+                            aux = True
+                            print('se cansela un turno al ya estar tomado')
+                            
+                    if not aux:
+                        horario = int(horario)
+                        turnos_disponibles.append(horario)
+
+            print('turnos disponibles:', turnos_disponibles)
             # conversión a de min a horas y en formato str para poder publicar en el template
             index_i = 0
             lista_turnos = []
