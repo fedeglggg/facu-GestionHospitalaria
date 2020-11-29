@@ -51,7 +51,7 @@
         <td>{{doctor.user.last_name}} </td>
         <td>{{doctor.matricula}} </td>
         <!-- <td>{% for especialidad in doctor.especialidad.all %} {{ especialidad }}{% if not forloop.last %}, {% endif %}{% endfor %} </td>-->
-        <td><a class="btn btn-success" href="/medico/{{ doctor.id }}">Detalle</a> <a class="btn btn-danger" href="">Borrar</a></td>
+        <td><a class="btn btn-success" href="/medico/{{ doctor.id }}">Detalle</a>
         </tr>
     {% endfor %}
     </tbody>
@@ -119,5 +119,7 @@
     );
 } );
 </script>
+
+
 
 {% endblock %}

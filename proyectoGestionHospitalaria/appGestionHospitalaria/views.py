@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from django.http import Http404
 from .forms import SignUpFormMedico, SignUpFormPaciente, CreateFormTurno, EspecialidadForm, DoctorMatriculaForm, TurnoDateForm, DNIForm
 from django.contrib.auth.models import Group, User
-from .filters import DoctorFilter, PatientFilter, EstudioFilter
+from .filters import DoctorFilter, PatientFilter, EstudioFilter, TurnoFilter
 
 
 
@@ -133,15 +133,21 @@ def medicos(request):
     return render(request, 'medico_list.html', context)
 
 def turnos(request):
-    if not is_user_auth(request.user, ('secretarios', 'medicos')):
+    if not is_user_auth(request.user, ('secretarios', 'sarasa')):
         return redirect('error_acceso')
       
     turnos = Turno.objects.all()
-    for i in turnos:
-        print(i.estudio.doctor.user.first_name)
-        print(i.estudio.paciente.user.first_name)
+
+    myFilter = TurnoFilter(request.GET, queryset=turnos)
+    turnos = myFilter.qs
+
+    #for i in turnos:
+       # print(i.estudio.doctor.user.first_name)
+        #print(i.estudio.paciente.user.first_name)
+
     context = {
-        'turnos': turnos
+        'turnos': turnos,
+        'myFilter': myFilter
     }
     return render(request, 'turno_list.html', context)
 
@@ -150,7 +156,7 @@ def historiasMedicas(request):
     if not is_user_auth(request.user, ('secretarios', 'medicos', 'sarasa')):
         return redirect('error_acceso')
 
-    estudios = Estudio.objects.all()
+    estudios = Estudio.objects.filter(confirmed=True)
 
     myFilter = EstudioFilter(request.GET, queryset=estudios)
     estudios = myFilter.qs

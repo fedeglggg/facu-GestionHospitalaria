@@ -49,7 +49,7 @@
 <div class="container border">
 
 <div class="row">
-    {% for file in files %} <div class="col-lg-3" style="padding: 7px"><div class="icon-box" style="width: fit-content;background-color: #e9ecef"><strong>{{ file }}:</strong></p><p><a class="btn btn-secondary" href="{{ file.file.url }}" download>Descargar</a> <a class="btn btn-danger" href="">Borrar</a></p></div></div>{% if not forloop.last %}{% endif %}{% endfor %}
+    {% for file in files %} <div class="col-lg-3" style="padding: 7px"><div class="icon-box" style="width: fit-content;background-color: #e9ecef"><strong>{{ file }}:</strong></p><p><a class="btn btn-secondary" href="{{ file.file.url }}" download>Descargar</a> <a class="btn btn-danger" data-toggle="modal" data-target="#myModalBorrar" style="color: #fff">Borrar</a></p></div></div>{% if not forloop.last %}{% endif %}{% endfor %}
 
 </div>
 </div>
@@ -81,7 +81,7 @@
 
 <!-- Modal -->
 <div class="modal fade" id="myModalFile" tabindex="-1" role="dialog" >
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Adjuntos</h5>
@@ -100,7 +100,7 @@
 </div>
 
 <div class="modal fade" id="myModalComments" tabindex="-1" role="dialog" >
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Comentarios</h5>
@@ -121,7 +121,7 @@
 </div>
 
 <div class="modal fade" id="myModalDiagnostic" tabindex="-1" role="dialog" >
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Diagnóstico</h5>
@@ -141,6 +141,24 @@
   </div>
 </div>
 
+<div class="modal fade" id="myModalBorrar" tabindex="-1" role="dialog" >
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Adjunto</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        </button>
+      </div>
+      <div class="modal-body">
+            Desea borrar este archivo adjunto?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-danger">Borrar</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 
