@@ -1,18 +1,12 @@
 from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
-from .models import Paciente, Doctor, Estudio, Especialidad, Obra_social, Turno, TipoEstudio, EstudioFile
-from django.views import generic
-from django.contrib.auth import login, authenticate
-from django.contrib.auth.forms import UserCreationForm
+from .models import *
 from django.shortcuts import render, redirect
-# from django.urls import reverse_lazy
 from django.http import Http404
-from django.views.generic import CreateView, UpdateView
-from .forms import SignUpFormMedico, SignUpFormPaciente, CreateFormTurno, EspecialidadForm, DoctorMatriculaForm, TurnoDateForm
-from django.db import transaction
+from .forms import SignUpFormMedico, SignUpFormPaciente, CreateFormTurno, EspecialidadForm, DoctorMatriculaForm, TurnoDateForm, DNIForm
 from django.contrib.auth.models import Group, User
 from .filters import DoctorFilter, PatientFilter, EstudioFilter
-import datetime
+
+
 
 # funcion que valida los permisos de una vista en base a los grupos a los que pertenece el usuario
 # y los grupos que permite la vista
@@ -34,6 +28,28 @@ def error_acceso(request):
     #  de desloguear se activaria esta vista
     return redirect('index')
     # return HttpResponse('usted no tiene permiso para solicitar esta pagina - bajo construcción')    
+
+def timefields_to_min(timefield):
+    lista_num_str = str(timefield).split(':')
+    lista_num_int = []
+    
+    for i in lista_num_str:
+        numero = int(i)
+        lista_num_int.append(numero)
+    
+    minutos = (lista_num_int[0]*60) + lista_num_int[1] + (lista_num_int[2]/60) # horas *60 y seg /60 y dejo todo en min
+    
+    return minutos
+
+def operate_timefields(tf_inicial, tf_final, operation): 
+    minutos_numero_inicial = timefields_to_min(tf_inicial)
+    minutos_numero_final = timefields_to_min(tf_final)
+
+    if (operation == 'suma'):
+        return minutos_numero_final + minutos_numero_inicial 
+    else:
+        return minutos_numero_final - minutos_numero_inicial 
+
 
 def index(request):
     # chequeo si el user pertenece a un grupo y en base a eso defino si esta autorizado o no
@@ -59,11 +75,12 @@ def index(request):
 def paciente(request, paciente_id):
     if not is_user_auth(request.user, ('secretarios', 'medicos', 'sarasa')):
         return redirect('error_acceso')
-
+   
     try:
         paciente = Paciente.objects.get(pk=paciente_id)
     except Paciente.DoesNotExist:
         raise Http404("El paciente no existe")
+    
     return render(request, 'paciente_detail.html', {'paciente': paciente})
 
 def pacientes(request):
@@ -85,7 +102,6 @@ def medico(request, doctor_id):
     if not is_user_auth(request.user, ('secretarios', 'medicos', 'sarasa')):
         return redirect('error_acceso')
 
-    print('1')
     try:
         doctor = Doctor.objects.get(pk=doctor_id)
         especialidades = doctor.especialidad.all()
@@ -94,10 +110,6 @@ def medico(request, doctor_id):
         'especialidades': especialidades
         }
     
-        for i in especialidades:
-            print('2')
-            print(i.name)
-
     except Doctor.DoesNotExist:
         raise Http404("El paciente no existe")
     return render(request, 'medico_detail.html', context)
@@ -213,15 +225,13 @@ def signup_medico(request):
         if form.is_valid(): # sino el cleaned data get no funca - dependiendo del tipo de form chequea que las instancais no sea repetidas en la bd también
             print(request.POST) # para ver la post data
             # Save a new User object from the form's data.
-            # --------------------
             new_user = form.save()
             grupo = Group.objects.get(name='medicos')
             new_user.groups.add(grupo)
             # new_user.refresh_from_db()  # load the profile instance created by the signal - 
             # no estoy seguro que sea necesario, estoy probando sin esto y por ahora va bien
-            matricula_form = form.cleaned_data.get('matricula') # agarra por el name del input, 
-            # no mira el id
-            # especialidad_form = form.cleaned_data.get('especialidad')
+            
+            matricula_form = form.cleaned_data.get('matricula') # agarra por el name del input, no mira el id 
           
             # new_user.save() # verificar si hace falta guardar de nuevo
             new_doctor = Doctor(matricula=matricula_form, user=new_user)
@@ -235,7 +245,7 @@ def signup_medico(request):
                     nombre = dict_especialidades[i]
                     especialidad = Especialidad.objects.get(name=nombre) 
                     new_doctor.especialidad.add(especialidad)
-                    print('especialidad:', especialidad.name)
+                    print('especialidad seleccionada:', especialidad.name)
                 index = index + 1
             
 
@@ -245,16 +255,14 @@ def signup_medico(request):
             # si es necesario el codigo restante, talvez no lo sea
             # doctor.refresh_from_db()
             # doctor.especialidad.add(especialidad) 
-            
-            # new_user.save() # no hace falta guardar devuelta el usuario al final de todo x ahora 
-            # aparentemente
+            # new_user.save() # no hace falta guardar devuelta el usuario al final de todo x ahora aparentemente
             return redirect('index')
         else:
             # falta agregar error por si el form es invalid
             print('form fail')
             print(form.errors)
-            # return redirect('index')
-            pass
+            return redirect('index')
+            
     else:
         # envio las especialidades al front para mostrarlas en el desplegable del alta
         context = { 
@@ -330,8 +338,120 @@ def create_turno_2(request):
     else:
         return redirect('error_acceso')
 
-# viejo crear turno
 def create_turno_3(request):
+    if not is_user_auth(request.user, ('secretarios', 'pacientes')):
+        return redirect('error_acceso')
+    
+    if request.method == 'GET':
+        form = DoctorMatriculaForm(request.GET) # Me quedo con la matricula por el value dentro del select
+        if form.is_valid():
+            especialidad_name = form.cleaned_data.get('especialidad') 
+            especialidad = Especialidad.objects.get(name=especialidad_name)
+            matricula = form.cleaned_data.get('matricula')
+            doctor = Doctor.objects.get(matricula=matricula)
+
+            context = {
+                # 'tipo_estudios': TipoEstudio.objects.all(),
+                'lista_pacientes': Paciente.objects.all(),
+                'especialidad': especialidad,
+                'doctor': doctor 
+            }
+        
+            return render(request, 'create_turno_3.html', context)
+
+dict_dias = {
+    '0': 'Lunes',
+    '1': 'Martes',
+    '2': 'Miércoles',
+    '3': 'Jueves',
+    '4': 'Viernes',
+    '5': 'Sábado',
+    '6': 'Domingo'
+}
+
+def create_turno_4(request):
+    if not is_user_auth(request.user, ('secretarios', 'pacientes')):
+        return redirect('error_acceso')     
+
+    if request.method == 'GET':
+        doctorForm = DoctorMatriculaForm(request.GET)
+        turnoForm = TurnoDateForm(request.GET)
+        if turnoForm.is_valid() and doctorForm.is_valid():
+            mpt = 15 # mintuos por turno usado mas adelante
+            date = turnoForm.cleaned_data.get('date') 
+            dia = dict_dias[str(date.weekday())]  # date.weekday() traduce date a dias -> 0 es lunes y 7 domingo 
+            matricula = doctorForm.cleaned_data.get('matricula')
+            doctor = Doctor.objects.get(matricula=matricula)
+            turnos_de_jornadas = TurnoJornada.objects.filter(doctor=doctor)
+
+            atiende_ese_dia = False
+            turnos_jornada = []
+            for i in turnos_de_jornadas:
+                if i.dia.nombre == dia:
+                    atiende_ese_dia = True
+                    turnos_jornada.append(i)
+            
+            cantidad_de_turnos = []
+            for i in turnos_jornada:
+                a = operate_timefields(i.horario_inicio, i.horario_fin, 'resta')
+                a = int(a//mpt) # 15 minutos por turno, esto lo podriamos cambiar
+                cantidad_de_turnos.append(a) # total de min de turnos / m por turno
+
+            turnos_disponibles = []
+            index_i = 0
+            for i in cantidad_de_turnos:
+                base = timefields_to_min(turnos_jornada[index_i].horario_inicio)
+                index_i = index_i + 1
+                for x in range(i):
+                    horario = base + x*mpt
+                    horario = int(horario)
+                    turnos_disponibles.append(horario)
+
+            # esta forma hace 12:00pm = noon y es re molesto   
+            # index_i = 0
+            # for i in turnos_disponibles:
+            #     horas = i/60
+            #     minutos = int(horas % 1 * 60)
+            #     horas = int(horas)
+            #     turno = datetime.time(horas, minutos, 0)
+            #     turnos_disponibles[index_i] = turno
+            #     print(turno)
+            #     index_i = index_i + 1
+
+            index_i = 0
+            lista_turnos = []
+            for i in turnos_disponibles:
+                horas = i/60
+                minutos = int(horas % 1 * 60)
+                if minutos == 0:
+                    minutos = '00'
+                else:
+                    minutos = round(minutos,2)
+                horas = int(horas)
+                if horas >= 12:
+                   lista_turnos.append(str(horas) + ':' + str(minutos) + 'pm')
+                else:
+                    lista_turnos.append(str(horas) + ':' + str(minutos) + 'am')
+                index_i = index_i + 1
+            print(lista_turnos)
+
+            # Turno.objects.filter(date=date).exists() 
+            context = {
+                'turnos_disponibles': lista_turnos
+            }
+            return render(request, 'create_turno_4.html', context) 
+        else:
+            print('-------------------------------')
+            print('errores del form de doctor')
+            print(doctorForm.errors)
+            print('errores del form de turno')
+            print(turnoForm.errors)
+            print('-------------------------------')
+            
+
+
+# viejo crear turno
+def create_turno_3_old(request):
     if not is_user_auth(request.user, ('secretarios', 'pacientes')):
         return redirect('error_acceso')
 

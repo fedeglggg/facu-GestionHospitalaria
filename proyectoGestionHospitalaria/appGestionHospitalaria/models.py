@@ -102,9 +102,8 @@ class Estudio(models.Model):
         """
         String para representar el Objeto del Modelo
         """
-
-        # return '%s (%s)' % (self.type.__str__(), self.paciente.__str__())
-        return 'tipo: ' + str(self.tipo.name) + ' - paciente:' + str(self.paciente.user.first_name) +' - '
+    # return '%s (%s)' % (self.type.__str__(), self.paciente.__str__())
+        return 'Tipo: ' + self.tipo.name + ' - Paciente: ' + self.paciente.__str__()+' - Médico: '+self.doctor.__str__()
 
 
 class EstudioFile(models.Model):
@@ -119,7 +118,6 @@ class EstudioFile(models.Model):
 
         # return '%s (%s)' % (self.type.__str__(), self.paciente.__str__())
         return self.descripcion
-
 
 class Turno(models.Model):
     """
@@ -136,3 +134,17 @@ class Turno(models.Model):
         """
         #return '%s %s(%s-%s)' % (self.estudio.__str__(), self.date , self.timeFrom, self.timeTo)
         return 'fecha: ' + str(self.date) + ' - horario:' + str(self.timeFrom)
+
+class DiaJornada(models.Model):
+    nombre = models.CharField(max_length=9)
+    def __str__(self):
+        return self.nombre
+
+class TurnoJornada(models.Model):
+    dia = models.ForeignKey(DiaJornada, on_delete=models.CASCADE, null=False)
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, null=False)
+    horario_inicio = models.TimeField(null=False)
+    horario_fin = models.TimeField(null=False)
+
+    def __str__(self):
+        return  self.doctor.user.first_name + ' ' + self.doctor.user.last_name + ' | ' + self.dia.nombre + ' | ' + str(self.horario_inicio) + ' - ' + str(self.horario_fin)
