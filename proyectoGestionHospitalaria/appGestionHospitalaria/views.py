@@ -167,21 +167,44 @@ def historiasMedicas(request):
     }
     return render(request, 'historia_list.html', context)
 
+def handle_uploaded_file(f):
+    with open('uploads/name.txt', 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
+
 def historia(request, estudio_id):
     if not is_user_auth(request.user, ('secretarios', 'medicos', 'sarasa')):
        return redirect('error_acceso')
 
     try:
-        estudioAux = Estudio.objects.get(pk=estudio_id)
-        files = EstudioFile.objects.filter(estudio = estudioAux)
-
-        context = {
-            'estudio': estudioAux,
-            'files': files
-        }
-
+        estudio = Estudio.objects.get(pk=estudio_id)
     except Estudio.DoesNotExist:
         raise Http404("El estudio no existe")
+
+    if request.method == 'POST':
+        if request.POST.get('diagnostic'):
+            diagnostic = request.POST.get('diagnostic')
+            estudio.diagnostic = diagnostic
+            estudio.save()
+
+        if request.POST.get('comments'): 
+            comments = request.POST.get('comments')
+            estudio.comments = comments
+            estudio.save()
+
+        if not request.POST.get('comments') and not request.POST.get('diagnostic'):
+            archivo = request.FILES['archivo']
+            descripcion = request.POST.get('descripcion_file')
+            estudio_file = EstudioFile(estudio=estudio, file=archivo, descripcion=descripcion )
+            estudio_file.save()
+            
+       
+    files = EstudioFile.objects.filter(estudio = estudio)
+    context = {
+        'estudio': estudio,
+        'files': files
+    }
+
     return render(request, 'historia_detail.html', context)
 
 dict_especialidades = {

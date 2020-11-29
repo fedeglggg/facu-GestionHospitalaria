@@ -88,13 +88,17 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         </button>
       </div>
-      <div class="modal-body">
-       Aca iria el formulario para cargar un archivo
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-success">Guardar</button>
-      </div>
+      <form enctype="multipart/form-data" method="POST" action="">
+        {% csrf_token %}
+        <div class="modal-body">
+          <input type="file" name="archivo" required> 
+          <input type="text" name="descripcion_file" placeholder="Ingrese una descipción" required>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          <button type="submit" class="btn btn-success">Guardar</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
@@ -107,14 +111,17 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         </button>
       </div>
-      <div class="modal-body">
-       <div style="text-align: center">
-          <textarea style="width: 98%;height: 300px" >{{estudio.comments}}</textarea>
+      <form method="post" action="">
+        {% csrf_token %}
+        <div class="modal-body">
+          <div style="text-align: center">
+            <textarea name="comments" style="width: 98%;height: 300px" >{{estudio.comments}}</textarea>
           </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-success">Guardar</button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          <button type="submit" class="btn btn-success">Guardar</button>
+      </form>
       </div>
     </div>
   </div>
@@ -128,15 +135,18 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         </button>
       </div>
-      <div class="modal-body">
-            <div style="text-align: center">
-          <textarea style="width: 98%;height: 300px" >{{estudio.diagnostic}}</textarea>
+      <form method="post" action="">
+        {% csrf_token %}
+        <div class="modal-body">
+          <div style="text-align: center">
+            <textarea name="diagnostic" style="width: 98%;height: 300px" >{{estudio.diagnostic}}</textarea>
           </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-success">Guardar</button>
-      </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          <button type="submit" class="btn btn-success" onclick="">Guardar</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
