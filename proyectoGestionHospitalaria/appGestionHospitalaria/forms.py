@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 import datetime
 from django.db import models
-from .models import Especialidad, Doctor, TipoEstudio, Turno, Paciente
+from .models import Especialidad, Doctor, TipoEstudio, Turno, Paciente, EstudioFile
 
 # los fields se usan en el is_valid() matcheandolos con los names de los input 
 # no se usa los id_nombredefield ej id_username para algo, no recuerdo -> chequear esto dsp
@@ -134,5 +134,4 @@ class CreateFormTurno33(ModelForm):
     class Meta:
         model = Turno
         fields = ('tipo_estudio_name', 'doctor_name', 'date', 'timeFrom')
-
 
