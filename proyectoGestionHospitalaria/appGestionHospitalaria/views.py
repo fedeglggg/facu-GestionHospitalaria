@@ -162,20 +162,31 @@ def historiasMedicas(request):
     return render(request, 'historia_list.html', context)
 
 def historia(request, estudio_id):
+    #  acaaaa
     if not is_user_auth(request.user, ('secretarios', 'medicos', 'sarasa')):
        return redirect('error_acceso')
 
     try:
-        estudioAux = Estudio.objects.get(pk=estudio_id)
-        files = EstudioFile.objects.filter(estudio = estudioAux)
-
-        context = {
-            'estudio': estudioAux,
-            'files': files
-        }
-
+        estudio = Estudio.objects.get(pk=estudio_id)
     except Estudio.DoesNotExist:
         raise Http404("El estudio no existe")
+
+    if request.method == 'POST':
+        if request.POST.get('diagnostic'):
+            diagnostic = request.POST.get('diagnostic')
+            estudio.diagnostic = diagnostic
+            estudio.save()
+        if request.POST.get('comments'): 
+            comments = request.POST.get('comments')
+            estudio.comments = comments
+            estudio.save()
+       
+    files = EstudioFile.objects.filter(estudio = estudio)
+    context = {
+        'estudio': estudio,
+        'files': files
+    }
+
     return render(request, 'historia_detail.html', context)
 
 dict_especialidades = {
