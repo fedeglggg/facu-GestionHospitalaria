@@ -72,7 +72,7 @@ class TipoEstudio(models.Model):
     Modelo que representa un Tipo de estudio
     """
     name = models.CharField(max_length=100)
-    especialidad = models.ForeignKey(Especialidad,on_delete=models.CASCADE, help_text="Seleccione una especialidad")
+    especialidad = models.ForeignKey(Especialidad,on_delete=models.CASCADE, help_text="Seleccione una especialidad", null=True, blank=True)
     # duration = models.IntegerField()
 
     def __str__(self):

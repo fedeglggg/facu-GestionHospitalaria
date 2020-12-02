@@ -143,7 +143,7 @@ def turnos(request):
 
     #for i in turnos:
        # print(i.estudio.doctor.user.first_name)
-        #print(i.estudio.paciente.user.first_name)
+       # #print(i.estudio.paciente.user.first_name)
 
     context = {
         'turnos': turnos,
@@ -301,7 +301,6 @@ def signup_medico(request):
 
 # todos los comentarios de signup_medico aplican aca
 def signup_paciente(request):
-    # por ahora saco el permiso para registrar pacientes al sistema, que se registre cualquiera
     # if not is_user_auth(request.user, ('pacientes')):
     #     return redirect('error_acceso')
 
@@ -515,7 +514,9 @@ def create_turno_4(request):
             turno = turno_form.cleaned_data.get('turno')
             paciente = Paciente.objects.get(dni=dni)
             doctor = Doctor.objects.get(matricula=matricula)
-            tipo = TipoEstudio.objects.get(pk=1) # ver como hacer este 
+            tipo = TipoEstudio.objects.get(name='Consulta') # todos los turnos crean un estudio de tipo consulta al inicio y despues se cambia
+            # Mas adelante hacemos si va a cambiar el tipo de estudio y no tiene especialidad asignada tonces que cree un nuevo tipo estudio con el nobmre correspondiente y su especialidad
+            # ya que si solamente le asignamos al tipo estudio una especialidad y cambiar de nombre al ya creado tiraria error la linea de arriba
             aux_1 = str(turno).split(' ')
             aux_2 = aux_1[0].split(':')
 
@@ -531,7 +532,6 @@ def create_turno_4(request):
                 else:
                     time = '0' + str(int(aux_2[0])) + ':' + str(int(aux_2[1])) + ':00'
 
-
             new_estudio = Estudio(paciente=paciente, doctor=doctor, tipo=tipo)
             new_estudio.save()
             new_turno = Turno(estudio=new_estudio, date=date, timeFrom=time)
@@ -540,3 +540,5 @@ def create_turno_4(request):
         else:
             print('error')
             print(turno_form.errors)
+
+    
