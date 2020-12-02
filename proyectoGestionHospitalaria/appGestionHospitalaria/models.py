@@ -88,11 +88,11 @@ class Estudio(models.Model):
     """
     tipo = models.ForeignKey(TipoEstudio, on_delete=models.CASCADE, null=False)
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE , null=False) # siempre se asocia a un paciente
-    comments = models.TextField(null=True, help_text="Ingrese comentarios (Será visible para el paciente)")
-    diagnostic = models.TextField(null=True, help_text="Ingrese un diagnóstico (No será visible para el paciente)")
+    comments = models.TextField(null=True, blank=True, help_text="Ingrese comentarios (Será visible para el paciente)", default="")
+    diagnostic = models.TextField(null=True, blank=True, help_text="Ingrese un diagnóstico (No será visible para el paciente)", default="")
     confirmed = models.BooleanField(default=False)
-    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, null=False)  # siempre se asocia a doctor
-    secretary = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)  #opcional
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, null=False, blank=True)  # siempre se asocia a doctor
+    secretary = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)  #opcional
 
     def __str__(self):
         """

@@ -136,6 +136,20 @@ def turnos(request):
     if not is_user_auth(request.user, ('secretarios', 'sarasa')):
         return redirect('error_acceso')
       
+    if request.method == 'POST':
+        turno_pk = request.POST.get('turno_id')
+        try:
+            turno = Turno.objects.get(pk=turno_pk)
+            if request.POST.get('confirmar') == '1':
+                turno.estudio.confirmed = True
+                turno.estudio.save()
+            else:
+                if request.POST.get('confirmar') == '0':
+                    turno.estudio.delete()
+        except Turno.DoesNotExist:
+            raise Http404("El turno no existe")
+
+
     turnos = Turno.objects.all()
 
     myFilter = TurnoFilter(request.GET, queryset=turnos)
@@ -182,26 +196,25 @@ def historia(request, estudio_id):
         raise Http404("El estudio no existe")
 
     if request.method == 'POST':
-        if request.POST.get('diagnostic'):
+        if request.POST.get('option') == 'diagnostic':
             diagnostic = request.POST.get('diagnostic')
             estudio.diagnostic = diagnostic
             estudio.save()
 
-        if request.POST.get('comments'): 
+        if request.POST.get('option') == 'comments': 
             comments = request.POST.get('comments')
             estudio.comments = comments
             estudio.save()
 
-        if request.POST.get('estudio_file_id'): 
+        if request.POST.get('option') == 'estudio_file': 
             estudio_file_pk = int(request.POST.get('estudio_file_id'))
             try:
                 estudio_file = EstudioFile.objects.get(pk=estudio_file_pk)
                 estudio_file.delete()
-            except Paciente.DoesNotExist:
+            except Estudio.DoesNotExist:
                 raise Http404("error en la toma del objeto")
 
-
-        if (not request.POST.get('comments')) and (not request.POST.get('diagnostic')) and (not request.POST.get('estudio_file_id')):
+        if request.POST.get('option') == 'descripcion_file':
             archivo = request.FILES['archivo']
             descripcion = request.POST.get('descripcion_file')
             estudio_file = EstudioFile(estudio=estudio, file=archivo, descripcion=descripcion )

@@ -59,7 +59,6 @@
           <strong>{{ file }}</strong>
           </p><p>
           <a class="btn btn-secondary" href="{{ file.file.url }}" download>Descargar</a>
-          <!-- <a class="btn btn-danger" data-id="" data-toggle="modal" data-target="#myModalBorrar" style="color: #fff">Borrar</a>  -->
           <a class="open-AddBookDialog btn btn-danger" data-id="{{ file.pk }}" data-toggle="modal" data-target="#myModalBorrar" style="color: #fff">Borrar</a> 
         </p>
         </div>
@@ -112,6 +111,7 @@
         <div class="modal-body">
           <input type="file" name="archivo" required> 
           <input type="text" name="descripcion_file" placeholder="Ingrese una descipción" required>
+          <input type="hidden" name="option" value="descripcion_file">
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -135,6 +135,7 @@
         <div class="modal-body">
           <div style="text-align: center">
             <textarea name="comments" style="width: 98%;height: 300px" >{{estudio.comments}}</textarea>
+            <input type="hidden" name="option" value="comments">
           </div>
         </div>
         <div class="modal-footer">
@@ -159,6 +160,7 @@
         <div class="modal-body">
           <div style="text-align: center">
             <textarea name="diagnostic" style="width: 98%;height: 300px" >{{estudio.diagnostic}}</textarea>
+            <input type="hidden" name="option" value="diagnostic">
           </div>
         </div>
         <div class="modal-footer">
@@ -181,9 +183,11 @@
       <form method="post" action="">
         {% csrf_token %}
         <div class="modal-body">
-          <!-- este no me acuerdo que tenia aca abajo en lugar del p-->
-          <p>¿Desea borrar este archivo?</p>
+          <div style="text-align: center">
+            <p>¿Desea borrar este archivo?</p>
+          </div>
           <input type="hidden" name="estudio_file_id" id="estudio_file_id" value=""/>
+          <input type="hidden" name="option" value="estudio_file">
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -200,7 +204,6 @@
 <script>
   
   $(document).on("click", ".open-AddBookDialog", function () {
-    console.log('1')
     var estudio_file_id = $(this).data('id');
     $(".modal-body #estudio_file_id").val(estudio_file_id);
   });
