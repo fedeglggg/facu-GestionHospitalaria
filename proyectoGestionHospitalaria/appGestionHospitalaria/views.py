@@ -192,7 +192,16 @@ def historia(request, estudio_id):
             estudio.comments = comments
             estudio.save()
 
-        if not request.POST.get('comments') and not request.POST.get('diagnostic'):
+        if request.POST.get('estudio_file_id'): 
+            estudio_file_pk = int(request.POST.get('estudio_file_id'))
+            try:
+                estudio_file = EstudioFile.objects.get(pk=estudio_file_pk)
+                estudio_file.delete()
+            except Paciente.DoesNotExist:
+                raise Http404("error en la toma del objeto")
+
+
+        if (not request.POST.get('comments')) and (not request.POST.get('diagnostic')) and (not request.POST.get('estudio_file_id')):
             archivo = request.FILES['archivo']
             descripcion = request.POST.get('descripcion_file')
             estudio_file = EstudioFile(estudio=estudio, file=archivo, descripcion=descripcion )

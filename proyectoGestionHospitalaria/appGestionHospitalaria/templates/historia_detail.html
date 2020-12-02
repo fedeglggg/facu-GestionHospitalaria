@@ -1,6 +1,10 @@
 {% extends "baseTemplate.html" %}
 
+<title>{% block title %}Sistema de Gestion{% endblock %}</title>
+
+
 {% block content %}
+
 
 <section id="hero" class="d-flex align-items-center" style="position: unset; ">
   <div class="container">
@@ -49,7 +53,20 @@
 <div class="container border">
 
 <div class="row">
-    {% for file in files %} <div class="col-lg-3" style="padding: 7px"><div class="icon-box" style="width: fit-content;background-color: #e9ecef"><strong>{{ file }}:</strong></p><p><a class="btn btn-secondary" href="{{ file.file.url }}" download>Descargar</a> <a class="btn btn-danger" data-toggle="modal" data-target="#myModalBorrar" style="color: #fff">Borrar</a></p></div></div>{% if not forloop.last %}{% endif %}{% endfor %}
+    {% for file in files %} 
+      <div class="col-lg-3" style="padding: 7px">
+        <div class="icon-box" style="width: fit-content;background-color: #e9ecef">
+          <strong>{{ file }}</strong>
+          </p><p>
+          <a class="btn btn-secondary" href="{{ file.file.url }}" download>Descargar</a>
+          <!-- <a class="btn btn-danger" data-id="" data-toggle="modal" data-target="#myModalBorrar" style="color: #fff">Borrar</a>  -->
+          <a class="open-AddBookDialog btn btn-danger" data-id="{{ file.pk }}" data-toggle="modal" data-target="#myModalBorrar" style="color: #fff">Borrar</a> 
+        </p>
+        </div>
+      </div>
+      {% if not forloop.last %}
+      {% endif %}
+    {% endfor %}
 
 </div>
 </div>
@@ -79,6 +96,7 @@
 
 <!-- Modals -->
 
+
 <!-- Modal -->
 <div class="modal fade" id="myModalFile" tabindex="-1" role="dialog" >
   <div class="modal-dialog modal-dialog-centered" role="document">
@@ -88,6 +106,7 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         </button>
       </div>
+      <!-- multipart -> majenar files en django -->
       <form enctype="multipart/form-data" method="POST" action="">
         {% csrf_token %}
         <div class="modal-body">
@@ -159,17 +178,35 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         </button>
       </div>
-      <div class="modal-body">
-            Desea borrar este archivo adjunto?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-danger">Borrar</button>
-      </div>
+      <form method="post" action="">
+        {% csrf_token %}
+        <div class="modal-body">
+          <!-- este no me acuerdo que tenia aca abajo en lugar del p-->
+          <p>¿Desea borrar este archivo?</p>
+          <input type="hidden" name="estudio_file_id" id="estudio_file_id" value=""/>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          <button type="submit" class="btn btn-danger">Borrar</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
 
+<!-- jquery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+  
+  $(document).on("click", ".open-AddBookDialog", function () {
+    console.log('1')
+    var estudio_file_id = $(this).data('id');
+    $(".modal-body #estudio_file_id").val(estudio_file_id);
+  });
+
+</script>
 
 
 {% endblock %}
+
