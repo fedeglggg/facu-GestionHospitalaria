@@ -92,7 +92,7 @@ class Estudio(models.Model):
     diagnostic = models.TextField(null=True, blank=True, help_text="Ingrese un diagnóstico (No será visible para el paciente)", default="")
     confirmed = models.BooleanField(default=False)
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, null=False, blank=True)  # siempre se asocia a doctor
-    secretary = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)  #opcional
+    secretary = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)  # opcional
 
     def __str__(self):
         """

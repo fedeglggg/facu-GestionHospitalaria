@@ -589,7 +589,7 @@ def create_turno_4(request):
             aux_2 = aux_1[0].split(':')
 
             # conversion a timefield
-            if int(aux_2[1]) >= 10:
+            if int(aux_2[0]) >= 10:
                 if str(int(aux_2[1])) == '0':
                     time = str(int(aux_2[0])) + ':00:00'
                 else:
