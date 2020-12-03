@@ -181,6 +181,38 @@ def turnos(request):
     }
     return render(request, 'turno_list.html', context)
 
+def turnos_paciente(request):
+    if not is_user_auth(request.user, ('pacientes', 'sarasa')):
+        return redirect('error_acceso')
+      
+
+    # paciente = Paciente.objects.get(user=request.user)
+    # estudios = Estudio.objects.filter(paciente=paciente)
+    # turnos =  []
+    # de aca salgo con la lista de turnos
+    # for i in estudios:
+    #     turnos_aux = Turno.objects.filter(estudio=i)
+    #     for x in turnos_aux:
+    #         turnos.append(x)
+
+
+    turnos = Turno.objects.all()
+
+    # para aplicar el filter la lista de turnos tiene que salir de un query y ahoramismo no se puede eso, faltaria una relacion entre turno y paciente en todo caso
+    myFilter = TurnoFilter(request.GET, queryset=turnos)
+    turnos = myFilter.qs
+
+
+    #for i in turnos:
+       # print(i.estudio.doctor.user.first_name)
+       # #print(i.estudio.paciente.user.first_name)
+
+    context = {
+        'turnos': turnos,
+        'myFilter': myFilter
+    }
+    return render(request, 'turno_list_paciente.html', context)
+
 
 def historiasMedicas(request):
     if not is_user_auth(request.user, ('secretarios', 'medicos', 'sarasa')):
@@ -197,13 +229,31 @@ def historiasMedicas(request):
     }
     return render(request, 'historia_list.html', context)
 
+def historias_medicas_pacientes(request):
+    if not is_user_auth(request.user, ('pacientes', 'sarasa')):
+        return redirect('error_acceso')
+
+    paciente = Paciente.objects.get(user=request.user)
+    estudios = Estudio.objects.filter(confirmed=True, paciente=paciente)
+
+    # si podes hacer que el filter no muestre el campo de paciente:
+    myFilter = EstudioFilter(request.GET, queryset=estudios)
+    estudios = myFilter.qs
+    print(myFilter)
+
+    context = {
+        'estudios': estudios,
+        'myFilter': myFilter
+    }
+    return render(request, 'historia_list_paciente.html', context)
+
 def handle_uploaded_file(f):
     with open('uploads/name.txt', 'wb+') as destination:
         for chunk in f.chunks():
             destination.write(chunk)
 
 def historia(request, estudio_id):
-    if not is_user_auth(request.user, ('secretarios', 'medicos', 'sarasa')):
+    if not is_user_auth(request.user, ('secretarios', 'pacientes', 'medicos', 'sarasa')):
        return redirect('error_acceso')
 
     try:
@@ -216,7 +266,7 @@ def historia(request, estudio_id):
             tipo_estudio_name = request.POST.get('tipo_estudio_name')
             tipo_estudio = TipoEstudio.objects.filter(name=tipo_estudio_name)
             estudio_id = request.POST.get('estudio_id')
-            
+
             try:
                 estudio = Estudio.objects.get(pk=estudio_id)
                 especialidad = estudio.tipo.especialidad

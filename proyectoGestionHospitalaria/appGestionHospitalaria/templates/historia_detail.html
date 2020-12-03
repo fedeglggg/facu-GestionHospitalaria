@@ -20,7 +20,10 @@
 <div class="icon-boxes">
   
 <div class="icon-box" style="padding: 10px;margin: 25px 0px 25px 0px;">
- <h1> <strong>{{ estudio.tipo }} </strong><a class="btn btn-light" style="margin: 10px;" data-toggle="modal" data-target="#myModalEstudio">Editar</a></h1>
+  <h1> <strong>{{ estudio.tipo }} </strong>
+  {% if perms.appGestionHospitalaria.view_paciente %}
+    <a class="btn btn-light" style="margin: 10px;" data-toggle="modal" data-target="#myModalEstudio">Editar</a></h1>
+  {% endif %}
 </div>
 
 <div class="icon-box" style="padding: 10px;margin: 25px 0px 25px 0px;">
@@ -32,13 +35,15 @@
   <strong>Hora:</strong> {{estudio.turno.timeFrom}}</p>
 </div>
 
+{% if perms.appGestionHospitalaria.view_paciente %}
 <div class="icon-box" style="padding: 10px; margin: 25px 0px 25px 0px;">
     <p><strong>Diagnostico</strong></p>
     <textarea style="width: inherit;height: 190px" disabled>{{estudio.diagnostic}}</textarea>
 
 <a class="btn btn-success" style="margin: 10px;color: #fff;" data-toggle="modal" data-target="#myModalDiagnostic">Modificar</a>
-
 </div>
+{% endif %}
+
 <div class="icon-box" style="padding: 10px; margin: 25px 0px 25px 0px;">
     <p><strong>Comentarios</strong></p>
     <textarea style="width: inherit;height: 190px" disabled>{{estudio.comments}}</textarea>
@@ -47,8 +52,13 @@
 
 </div>
 
+
+{% if perms.appGestionHospitalaria.view_paciente %}
+
 <div class="icon-box " style="padding: 10px; margin: 25px 0px 25px 0px;">
 
+
+  
     <p><strong>Adjuntos</strong></p>
 <div class="container border">
 
@@ -59,7 +69,9 @@
           <strong>{{ file }}</strong>
           </p><p>
           <a class="btn btn-secondary" href="{{ file.file.url }}" download>Descargar</a>
-          <a class="open-AddBookDialog btn btn-danger" data-id="{{ file.pk }}" data-toggle="modal" data-target="#myModalBorrar" style="color: #fff">Borrar</a> 
+          {% if perms.appGestionHospitalaria.modify_estudio or user.is_superuser %}
+            <a class="open-AddBookDialog btn btn-danger" data-id="{{ file.pk }}" data-toggle="modal" data-target="#myModalBorrar" style="color: #fff">Borrar</a>
+          {% endif %}
         </p>
         </div>
       </div>
@@ -73,6 +85,8 @@
 <a class="btn btn-success" style="margin: 10px;color: #fff;" data-toggle="modal" data-target="#myModalFile">Nuevo</a>
 
 </div>
+
+{% endif %}
 <!--
   <div style="margin-left:20px;margin-top:20px">
     <h4>Estudios</h4>

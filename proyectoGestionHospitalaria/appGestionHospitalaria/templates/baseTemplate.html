@@ -90,13 +90,15 @@
         <ul>
           {% if user.is_authenticated %}
           <li class="active"><a href="/">Inicio</a></li>
-          <li><a href="{% url 'lista_turno'%}">Turnos</a></li>
+          
 
             <!-- por ahora uso view_paciente para ver si es paciente o no -->
             {% if perms.appGestionHospitalaria.view_paciente %}
-            <li><a href="{% url 'lista_historia'%}">Historias medicas</a></li>
-              {% else %}
-            <li><a href="{% url 'lista_historia'%}">Mi historia medica</a></li>
+              <li><a href="{% url 'lista_turno'%}"> Turnos</a></li>
+              <li><a href="{% url 'lista_historia'%}">Historias medicas</a></li>
+            {% else %}
+              <li><a href="{% url 'lista_turno_paciente'%}">Mis Turnos</a></li>
+              <li><a href="{% url 'historia_list_paciente'%}">Mi historia medica</a></li>
             {% endif %}
 
             <!-- forma de chequear los permisos en el front - estos permisos estan asignados por default

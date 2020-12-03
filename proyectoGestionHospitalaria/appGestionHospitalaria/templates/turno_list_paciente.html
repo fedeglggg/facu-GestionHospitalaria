@@ -1,0 +1,198 @@
+{% extends "baseTemplate.html" %}
+<title>{% block title %}Turnos{% endblock %}</title>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+{% block content %}
+<section id="hero" class="d-flex align-items-center" style="position: unset; ">
+    <div class="container">
+        <h1>Listado de los turnos</h1>
+        <h2>Vea todos los turnos registrados del sistema</h2>
+    </div>
+</section>
+
+<main id="main">
+<section id="appointment" class="appointment section-bg" style="padding: 3%;">
+<section id="why-us" class="why-us" style="all: inherit;padding: 0">
+<div class="container" style="inline-size: fit-content; text-align: center" >
+<div class="icon-boxes">
+<div class="icon-box">
+<div class="row">
+	<div class="col" style="width: fit-content">
+
+<div class="card card-body">
+			<form method="get">
+                {{myFilter.form}}
+
+		    <button class="btn btn-primary" type="submit">Filtrar</button>
+		  </form>
+</div>
+
+	</div>
+
+</div>
+</div>
+<div class="icon-box">
+
+<h1>bajo construccion</h1>
+
+{% if turnos %}
+
+    <table id="table_id"  class="table table-bordered"> <!--list-group -->
+    <thead>
+        <tr>
+            <td>Fecha</td>
+            <td>Hora</td>
+            <td>Médico</td>
+            <td></td>
+        </tr>
+    </thead>
+    <tbody>
+    {% for turno in turnos %}
+        <tr>
+        <td>{{turno.date }} </td>
+        <td>{{turno.timeFrom}}  </td>
+        <td>{{turno.estudio.doctor}} </td>
+        {% if turno.estudio.confirmed %}
+            <td><p>Turno Confirmado.</p></td>
+        {% else %}
+            <td>
+              <!-- here1 -->
+              <a class="aceptar_turno btn btn-success" data-id="{{ turno.pk }}" style="margin: 3px;color: #fff;" data-toggle="modal" data-target="#myModalConfirmar" >Confirmar</a> 
+              <a class="rechazar_turno btn btn-danger" data-id="{{ turno.pk }}" style="margin: 3px;color: #fff;" data-toggle="modal" data-target="#myModalRechazar" >Rechazar</a> 
+            </td>
+        {% endif %}
+        </tr>
+    {% endfor %}
+    </tbody>
+
+
+</table>
+
+
+
+{% else %}
+<p>No existen turnos registrados.</p>
+{% endif %}
+
+</div>
+</div>
+</div>
+</section>
+</section>
+</main>
+
+<div class="modal fade" id="myModalConfirmar" tabindex="-1" role="dialog" >
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Turno</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        </button>
+      </div>
+      <form method="post" action="">
+        {% csrf_token %}
+        <div class="modal-body">
+          <div style="text-align: center">
+            <input type="text" class="form-control" name="tipo_estudio_name" placeholder="Ingrese el nombre de la práctica para confirmar el turno" maxlength="25" required="required"> <!--Debe poner nombre de estudio (Nombre del tipoEstudio) sino que ponga un nombre default-->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <input type="hidden" name="turno_id" id="turno_id" value=""/>
+          <input type="hidden" name="confirmar" id="confirmar" value="1"/>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          <button type="submit" class="btn btn-success">Confirmar</button>
+        </form>  
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="myModalRechazar" tabindex="-1" role="dialog" >
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Turno</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        </button>
+      </div>
+      <div class="modal-body">
+            <div style="text-align: center">
+                <p>¿Desea rechazar este turno?</p>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <form method="post" action="">
+          {% csrf_token %}
+          <input type="hidden" name="turno_id" id="turno_id" value=""/>
+          <input type="hidden" name="confirmar" id="confirmar" value="0"/>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          <button type="submit" class="btn btn-success">Confirmar</button>
+        </form>  
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+
+{% block js %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.18/af-2.3.0/b-1.5.2/b-colvis-1.5.2/b-flash-1.5.2/b-html5-1.5.2/b-print-1.5.2/cr-1.5.0/fh-3.1.4/r-2.2.2/datatables.min.css"/>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.18/af-2.3.0/b-1.5.2/b-colvis-1.5.2/b-flash-1.5.2/b-html5-1.5.2/b-print-1.5.2/cr-1.5.0/fh-3.1.4/r-2.2.2/datatables.min.js"></script>
+<!-- needed to use moment.js for our date sorting-->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.10.19/sorting/datetime-moment.js"></script>
+
+
+
+
+<!-- the second way to do it to integrate our buttons for export-->
+
+<script>
+    $(document).ready( function () {
+
+    $.fn.dataTable.moment( 'MMM D, YYYY' );
+    $.fn.dataTable.moment( 'D-MMM-YY' );
+    $('#table_id').DataTable({
+            "autoWidth": false,
+    responsive: true,
+    columnDefs: [
+    { responsivePriority: 1, targets: 0 },
+    { responsivePriority: 2, targets: 1 },
+    { responsivePriority: 3, targets: 2 }
+    ],
+    language: {
+            "search":         "Buscar:",
+            "lengthMenu": "Muestra _MENU_ registros por página",
+            "zeroRecords": "Vacio",
+            "info": "Página _PAGE_ de _PAGES_",
+            "infoEmpty": "Sin registros posibles",
+            "infoFiltered": "(filtrados _MAX_ registros totales)",
+            "paginate": {
+                            "first":      "Primero",
+                            "last":       "Ultimo",
+                            "next":       "Siguiente",
+                            "previous":   "Anterior"
+                        }
+        }
+    }
+    );
+} );
+</script>
+
+<script>
+  $(document).on("click", ".aceptar_turno", function () {
+    var turno_id = $(this).data('id');
+    $(".modal-footer #turno_id").val(turno_id);
+  });
+
+  $(document).on("click", ".rechazar_turno", function () {
+    var turno_id = $(this).data('id');
+    $(".modal-footer #turno_id").val(turno_id);
+  });
+</script>
+{% endblock %}
+
