@@ -141,11 +141,27 @@ def turnos(request):
         try:
             turno = Turno.objects.get(pk=turno_pk)
             if request.POST.get('confirmar') == '1':
+                tipo_estudio_name = request.POST.get('tipo_estudio_name')
+                tipo_estudio = TipoEstudio.objects.filter(name=tipo_estudio_name)
+                especialidad = turno.estudio.tipo.especialidad
+                if tipo_estudio.exists():
+                    for i in tipo_estudio:
+                        if i.especialidad == especialidad:
+                            print('el tipo de estudio ya existe. especialidad = ', i.especialidad.name, ' - tipo: ', i.name)
+                            turno.estudio.tipo = i
+                else:
+                    print('no hay ningun tipo de estudio con ese nombre - creando nuevo ')
+                    new_tipo_estudio = TipoEstudio(name=tipo_estudio_name,especialidad=especialidad)
+                    new_tipo_estudio.save()
+                    turno.estudio.tipo = new_tipo_estudio
+
                 turno.estudio.confirmed = True
                 turno.estudio.save()
+
             else:
                 if request.POST.get('confirmar') == '0':
                     turno.estudio.delete()
+                    
         except Turno.DoesNotExist:
             raise Http404("El turno no existe")
 
