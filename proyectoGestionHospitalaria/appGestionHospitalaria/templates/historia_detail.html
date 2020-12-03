@@ -105,13 +105,13 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         </button>
       </div>
-      <!-- multipart -> majenar files en django -->
-      <form enctype="multipart/form-data" method="POST" action="">
+      <form method="POST" action="">
         {% csrf_token %}
         <div class="modal-body">
-            <p>Ingrese nombre del estudio:
-          <input type="text" name="descripcion_file" value="{{ estudio.tipo.name }}" maxlength="25" required></p>
-          <input type="hidden" name="option" value="descripcion_file">
+          <p>Ingrese un nuevo nombre para el estudio</p>
+          <input type="text" class="form-control" name="tipo_estudio_name" value="{{ estudio.tipo.name }}" maxlength="25" required="required">
+          <input type="hidden" name="estudio_id" value="{{ estudio.pk }}">
+          <input type="hidden" name="option" value="tipo_estudio_name">
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -134,9 +134,15 @@
       <form enctype="multipart/form-data" method="POST" action="">
         {% csrf_token %}
         <div class="modal-body">
-          <input type="file" name="archivo" required> 
-          <input type="text" name="descripcion_file" placeholder="Ingrese una descripción" required>
+          <!-- <input type="file" name="archivo2" required>  -->
+          <input type="text" class="form-control" name="descripcion_file" placeholder="Ingrese una descripción" required>
+          <p></p>
           <input type="hidden" name="option" value="descripcion_file">
+          <div class="custom-file">
+            <input type="file" class="custom-file-input" name="archivo "id="archivo" required>
+            <label class="custom-file-label" for="validatedCustomFile">Adjuntar un archivo</label>
+            <div class="invalid-feedback">Adjunte un archivo</div>
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -226,7 +232,7 @@
 <!-- jquery -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-<script>
+<script type="text/javascript">
   
   $(document).on("click", ".open-AddBookDialog", function () {
     var estudio_file_id = $(this).data('id');

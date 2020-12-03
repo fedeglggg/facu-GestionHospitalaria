@@ -212,6 +212,30 @@ def historia(request, estudio_id):
         raise Http404("El estudio no existe")
 
     if request.method == 'POST':
+        if request.POST.get('option') == 'tipo_estudio_name':
+            tipo_estudio_name = request.POST.get('tipo_estudio_name')
+            tipo_estudio = TipoEstudio.objects.filter(name=tipo_estudio_name)
+            estudio_id = request.POST.get('estudio_id')
+            
+            try:
+                estudio = Estudio.objects.get(pk=estudio_id)
+                especialidad = estudio.tipo.especialidad
+            except Estudio.DoesNotExist:
+                raise Http404("error en la toma del objeto")
+
+            if tipo_estudio.exists():
+                for i in tipo_estudio:
+                    if i.especialidad == especialidad:
+                        print('el tipo de estudio ya existe. especialidad = ', i.especialidad.name, ' - tipo: ', i.name)
+                        estudio.tipo = i
+            else:
+                print('no hay ningun tipo de estudio con ese nombre - creando nuevo tipo - especialidad:', especialidad.name, 'tipo nombre: ', tipo_estudio_name)
+                new_tipo_estudio = TipoEstudio(name=tipo_estudio_name,especialidad=especialidad)
+                new_tipo_estudio.save()
+                estudio.tipo = new_tipo_estudio
+
+            estudio.save()
+
         if request.POST.get('option') == 'diagnostic':
             diagnostic = request.POST.get('diagnostic')
             estudio.diagnostic = diagnostic
