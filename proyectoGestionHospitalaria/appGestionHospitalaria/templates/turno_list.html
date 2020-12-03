@@ -55,7 +55,11 @@
         {% if turno.estudio.confirmed %}
             <td><p>Turno Confirmado.</p></td>
         {% else %}
-            <td><a class="btn btn-success" style="margin: 3px;color: #fff;" data-toggle="modal" data-target="#myModalConfirmar">Confirmar</a> <a class="btn btn-danger" style="margin: 3px;color: #fff;" data-toggle="modal" data-target="#myModalRechazar">Rechazar</a></td>
+            <td>
+              <!-- here1 -->
+              <a class="aceptar_turno btn btn-success" data-id="{{ turno.pk }}" style="margin: 3px;color: #fff;" data-toggle="modal" data-target="#myModalConfirmar" >Confirmar</a> 
+              <a class="rechazar_turno btn btn-danger" data-id="{{ turno.pk }}" style="margin: 3px;color: #fff;" data-toggle="modal" data-target="#myModalRechazar" >Rechazar</a> 
+            </td>
         {% endif %}
         </tr>
     {% endfor %}
@@ -86,13 +90,19 @@
         </button>
       </div>
       <div class="modal-body">
-            <div style="text-align: center">
-                <p>Desea confirmar este turno?</p>
+          <div style="text-align: center">
+            <p>¿Desea confirmar este turno?</p>
           </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-success">Confirmar</button>
+      <!-- here2 -->
+        <form method="post" action="">
+          {% csrf_token %}
+          <input type="hidden" name="turno_id" id="turno_id" value=""/>
+          <input type="hidden" name="confirmar" id="confirmar" value="1"/>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          <button type="submit" class="btn btn-success">Confirmar</button>
+        </form>  
       </div>
     </div>
   </div>
@@ -108,12 +118,17 @@
       </div>
       <div class="modal-body">
             <div style="text-align: center">
-                <p>Desea rechazar este turno?</p>
+                <p>¿Desea rechazar este turno?</p>
           </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-danger">Rechazar</button>
+        <form method="post" action="">
+          {% csrf_token %}
+          <input type="hidden" name="turno_id" id="turno_id" value=""/>
+          <input type="hidden" name="confirmar" id="confirmar" value="0"/>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          <button type="submit" class="btn btn-success">Confirmar</button>
+        </form>  
       </div>
     </div>
   </div>
@@ -168,6 +183,18 @@
     }
     );
 } );
+</script>
+
+<script>
+  $(document).on("click", ".aceptar_turno", function () {
+    var turno_id = $(this).data('id');
+    $(".modal-footer #turno_id").val(turno_id);
+  });
+
+  $(document).on("click", ".rechazar_turno", function () {
+    var turno_id = $(this).data('id');
+    $(".modal-footer #turno_id").val(turno_id);
+  });
 </script>
 {% endblock %}
 

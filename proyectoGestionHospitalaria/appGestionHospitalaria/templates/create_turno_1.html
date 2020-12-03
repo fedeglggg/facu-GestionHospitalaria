@@ -20,7 +20,7 @@
 <div class="icon-box">
 
 
-<form method="GET" action="{% url 'create_turno_2' %}" > 
+<form method="GET" autocomplete="off" action="{% url 'create_turno_2' %}" > 
     <p></p>
     <!-- {% csrf_token %} saco el crft porq no deja usar get con esto -->
         <div class="section-title" style="padding-bottom: 0;">
@@ -44,6 +44,9 @@
             </ul>
         </small>
     {% endif %}
+    <div class="text-center">
+        <button style="background: #1977cc; border: 0; padding: 10px 35px; color: #fff; transition: 0.4s; border-radius: 50px; " onmouseover="this.style.backgroundColor='#1c84e3'" onmouseout="this.style.backgroundColor='#1977cc'" onclick="history.back()">Volver</button>
+    </div>
 </form>
 
 </div>

@@ -21,7 +21,7 @@ urlpatterns = [
     path('turnos/crear/1/', views.create_turno_1, name='create_turno_1'),
     path('turnos/crear/2/', views.create_turno_2, name='create_turno_2'),
     path('turnos/crear/3/', views.create_turno_3, name='create_turno_3'),
-    path('turnos/crear/4/', views.create_turno_4, name='create_turno_4'),
+    path('turnos/crear/4/', views.create_turno_4, name='create_turno_4')
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

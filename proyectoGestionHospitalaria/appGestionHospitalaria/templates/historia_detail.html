@@ -1,6 +1,10 @@
 {% extends "baseTemplate.html" %}
 
+<title>{% block title %}Sistema de Gestion{% endblock %}</title>
+
+
 {% block content %}
+
 
 <section id="hero" class="d-flex align-items-center" style="position: unset; ">
   <div class="container">
@@ -49,7 +53,19 @@
 <div class="container border">
 
 <div class="row">
-    {% for file in files %} <div class="col-lg-3" style="padding: 7px"><div class="icon-box" style="width: fit-content;background-color: #e9ecef"><strong>{{ file }}:</strong></p><p><a class="btn btn-secondary" href="{{ file.file.url }}" download>Descargar</a> <a class="btn btn-danger" data-toggle="modal" data-target="#myModalBorrar" style="color: #fff">Borrar</a></p></div></div>{% if not forloop.last %}{% endif %}{% endfor %}
+    {% for file in files %} 
+      <div class="col-lg-3" style="padding: 7px">
+        <div class="icon-box" style="width: fit-content;background-color: #e9ecef">
+          <strong>{{ file }}</strong>
+          </p><p>
+          <a class="btn btn-secondary" href="{{ file.file.url }}" download>Descargar</a>
+          <a class="open-AddBookDialog btn btn-danger" data-id="{{ file.pk }}" data-toggle="modal" data-target="#myModalBorrar" style="color: #fff">Borrar</a> 
+        </p>
+        </div>
+      </div>
+      {% if not forloop.last %}
+      {% endif %}
+    {% endfor %}
 
 </div>
 </div>
@@ -79,6 +95,7 @@
 
 <!-- Modals -->
 
+
 <!-- Modal -->
 <div class="modal fade" id="myModalFile" tabindex="-1" role="dialog" >
   <div class="modal-dialog modal-dialog-centered" role="document">
@@ -88,11 +105,13 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         </button>
       </div>
+      <!-- multipart -> majenar files en django -->
       <form enctype="multipart/form-data" method="POST" action="">
         {% csrf_token %}
         <div class="modal-body">
           <input type="file" name="archivo" required> 
           <input type="text" name="descripcion_file" placeholder="Ingrese una descipción" required>
+          <input type="hidden" name="option" value="descripcion_file">
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -116,6 +135,7 @@
         <div class="modal-body">
           <div style="text-align: center">
             <textarea name="comments" style="width: 98%;height: 300px" >{{estudio.comments}}</textarea>
+            <input type="hidden" name="option" value="comments">
           </div>
         </div>
         <div class="modal-footer">
@@ -140,6 +160,7 @@
         <div class="modal-body">
           <div style="text-align: center">
             <textarea name="diagnostic" style="width: 98%;height: 300px" >{{estudio.diagnostic}}</textarea>
+            <input type="hidden" name="option" value="diagnostic">
           </div>
         </div>
         <div class="modal-footer">
@@ -159,17 +180,36 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         </button>
       </div>
-      <div class="modal-body">
-            Desea borrar este archivo adjunto?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-danger">Borrar</button>
-      </div>
+      <form method="post" action="">
+        {% csrf_token %}
+        <div class="modal-body">
+          <div style="text-align: center">
+            <p>¿Desea borrar este archivo?</p>
+          </div>
+          <input type="hidden" name="estudio_file_id" id="estudio_file_id" value=""/>
+          <input type="hidden" name="option" value="estudio_file">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          <button type="submit" class="btn btn-danger">Borrar</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
 
+<!-- jquery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+  
+  $(document).on("click", ".open-AddBookDialog", function () {
+    var estudio_file_id = $(this).data('id');
+    $(".modal-body #estudio_file_id").val(estudio_file_id);
+  });
+
+</script>
 
 
 {% endblock %}
+

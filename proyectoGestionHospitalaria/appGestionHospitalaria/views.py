@@ -136,6 +136,20 @@ def turnos(request):
     if not is_user_auth(request.user, ('secretarios', 'sarasa')):
         return redirect('error_acceso')
       
+    if request.method == 'POST':
+        turno_pk = request.POST.get('turno_id')
+        try:
+            turno = Turno.objects.get(pk=turno_pk)
+            if request.POST.get('confirmar') == '1':
+                turno.estudio.confirmed = True
+                turno.estudio.save()
+            else:
+                if request.POST.get('confirmar') == '0':
+                    turno.estudio.delete()
+        except Turno.DoesNotExist:
+            raise Http404("El turno no existe")
+
+
     turnos = Turno.objects.all()
 
     myFilter = TurnoFilter(request.GET, queryset=turnos)
@@ -143,7 +157,7 @@ def turnos(request):
 
     #for i in turnos:
        # print(i.estudio.doctor.user.first_name)
-        #print(i.estudio.paciente.user.first_name)
+       # #print(i.estudio.paciente.user.first_name)
 
     context = {
         'turnos': turnos,
@@ -182,17 +196,25 @@ def historia(request, estudio_id):
         raise Http404("El estudio no existe")
 
     if request.method == 'POST':
-        if request.POST.get('diagnostic'):
+        if request.POST.get('option') == 'diagnostic':
             diagnostic = request.POST.get('diagnostic')
             estudio.diagnostic = diagnostic
             estudio.save()
 
-        if request.POST.get('comments'): 
+        if request.POST.get('option') == 'comments': 
             comments = request.POST.get('comments')
             estudio.comments = comments
             estudio.save()
 
-        if not request.POST.get('comments') and not request.POST.get('diagnostic'):
+        if request.POST.get('option') == 'estudio_file': 
+            estudio_file_pk = int(request.POST.get('estudio_file_id'))
+            try:
+                estudio_file = EstudioFile.objects.get(pk=estudio_file_pk)
+                estudio_file.delete()
+            except Estudio.DoesNotExist:
+                raise Http404("error en la toma del objeto")
+
+        if request.POST.get('option') == 'descripcion_file':
             archivo = request.FILES['archivo']
             descripcion = request.POST.get('descripcion_file')
             estudio_file = EstudioFile(estudio=estudio, file=archivo, descripcion=descripcion )
@@ -301,7 +323,6 @@ def signup_medico(request):
 
 # todos los comentarios de signup_medico aplican aca
 def signup_paciente(request):
-    # por ahora saco el permiso para registrar pacientes al sistema, que se registre cualquiera
     # if not is_user_auth(request.user, ('pacientes')):
     #     return redirect('error_acceso')
 
@@ -430,7 +451,7 @@ def create_turno_4(request):
                 a = int(a//mpt)
                 cantidad_de_turnos.append(a) # total de min de turnos / m por turno
 
-            # agarro los turnos tomados de ese dia (faltan de ese medico) 
+            # agarro los turnos tomados de ese dia
             # y los transformo en min (los date) 
             turnos_tomados_todos = Turno.objects.filter(date=date) # turnos de la fecha
             estudios = Estudio.objects.filter(doctor=doctor)
@@ -454,13 +475,19 @@ def create_turno_4(request):
                 index_i = index_i + 1
                 for x in range(i):
                     horario = base + x*mpt
-                    for x in turnos_tomados_minutos:
-                        if not x == horario:
-                            horario = int(horario)
-                            turnos_disponibles.append(horario)
-                        else:
-                            print('se cansela un turno al ya estar tomado')
+                    aux = False
 
+                    # chequea si hay al menos 1 turno tomado que es = a un horario que daria de los turnos
+                    for j in turnos_tomados_minutos:
+                        if j == horario:
+                            aux = True
+                            print('se cansela un turno al ya estar tomado')
+                            
+                    if not aux:
+                        horario = int(horario)
+                        turnos_disponibles.append(horario)
+
+            print('turnos disponibles:', turnos_disponibles)
             # conversión a de min a horas y en formato str para poder publicar en el template
             index_i = 0
             lista_turnos = []
@@ -509,7 +536,9 @@ def create_turno_4(request):
             turno = turno_form.cleaned_data.get('turno')
             paciente = Paciente.objects.get(dni=dni)
             doctor = Doctor.objects.get(matricula=matricula)
-            tipo = TipoEstudio.objects.get(pk=1) # ver como hacer este 
+            tipo = TipoEstudio.objects.get(name='Consulta') # todos los turnos crean un estudio de tipo consulta al inicio y despues se cambia
+            # Mas adelante hacemos si va a cambiar el tipo de estudio y no tiene especialidad asignada tonces que cree un nuevo tipo estudio con el nobmre correspondiente y su especialidad
+            # ya que si solamente le asignamos al tipo estudio una especialidad y cambiar de nombre al ya creado tiraria error la linea de arriba
             aux_1 = str(turno).split(' ')
             aux_2 = aux_1[0].split(':')
 
@@ -525,7 +554,6 @@ def create_turno_4(request):
                 else:
                     time = '0' + str(int(aux_2[0])) + ':' + str(int(aux_2[1])) + ':00'
 
-
             new_estudio = Estudio(paciente=paciente, doctor=doctor, tipo=tipo)
             new_estudio.save()
             new_turno = Turno(estudio=new_estudio, date=date, timeFrom=time)
@@ -534,3 +562,5 @@ def create_turno_4(request):
         else:
             print('error')
             print(turno_form.errors)
+
+    

@@ -1,4 +1,6 @@
 {% extends "baseTemplate.html" %}
+
+
 <title>{% block title %}Sistema de Gestion{% endblock %}</title>
 
 
@@ -32,7 +34,6 @@
                 {% for i in turnos_disponibles %}
                     <option value=" {{ i }} "> {{ i|safe }} </option>      
                 {% endfor %}
-                <option value=" 12:00:00 "> asdsad </option> 
             </select>
         </div>
 
