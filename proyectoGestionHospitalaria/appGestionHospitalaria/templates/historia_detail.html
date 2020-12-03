@@ -20,7 +20,7 @@
 <div class="icon-boxes">
   
 <div class="icon-box" style="padding: 10px;margin: 25px 0px 25px 0px;">
- <h1> <strong>{{ estudio.tipo }} </strong></h1>
+ <h1> <strong>{{ estudio.tipo }} </strong><a class="btn btn-light" style="margin: 10px;" data-toggle="modal" data-target="#myModalEstudio">Editar</a></h1>
 </div>
 
 <div class="icon-box" style="padding: 10px;margin: 25px 0px 25px 0px;">
@@ -97,6 +97,31 @@
 
 
 <!-- Modal -->
+<div class="modal fade" id="myModalEstudio" tabindex="-1" role="dialog" >
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Estudio</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        </button>
+      </div>
+      <!-- multipart -> majenar files en django -->
+      <form enctype="multipart/form-data" method="POST" action="">
+        {% csrf_token %}
+        <div class="modal-body">
+            <p>Ingrese nombre del estudio:
+          <input type="text" name="descripcion_file" value="{{ estudio.tipo.name }}" maxlength="25" required></p>
+          <input type="hidden" name="option" value="descripcion_file">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          <button type="submit" class="btn btn-success">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <div class="modal fade" id="myModalFile" tabindex="-1" role="dialog" >
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
@@ -110,7 +135,7 @@
         {% csrf_token %}
         <div class="modal-body">
           <input type="file" name="archivo" required> 
-          <input type="text" name="descripcion_file" placeholder="Ingrese una descipción" required>
+          <input type="text" name="descripcion_file" placeholder="Ingrese una descripción" required>
           <input type="hidden" name="option" value="descripcion_file">
         </div>
         <div class="modal-footer">

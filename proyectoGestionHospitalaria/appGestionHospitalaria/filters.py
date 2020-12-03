@@ -47,7 +47,8 @@ class EstudioFilter(django_filters.FilterSet):
 
     def __init__(self, *args, **kwargs):
         super(EstudioFilter, self).__init__(*args, **kwargs)
-        self.filters['tipo'].label = "Estudio "
+        self.filters['tipo__especialidad'].label = "Especialidad "
+        #self.filters['tipo__name'].label = "Estudio "
         self.filters['paciente'].label = "Paciente "
         self.filters['doctor'].label = "Médico "
         self.filters['turno__date'].label = "Día "
@@ -56,7 +57,7 @@ class EstudioFilter(django_filters.FilterSet):
 
     class Meta:
         model = Estudio
-        fields = ['tipo', 'paciente', 'doctor','turno__date'] #'turno__timeFrom'
+        fields = ['tipo__especialidad', 'paciente', 'doctor','turno__date'] #'turno__timeFrom'
 
 class TurnoFilter(django_filters.FilterSet):
 

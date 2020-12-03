@@ -40,6 +40,7 @@
         <tr>
             <td>Fecha</td>
             <td>Hora</td>
+            <td>Especialidad</td>
             <td>Estudio</td>
             <td>Paciente</td>
             <td>Médico</td>
@@ -51,7 +52,8 @@
         <tr>
         <td>{{estudio.turno.date}} </td>
         <td>{{estudio.turno.timeFrom}} </td>
-        <td>{{estudio.tipo}} </td>
+        <td>{{estudio.tipo.especialidad}} </td>
+        <td>{{estudio.tipo.name}} </td>
         <td>{{estudio.paciente}} </td>
         <td>{{estudio.doctor}} </td>
         <td><a class="btn btn-success" href="/historia/{{ estudio.id }}" style="alignment: center">Detalle</a></td>

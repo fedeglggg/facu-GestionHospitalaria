@@ -298,7 +298,52 @@ def signup_medico(request):
                     new_doctor.especialidad.add(especialidad)
                     print('especialidad seleccionada:', especialidad.name)
                 index = index + 1
-            
+
+            # añadiendo los horarios del medico
+            #Lunes
+            lunManDesde = form.cleaned_data.get('id_Lunes_Man_Desde') #HoraDesde del lunes a la mañana
+            lunManHasta = form.cleaned_data.get('id_Lunes_Man_Hasta') #HoraHasta del lunes a la mañana
+            lunTarDesde = form.cleaned_data.get('id_Lunes_Tar_Desde') #HoraDesde del lunes a la tarde
+            lunTarDesde = form.cleaned_data.get('id_Lunes_Tar_Hasta') #HoraHasta del lunes a la tarde
+            lunHabilitado = form.cleaned_data.get('id_Lunes_Habilitado') #Lo primero que haces es verificar si este dato viene con un check (VERIFICA SI ESTA HABILITADO EL DIA LUNES)
+            # if lunHabilitado:
+                    # habria que crear el TurnoJornada del lunes a la mañana (en caso de ser distinto de null) y/o a la tarde(en caso de ser distinto de null) para el medico
+            #Martes
+            marManDesde = form.cleaned_data.get('id_Martes_Man_Desde')
+            marManHasta = form.cleaned_data.get('id_Martes_Man_Hasta')
+            marTarDesde = form.cleaned_data.get('id_Martes_Tar_Desde')
+            marTarDesde = form.cleaned_data.get('id_Martes_Tar_Hasta')
+            marHabilitado = form.cleaned_data.get('id_Martes_Habilitado')
+            #Miercoles
+            mieManDesde = form.cleaned_data.get('id_Mier_Man_Desde')
+            mieManHasta = form.cleaned_data.get('id_Mier_Man_Hasta')
+            mieTarDesde = form.cleaned_data.get('id_Mier_Tar_Desde')
+            mieTarDesde = form.cleaned_data.get('id_Mier_Tar_Hasta')
+            mieHabilitado = form.cleaned_data.get('id_Mier_Habilitado')
+            #Jueves
+            jueManDesde = form.cleaned_data.get('id_Jueves_Man_Desde')
+            jueManHasta = form.cleaned_data.get('id_Jueves_Man_Hasta')
+            jueTarDesde = form.cleaned_data.get('id_Jueves_Tar_Desde')
+            jueTarDesde = form.cleaned_data.get('id_Jueves_Tar_Hasta')
+            jueHabilitado = form.cleaned_data.get('id_Jueves_Habilitado')
+            #Viernes
+            vieManDesde = form.cleaned_data.get('id_Viernes_Man_Desde')
+            vieManHasta = form.cleaned_data.get('id_Viernes_Man_Hasta')
+            vieTarDesde = form.cleaned_data.get('id_Viernes_Tar_Desde')
+            vieTarDesde = form.cleaned_data.get('id_Viernes_Tar_Hasta')
+            vieHabilitado = form.cleaned_data.get('id_Viernes_Habilitado')
+            #Sabado
+            sabManDesde = form.cleaned_data.get('id_Sab_Man_Desde')
+            sabManHasta = form.cleaned_data.get('id_Sab_Man_Hasta')
+            sabTarDesde = form.cleaned_data.get('id_Sab_Tar_Desde')
+            sabTarDesde = form.cleaned_data.get('id_Sab_Tar_Hasta')
+            sabHabilitado = form.cleaned_data.get('id_Sab_Habilitado')
+            #Domingo
+            domManDesde = form.cleaned_data.get('id_Dom_Man_Desde')
+            domManHasta = form.cleaned_data.get('id_Dom_Man_Hasta')
+            domTarDesde = form.cleaned_data.get('id_Dom_Tar_Desde')
+            domTarDesde = form.cleaned_data.get('id_Dom_Tar_Hasta')
+            domHabilitado = form.cleaned_data.get('id_Dom_Habilitado')
 
             new_user.save() 
             new_doctor.save()
@@ -532,11 +577,12 @@ def create_turno_4(request):
             dni = turno_form.cleaned_data.get('dni')
             matricula = turno_form.cleaned_data.get('matricula')
             date = turno_form.cleaned_data.get('date')
-            especialidad = turno_form.cleaned_data.get('especialidad')
+            especialidad_name = turno_form.cleaned_data.get('especialidad')
+            especialidad = Especialidad.objects.get(name=especialidad_name)
             turno = turno_form.cleaned_data.get('turno')
             paciente = Paciente.objects.get(dni=dni)
             doctor = Doctor.objects.get(matricula=matricula)
-            tipo = TipoEstudio.objects.get(name='Consulta') # todos los turnos crean un estudio de tipo consulta al inicio y despues se cambia
+            tipo = TipoEstudio.objects.get(name='Consulta',especialidad=especialidad) # todos los turnos crean un estudio de tipo consulta al inicio y despues se cambia
             # Mas adelante hacemos si va a cambiar el tipo de estudio y no tiene especialidad asignada tonces que cree un nuevo tipo estudio con el nobmre correspondiente y su especialidad
             # ya que si solamente le asignamos al tipo estudio una especialidad y cambiar de nombre al ya creado tiraria error la linea de arriba
             aux_1 = str(turno).split(' ')

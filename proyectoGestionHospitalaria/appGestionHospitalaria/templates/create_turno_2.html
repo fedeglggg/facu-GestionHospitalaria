@@ -48,17 +48,18 @@
         <div class="form-group">
             <input type="hidden" name="especialidad" value="{{ especialidad.name }}" />
         </div>
-
+            <div class="text-center">
+        <button style="background: #1977cc; border: 0; padding: 10px 35px; color: #fff; transition: 0.4s; border-radius: 50px; " onmouseover="this.style.backgroundColor='#1c84e3'" onmouseout="this.style.backgroundColor='#1977cc'" onclick="history.back()">Volver</button>
+    </div>
     {% else %}
         <small id="tipo_doctorHelpBlock" class="form-text text-muted">
             <ul>
                 <li>No existen doctores disponibles</li>
+
             </ul>
         </small>
     {% endif %}
-    <div class="text-center">
-        <button style="background: #1977cc; border: 0; padding: 10px 35px; color: #fff; transition: 0.4s; border-radius: 50px; " onmouseover="this.style.backgroundColor='#1c84e3'" onmouseout="this.style.backgroundColor='#1977cc'" onclick="history.back()">Volver</button>
-    </div>
+
     </form>
 <!--
     {% if lista_doctores %}
