@@ -183,28 +183,31 @@ def turnos(request):
 
 def turnos_paciente(request):
     if not is_user_auth(request.user, ('pacientes', 'sarasa')):
-        return redirect('error_acceso')
+        return redirect('error_acceso')    
       
+    if request.method == 'POST':
+        turno_pk = request.POST.get('turno_id')
+        try:
+            turno = Turno.objects.get(pk=turno_pk)
+        except Turno.DoesNotExist:
+            raise Http404("El turno no existe")
+
+        if request.POST.get('confirmar') == '0':
+            print('borrando el turno:', turno.date)
+            turno.estudio.delete()
 
     paciente = Paciente.objects.get(user=request.user)
     estudios = Estudio.objects.filter(paciente=paciente)
-    # turnos =  []
+    
     # de aca salgo con la lista de turnos
     turnosPks = set()
     for i in estudios:
         turno_aux = Turno.objects.get(estudio=i)
-         #for x in turnos_aux:
         turnosPks.add(turno_aux.pk)
 
     turnosPaciente = Turno.objects.filter(pk__in = turnosPks)
-
-
-    #turnos = Turno.objects.all()
-
-    # para aplicar el filter la lista de turnos tiene que salir de un query y ahoramismo no se puede eso, faltaria una relacion entre turno y paciente en todo caso
     myFilter = TurnoPacienteFilter(request.GET, queryset=turnosPaciente)
     turnos = myFilter.qs
-
 
     #for i in turnos:
        # print(i.estudio.doctor.user.first_name)
@@ -222,7 +225,6 @@ def historiasMedicas(request):
         return redirect('error_acceso')
 
     estudios = Estudio.objects.filter(confirmed=True)
-
     myFilter = EstudioFilter(request.GET, queryset=estudios)
     estudios = myFilter.qs
 
