@@ -4,8 +4,8 @@
 {% block content %}
 <section id="hero" class="d-flex align-items-center" style="position: unset; ">
     <div class="container">
-        <h1>Historias Médicas</h1>
-        <h2>Listado de historias médicas registradas en el sistema</h2>
+        <h1>Historia Médica</h1>
+        <h2>Listado de sus estudios/consultas registradas</h2>
     </div>
 </section>
 
@@ -50,7 +50,7 @@
     {% for estudio in estudios %}
         <tr>
         <td>{{estudio.turno.date}} </td>
-        <td>{{estudio.turno.timeFrom}} </td>
+        <td>{{estudio.turno.timeFrom|time:"H:i"}} </td>
         <td>{{estudio.tipo.especialidad}} </td>
         <td>{{estudio.tipo.name}} </td>
         <td>{{estudio.doctor}} </td>

@@ -49,7 +49,7 @@
     {% for turno in turnos %}
         <tr>
         <td>{{ turno.date }} </td>
-        <td>{{ turno.timeFrom}}  </td>
+        <td>{{ turno.timeFrom|time:"H:i"}}  </td>
         <td>{{turno.estudio.paciente}} </td>
         <td>{{turno.estudio.doctor}} </td>
         {% if turno.estudio.confirmed %}

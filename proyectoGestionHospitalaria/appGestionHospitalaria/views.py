@@ -2,9 +2,9 @@ from django.http import HttpResponse
 from .models import *
 from django.shortcuts import render, redirect
 from django.http import Http404
-from .forms import SignUpFormMedico, SignUpFormPaciente, CreateFormTurno, EspecialidadForm, DoctorMatriculaForm, TurnoDateForm, TurnoForm
+from .forms import *
 from django.contrib.auth.models import Group, User
-from .filters import DoctorFilter, PatientFilter, EstudioFilter, TurnoFilter
+from .filters import *
 
 
 
@@ -186,20 +186,23 @@ def turnos_paciente(request):
         return redirect('error_acceso')
       
 
-    # paciente = Paciente.objects.get(user=request.user)
-    # estudios = Estudio.objects.filter(paciente=paciente)
+    paciente = Paciente.objects.get(user=request.user)
+    estudios = Estudio.objects.filter(paciente=paciente)
     # turnos =  []
     # de aca salgo con la lista de turnos
-    # for i in estudios:
-    #     turnos_aux = Turno.objects.filter(estudio=i)
-    #     for x in turnos_aux:
-    #         turnos.append(x)
+    turnosPks = set()
+    for i in estudios:
+        turno_aux = Turno.objects.get(estudio=i)
+         #for x in turnos_aux:
+        turnosPks.add(turno_aux.pk)
+
+    turnosPaciente = Turno.objects.filter(pk__in = turnosPks)
 
 
-    turnos = Turno.objects.all()
+    #turnos = Turno.objects.all()
 
     # para aplicar el filter la lista de turnos tiene que salir de un query y ahoramismo no se puede eso, faltaria una relacion entre turno y paciente en todo caso
-    myFilter = TurnoFilter(request.GET, queryset=turnos)
+    myFilter = TurnoPacienteFilter(request.GET, queryset=turnosPaciente)
     turnos = myFilter.qs
 
 
@@ -237,7 +240,7 @@ def historias_medicas_pacientes(request):
     estudios = Estudio.objects.filter(confirmed=True, paciente=paciente)
 
     # si podes hacer que el filter no muestre el campo de paciente:
-    myFilter = EstudioFilter(request.GET, queryset=estudios)
+    myFilter = EstudioPacienteFilter(request.GET, queryset=estudios)
     estudios = myFilter.qs
     print(myFilter)
 

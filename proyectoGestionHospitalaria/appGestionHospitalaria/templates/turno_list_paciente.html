@@ -4,8 +4,8 @@
 {% block content %}
 <section id="hero" class="d-flex align-items-center" style="position: unset; ">
     <div class="container">
-        <h1>Listado de los turnos</h1>
-        <h2>Vea todos los turnos registrados del sistema</h2>
+        <h1>Turnos</h1>
+        <h2>Listado de sus turnos registrados</h2>
     </div>
 </section>
 
@@ -32,7 +32,6 @@
 </div>
 <div class="icon-box">
 
-<h1>bajo construccion</h1>
 
 {% if turnos %}
 
@@ -42,6 +41,7 @@
             <td>Fecha</td>
             <td>Hora</td>
             <td>Médico</td>
+            <td>Especialidad</td>
             <td></td>
         </tr>
     </thead>
@@ -49,15 +49,15 @@
     {% for turno in turnos %}
         <tr>
         <td>{{turno.date }} </td>
-        <td>{{turno.timeFrom}}  </td>
+        <td>{{turno.timeFrom|time:"H:i"}}  </td>
         <td>{{turno.estudio.doctor}} </td>
+        <td>{{turno.estudio.tipo.especialidad}} </td>
         {% if turno.estudio.confirmed %}
-            <td><p>Turno Confirmado.</p></td>
+            <td></td>
         {% else %}
             <td>
               <!-- here1 -->
-              <a class="aceptar_turno btn btn-success" data-id="{{ turno.pk }}" style="margin: 3px;color: #fff;" data-toggle="modal" data-target="#myModalConfirmar" >Confirmar</a> 
-              <a class="rechazar_turno btn btn-danger" data-id="{{ turno.pk }}" style="margin: 3px;color: #fff;" data-toggle="modal" data-target="#myModalRechazar" >Rechazar</a> 
+              <a class="rechazar_turno btn btn-danger" data-id="{{ turno.pk }}" style="margin: 3px;color: #fff;" data-toggle="modal" data-target="#myModalRechazar" >Cancelar</a>
             </td>
         {% endif %}
         </tr>
@@ -80,7 +80,7 @@
 </section>
 </main>
 
-<div class="modal fade" id="myModalConfirmar" tabindex="-1" role="dialog" >
+<!--<div class="modal fade" id="myModalConfirmar" tabindex="-1" role="dialog" >
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -92,7 +92,7 @@
         {% csrf_token %}
         <div class="modal-body">
           <div style="text-align: center">
-            <input type="text" class="form-control" name="tipo_estudio_name" placeholder="Ingrese el nombre de la práctica para confirmar el turno" maxlength="25" required="required"> <!--Debe poner nombre de estudio (Nombre del tipoEstudio) sino que ponga un nombre default-->
+            <input type="text" class="form-control" name="tipo_estudio_name" placeholder="Ingrese el nombre de la práctica para confirmar el turno" maxlength="25" required="required">
           </div>
         </div>
         <div class="modal-footer">
@@ -104,7 +104,7 @@
       </div>
     </div>
   </div>
-</div>
+</div>-->
 
 <div class="modal fade" id="myModalRechazar" tabindex="-1" role="dialog" >
   <div class="modal-dialog modal-dialog-centered" role="document">
@@ -116,7 +116,7 @@
       </div>
       <div class="modal-body">
             <div style="text-align: center">
-                <p>¿Desea rechazar este turno?</p>
+                <p>¿Desea cancelar este turno?</p>
           </div>
       </div>
       <div class="modal-footer">
@@ -125,7 +125,7 @@
           <input type="hidden" name="turno_id" id="turno_id" value=""/>
           <input type="hidden" name="confirmar" id="confirmar" value="0"/>
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-          <button type="submit" class="btn btn-success">Confirmar</button>
+          <button type="submit" class="btn btn-danger">Confirmar</button>
         </form>  
       </div>
     </div>

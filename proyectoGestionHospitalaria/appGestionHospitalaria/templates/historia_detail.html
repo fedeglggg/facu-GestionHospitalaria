@@ -32,7 +32,7 @@
   <p><strong>Paciente:</strong> {{ estudio.paciente }} --
   <strong>Médico:</strong> {{ estudio.doctor }} --
    <strong>Dia:</strong> {{estudio.turno.date}} --
-  <strong>Hora:</strong> {{estudio.turno.timeFrom}}</p>
+  <strong>Hora:</strong> {{estudio.turno.timeFrom|time:"H:i"}}</p>
 </div>
 
 {% if perms.appGestionHospitalaria.view_paciente %}

@@ -51,7 +51,7 @@
     {% for estudio in estudios %}
         <tr>
         <td>{{estudio.turno.date}} </td>
-        <td>{{estudio.turno.timeFrom}} </td>
+        <td>{{estudio.turno.timeFrom|time:"H:i"}} </td>
         <td>{{estudio.tipo.especialidad}} </td>
         <td>{{estudio.tipo.name}} </td>
         <td>{{estudio.paciente}} </td>
