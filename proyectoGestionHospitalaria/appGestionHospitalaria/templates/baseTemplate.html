@@ -48,7 +48,7 @@
         <ul>
           {% if user.is_authenticated %}
           <li><a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Bienvenido,
-              {{ user.get_username }}</a></li>
+              {{ user.first_name }} {{ user.last_name }}</a></li>
           <li><a class="nav-link " href="{% url 'logout'%}?next={{request.path}}">Salir</a></li>
           {% else %}
           <li class="active"><a href="/accounts/login/">Ingresar</a>

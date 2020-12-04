@@ -32,7 +32,7 @@
                     <!--- Menu del usuario registrado --->
                     <li class="nav-item">
                         <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Bienvenido,
-                        {{ user.get_username }}</a>
+                        {{ user.get_first_name }}</a>
                     </li>
                     {% if auth %}
                         <li class="nav-item">

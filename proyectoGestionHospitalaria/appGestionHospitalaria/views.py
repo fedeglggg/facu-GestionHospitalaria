@@ -791,8 +791,8 @@ def medico_turnos(request, doctor_id):
 
 # todos los comentarios de signup_medico aplican aca
 def signup_paciente(request):
-    # if not is_user_auth(request.user, ('pacientes')):
-    #     return redirect('error_acceso')
+    if not is_user_auth(request.user, ('secretarios')):
+        return redirect('error_acceso')
 
     if request.method == 'POST':
         form = SignUpFormPaciente(request.POST)
