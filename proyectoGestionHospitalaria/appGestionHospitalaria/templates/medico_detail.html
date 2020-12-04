@@ -2,6 +2,23 @@
 <title>{% block title %}Médico{% endblock %}</title>
 {% block content %}
 
+<!-- Elimina las flechas de los campos number -->
+<head>
+    <style>
+        /* Chrome, Safari, Edge, Opera */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+        
+        /* Firefox */
+        input[type=number] {
+          -moz-appearance: textfield;
+        }
+        </style>
+</head>
+
 <section id="hero" class="d-flex align-items-center" style="position: unset; ">
   <div class="container">
     <h1>Médico</h1>
@@ -32,178 +49,365 @@
 <div class="icon-box" style="padding: 10px;margin: 25px 0px 25px 0px;">
     <h3><strong>Especialidades</strong></h3>
     <hr>
-<div style="text-align: left;padding: 0% 0% 0% 7%;margin: 3%;">
-    <div class="row">
-        <div class="col-lg">
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" id="id_especialidad_0"
-                name="traumatologia" value="Traumatología">
-                <label class="form-check-label" for="id_especialidad_0"> Traumatología </label>
+    <form id="especialidades_form" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="especialidades" value="1">
+        <div style="text-align: left;padding: 0% 0% 0% 7%;margin: 3%;">
+            <div class="row">
+                <div class="col-lg">
+                    <div class="form-check form-check-inline">
+                        {% if traumatologia %}
+                        <input class="form-check-input" checked="" type="checkbox" id="id_especialidad_0"
+                        name="traumatologia" value="Traumatología">
+                        {% else %} 
+                        <input class="form-check-input" type="checkbox" id="id_especialidad_0"
+                        name="traumatologia" value="Traumatología">              
+                        {% endif %}
+                            <label class="form-check-label" for="id_especialidad_0"> Traumatología </label>          
+                    </div>
+                </div>
+                <div class="col-lg">
+                    <div class="form-check form-check-inline">
+                        {% if clinica_medica %}
+                        <input class="form-check-input" checked="" type="checkbox" id="id_especialidad_1"
+                        name="clinica_medica" value="Clínica médica">
+                        {% else %}
+                        <input class="form-check-input" type="checkbox" id="id_especialidad_1"
+                        name="clinica_medica" value="Clínica médica">
+                        {% endif %}
+                        <label class="form-check-label" for="id_especialidad_1"> Clínica médica </label>
+                    </div>
+                </div>
+                <div class="col-lg">
+                    <div class="form-check form-check-inline">
+                        {% if cardiologia %}
+                            <input class="form-check-input" checked="" type="checkbox" id="id_especialidad_2"
+                            name="cardiologia" value="Cardiología">
+                        {% else %}
+                            <input class="form-check-input" type="checkbox" id="id_especialidad_2"
+                            name="cardiologia" value="Cardiología">
+                        {% endif %}
+                        <label class="form-check-label" for="id_especialidad_2"> Cardiología </label>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="col-lg">
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" id="id_especialidad_1"
-                name="clinica_medica" value="Clínica médica">
-                <label class="form-check-label" for="id_especialidad_1"> Clínica médica </label>
+            <div class="row" >
+                <div class="col-lg">
+                    <div class="form-check form-check-inline">
+                        {% if dermatologia %}
+                        <input class="form-check-input" checked="" type="checkbox" id="id_especialidad_3"
+                            name="dermatologia" value="Dermatología">
+                        {% else %}
+                            <input class="form-check-input" type="checkbox" id="id_especialidad_3"
+                            name="dermatologia" value="Dermatología">
+                        {% endif %}
+                        <label class="form-check-label" for="id_especialidad_3"> Dermatología </label>
+                    </div>
+                </div>
+                <div class="col-lg">
+                    <div class="form-check form-check-inline">
+                        {% if oftalmologia %} 
+                            <input class="form-check-input" checked="" type="checkbox" id="id_especialidad_4"
+                            name="oftalmologia" value="Oftalmología">
+                        {% else %}
+                            <input class="form-check-input" type="checkbox" id="id_especialidad_4"
+                            name="oftalmologia" value="Oftalmología">
+                        {% endif %}                
+                        <label class="form-check-label" for="id_especialidad_4"> Oftalmología </label>
+                    </div>
+                </div>
+                <div class="col-lg">
+                    <div class="form-check form-check-inline">
+                        {% if endocrinologia %} 
+                            <input class="form-check-input" checked="" type="checkbox" id="id_especialidad_5"
+                            name="endocrinologia" value="Endocrinología">
+                        {% else %}
+                            <input class="form-check-input" type="checkbox" id="id_especialidad_5"
+                            name="endocrinologia" value="Endocrinología">
+                        {% endif %}
+                        
+                        <label class="form-check-label" for="id_especialidad_5"> Endocrinología </label>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="col-lg">
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" id="id_especialidad_2"
-                name="cardiologia" value="Cardiología">
-                <label class="form-check-label" for="id_especialidad_2"> Cardiología </label>
+            <div class="row" >
+                <div class="col-lg">
+                    <div class="form-check form-check-inline">
+                        {% if ginecologia %} 
+                            <input class="form-check-input" checked="" type="checkbox" id="id_especialidad_6"
+                            name="ginecologia" value="Ginecología">
+                        {% else %}
+                            <input class="form-check-input" type="checkbox" id="id_especialidad_6"
+                            name="ginecologia" value="Ginecología">
+                        {% endif %}
+                        
+                        <label class="form-check-label" for="id_especialidad_6"> Ginecología </label>
+                    </div>
+                </div>
+                <div class="col-lg">
+                    <div class="form-check form-check-inline">
+                        {% if obstetricia %} 
+                        <input class="form-check-input" checked="" type="checkbox" id="id_especialidad_7"
+                        name="obstetricia" value="Obstetricia">
+                        {% else %}
+                        <input class="form-check-input" type="checkbox" id="id_especialidad_7"
+                        name="obstetricia" value="Obstetricia">
+                        {% endif %}
+                        
+                        <label class="form-check-label" for="id_especialidad_7"> Obstetricia </label>
+                    </div>
+                </div>
+                <div class="col-lg">
+                    <div class="form-check form-check-inline">
+                        {% if psicologia %} 
+                        <input class="form-check-input" checked="" type="checkbox" id="id_especialidad_8"
+                        name="psicologia" value="Psicología">
+                        {% else %}
+                        <input class="form-check-input" type="checkbox" id="id_especialidad_8"
+                        name="psicologia" value="Psicología">
+                        {% endif %}
+                        
+                        <label class="form-check-label" for="id_especialidad_8"> Psicología </label>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-    <div class="row" >
-        <div class="col-lg">
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" id="id_especialidad_3"
-                name="dermatologia" value="Dermatología">
-                <label class="form-check-label" for="id_especialidad_3"> Dermatología </label>
+            <div class="row" >
+                <div class="col-lg">
+                    <div class="form-check form-check-inline">
+                        {% if neumonologia %} 
+                        <input class="form-check-input" checked="" type="checkbox" id="id_especialidad_13"
+                        name="neumonologia" value="Neumonología">
+                        {% else %}
+                        <input class="form-check-input" type="checkbox" id="id_especialidad_13"
+                        name="neumonologia" value="Neumonología">
+                        {% endif %}
+                        
+                        <label class="form-check-label" for="id_especialidad_13"> Neumonología </label>
+                    </div>
+                </div>
+                <div class="col-lg">
+                    <div class="form-check form-check-inline">
+                        {% if nutricion %} 
+                        <input class="form-check-input" checked="" type="checkbox" id="id_especialidad_10"
+                        name="nutricion" value="Nutrición">
+                        {% else %}
+                        <input class="form-check-input" type="checkbox" id="id_especialidad_10"
+                        name="nutricion" value="Nutrición">
+                        {% endif %}
+                        
+                        <label class="form-check-label" for="id_especialidad_10"> Nutrición </label>
+                    </div>
+                </div>
+                <div class="col-lg">
+                    <div class="form-check form-check-inline">
+                        {% if pediatria %} 
+                        <input class="form-check-input" checked="" type="checkbox" id="id_especialidad_11"
+                        name="pediatria" value="Pediatría">
+                        {% else %}
+                        <input class="form-check-input" type="checkbox" id="id_especialidad_11"
+                        name="pediatria" value="Pediatría">
+                        {% endif %}
+                        
+                        <label class="form-check-label" for="id_especialidad_11"> Pediatría </label>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="col-lg">
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" id="id_especialidad_4"
-                name="oftalmologia" value="Oftalmología">
-                <label class="form-check-label" for="id_especialidad_4"> Oftalmología </label>
-            </div>
-        </div>
-        <div class="col-lg">
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" id="id_especialidad_5"
-                name="endocrinologia" value="Endocrinología">
-                <label class="form-check-label" for="id_especialidad_5"> Endocrinología </label>
-            </div>
-        </div>
-    </div>
-    <div class="row" >
-        <div class="col-lg">
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" id="id_especialidad_6"
-                name="ginecologia" value="Ginecología">
-                <label class="form-check-label" for="id_especialidad_6"> Ginecología </label>
-            </div>
-        </div>
-        <div class="col-lg">
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" id="id_especialidad_7"
-                name="obstetricia" value="Obstetricia">
-                <label class="form-check-label" for="id_especialidad_7"> Obstetricia </label>
-            </div>
-        </div>
-        <div class="col-lg">
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" id="id_especialidad_8"
-                name="psicologia" value="Psicología">
-                <label class="form-check-label" for="id_especialidad_8"> Psicología </label>
-            </div>
-        </div>
-    </div>
-    <div class="row" >
-        <div class="col-lg">
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" id="id_especialidad_13"
-                name="neumonologia" value="Neumonología">
-                <label class="form-check-label" for="id_especialidad_13"> Neumonología </label>
-            </div>
-        </div>
-        <div class="col-lg">
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" id="id_especialidad_10"
-                name="nutricion" value="Nutrición">
-                <label class="form-check-label" for="id_especialidad_10"> Nutrición </label>
-            </div>
-        </div>
-        <div class="col-lg">
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" id="id_especialidad_11"
-                name="pediatria" value="Pediatría">
-                <label class="form-check-label" for="id_especialidad_11"> Pediatría </label>
-            </div>
-        </div>
-    </div>
-    <div class="row" >
-        <div class="col-lg-4">
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" id="id_especialidad_12"
-                name="psiquiatria" value="Psiquiatría">
-                <label class="form-check-label" for="id_especialidad_12"> Psiquiatría </label>
-            </div>
-        </div>
-        <div class="col-lg-8">
+            <div class="row" >
+                <div class="col-lg-4">
+                    <div class="form-check form-check-inline">
+                        {% if psiquiatria %} 
+                        <input class="form-check-input" checked="" type="checkbox" id="id_especialidad_12"
+                        name="psiquiatria" value="Psiquiatría">
+                        {% else %}
+                        <input class="form-check-input" type="checkbox" id="id_especialidad_12"
+                        name="psiquiatria" value="Psiquiatría">
+                        {% endif %}
+                        
+                        <label class="form-check-label" for="id_especialidad_12"> Psiquiatría </label>
+                    </div>
+                </div>
+                <div class="col-lg-8">
 
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" id="id_especialidad_9"
-                name="diagnostico_por_imagenes" value="Diagnóstico por imágenes">
-                <label class="form-check-label" for="id_especialidad_9"> Diagnóstico p/imag. </label>
+                    <div class="form-check form-check-inline">
+                        {% if diagnostico_por_imagenes %} 
+                        <input class="form-check-input" checked="" type="checkbox" id="id_especialidad_9"
+                        name="diagnostico_por_imagenes" value="Diagnóstico por imágenes">
+                        {% else %}
+                        <input class="form-check-input" type="checkbox" id="id_especialidad_9"
+                        name="diagnostico_por_imagenes" value="Diagnóstico por imágenes">
+                        {% endif %}
+                        
+                        <label class="form-check-label" for="id_especialidad_9"> Diagnóstico p/imag. </label>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-     </div>
+        </div> 
+    </form>
     <a class="btn btn-success" style="margin: 10px;color: #fff;" data-toggle="modal" data-target="#myModalEspecialidad">Guardar</a>
 </div>
 
 <div class="icon-box" style="padding: 10px;margin: 25px 0px 25px 0px;">
-    <h3><strong>Jornada</strong></h3>
-    <hr>
-    <div style="margin: 15px">
-    <table id="table_id"  class="table table-bordered"> <!--list-group -->
-    <thead>
-        <tr>
-            <td>Dia</td>
-            <td>Horario</td>
-            <td>Habilitado</td>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>Lunes</td>
-            <td>
-                <label for="id_Lunes_Man_Desde">Desde: </label>
-                <input type="number" name="lunes_from" id="id_Lunes_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
-                <label for="id_Lunes_Man_Hasta"> - Hasta:</label>
-                <input type="number" name="lunes_to" id="id_Lunes_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
-            </td>
-            <td><input type="checkbox" name="lunes" class="form-check-input" id="id_Lunes_Habilitado"></td>
-        </tr>
-        <tr>
-            <td>Martes</td>
-            <td>Desde: <input type="number" name="martes_from" id="id_Martes_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24"> - Hasta: <input type="number" name="martes_to" id="id_Martes_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24"> </td>
-            <td><input class="form-check-input" name="martes" type="checkbox" id="id_Martes_Habilitado"></td>
-        </tr>
-         <tr>
-            <td>Miercoles</td>
-            <td>Desde: <input type="number" name="miercoles_from" id="id_Mier_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24"> - Hasta: <input type="number" name="miercoles_to" id="id_Mier_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24"> </td>
-            <td><input class="form-check-input" name="miercoles" type="checkbox" id="id_Mier_Habilitado"></td>
-        </tr>
-        <tr>
-            <td>Jueves</td>
-            <td>Desde: <input type="number" name="jueves_from" id="id_Jueves_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24"> - Hasta: <input type="number" name="jueves_to" id="id_Jueves_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24"></td>
-            <td><input class="form-check-input" name="jueves" type="checkbox" id="id_Jueves_Habilitado"></td>
-        </tr>
-        <tr>
-            <td>Viernes</td>
-            <td>Desde: <input type="number" name="viernes_from" id="id_Viernes_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24"> - Hasta: <input type="number" name="viernes_to" id="id_Viernes_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24"></td>
-            <td><input class="form-check-input" name="viernes" type="checkbox" id="id_Viernes_Habilitado"></td>
-        </tr>
-        <tr>
-            <td>Sabado</td>
-            <td>Desde: <input type="number" name="sabado_from" id="id_Sab_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">  - Hasta: <input type="number" name="sabado_to" id="id_Sab_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24"></td>
-            <td><input class="form-check-input" name="sabado" type="checkbox" id="id_Sab_Habilitado"></td>
-        </tr>
-         <tr>
-            <td>Domingo</td>
-            <td>Desde: <input type="number" name="domingo_from" id="id_Dom_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">  - Hasta: <input type="number" name="domingo_to" id="id_Dom_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24"></td>
-            <td><input class="form-check-input" name="domingo" type="checkbox" id="id_Dom_Habilitado"></td>
-        </tr>
-
-    </tbody>
-    </table>
-        <a class="btn btn-success" style="margin: 10px;color: #fff;" data-toggle="modal" data-target="#myModalHorario">Guardar</a>
-    </div>
+    <form method="post" id="horarios_form" autocomplete="off">
+        {% csrf_token %}
+        <div style="margin: 15px">
+                <div class="section-title" style="padding-bottom: 0;">
+              <h2>Horarios para {{ doctor.user.first_name }} {{ doctor.user.last_name }}</h2>
+        </div>
+        </div>
+            <p>Ingrese horarios de disponibilidad</p>
+        <div style="margin: 15px">
+        <table id="table_id"  class="table table-bordered"> <!--list-group -->
+        <thead>
+            <tr>
+                <td>Dia</td>
+                <td>Horario</td>
+                <td>Habilitado</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Lunes</td>
+                <td> 
+                    {% if Lunes %}
+                        {% with Lunes as turno %}
+                            <label for="id_Lunes_Man_Desde">Desde: </label>
+                            <input type="number" value="{{ turno.horario_inicio|time:'H' }}" placeholder="{{ turno.horario_inicio|time:'H' }}" name="lunes_from" id="id_Lunes_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24"> 
+                            <label for="id_Lunes_Man_Hasta"> - Hasta:</label>
+                            <input type="number" value="{{ turno.horario_fin|time:'H' }}" placeholder="{{ turno.horario_fin|time:'H' }}" name="lunes_to" id="id_Lunes_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
+                        {% endwith %}         
+                    {% else %}
+                        <label for="id_Lunes_Man_Desde">Desde: </label>
+                        <input type="number" name="lunes_from" id="id_Lunes_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24"> 
+                        <label for="id_Lunes_Man_Hasta"> - Hasta:</label>
+                        <input type="number" name="lunes_to" id="id_Lunes_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
+                    {% endif %}
+                </td>
+                <td><input type="checkbox" name="lunes" class="form-check-input" id="id_Lunes_Habilitado"></td>
+            </tr>
+            <tr>
+                <td>Martes</td>
+                <td>
+                    {% if Martes %}
+                        {% with Martes as turno %}
+                            <label for="id_Martes_Man_Desde">Desde: </label>
+                            <input type="number" name="martes_from" value="{{ turno.horario_inicio|time:'H' }}" placeholder="{{ turno.horario_inicio|time:'H' }}" id="id_Martes_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
+                            <label for="id_Martes_Man_Hasta">- Hasta: </label>
+                            <input type="number" name="martes_to" value="{{ turno.horario_fin|time:'H' }}" placeholder="{{ turno.horario_fin|time:'H' }}" id="id_Martes_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24"> 
+                        {% endwith %}         
+                    {% else %}
+                        <label for="id_Martes_Man_Desde">Desde: </label>
+                        <input type="number" name="martes_from" id="id_Martes_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
+                        <label for="id_Martes_Man_Hasta">- Hasta: </label>
+                        <input type="number" name="martes_to" id="id_Martes_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24"> 
+                    {% endif %}    
+                </td>
+                <td><input class="form-check-input" name="martes" type="checkbox" id="id_Martes_Habilitado"></td>
+            </tr>
+             <tr>
+                <td>Miércoles</td>
+                <td>
+                    {% if Miércoles %}
+                        {% with Miércoles as turno %}
+                            <label for="id_Mier_Man_Desde">Desde: </label>
+                            <input type="number" name="miercoles_from" value="{{ turno.horario_inicio|time:'H' }}" placeholder="{{ turno.horario_inicio|time:'H' }}" id="id_Mier_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
+                            <label for="id_Mier_Man_Hasta">- Hasta: </label>
+                            <input type="number" name="miercoles_to" value="{{ turno.horario_fin|time:'H' }}" placeholder="{{ turno.horario_fin|time:'H' }}" id="id_Mier_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24"> 
+                        {% endwith %}         
+                    {% else %}
+                        <label for="id_Mier_Man_Desde">Desde: </label>
+                        <input type="number" name="miercoles_from" id="id_Mier_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
+                        <label for="id_Mier_Man_Hasta">- Hasta: </label>
+                        <input type="number" name="miercoles_to" id="id_Mier_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
+                    {% endif %} 
+                </td>
+                <td><input class="form-check-input" name="miercoles" type="checkbox" id="id_Mier_Habilitado"></td>
+            </tr>
+            <tr>
+                <td>Jueves</td>
+                <td>
+                    {% if Jueves %}
+                        {% with Jueves as turno %}
+                            <label for="id_Jueves_Man_Desde">Desde: </label>
+                            <input type="number" name="jueves_from" value="{{ turno.horario_inicio|time:'H' }}" placeholder="{{ turno.horario_inicio|time:'H' }}" id="id_Jueves_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
+                            <label for="id_Jueves_Man_Hasta">- Hasta: </label>
+                            <input type="number" name="jueves_to" value="{{ turno.horario_fin|time:'H' }}" placeholder="{{ turno.horario_fin|time:'H' }}" id="id_Jueves_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">            
+                        {% endwith %}         
+                    {% else %}
+                        <label for="id_Jueves_Man_Desde">Desde: </label>
+                        <input type="number" name="jueves_from" id="id_Jueves_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
+                        <label for="id_Jueves_Man_Hasta">- Hasta: </label>
+                        <input type="number" name="jueves_to" id="id_Jueves_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
+                    {% endif %}
+                </td>
+                <td><input class="form-check-input" name="jueves" type="checkbox" id="id_Jueves_Habilitado"></td>
+            </tr>
+            <tr>
+                <td>Viernes</td>
+                <td>
+                    {% if Viernes %}
+                        {% with Viernes as turno %}
+                            <label for="id_Viernes_Man_Desde">Desde: </label>
+                            <input type="number" name="viernes_from" value="{{ turno.horario_inicio|time:'H' }}" placeholder="{{ turno.horario_inicio|time:'H' }}" id="id_Viernes_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
+                            <label for="id_Viernes_Man_Hasta">- Hasta: </label>
+                            <input type="number" name="viernes_to" value="{{ turno.horario_fin|time:'H' }}" placeholder="{{ turno.horario_fin|time:'H' }}" id="id_Viernes_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">                    
+                        {% endwith %}         
+                    {% else %}
+                        <label for="id_Viernes_Man_Desde">Desde: </label>
+                        <input type="number" name="viernes_from" id="id_Viernes_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
+                        <label for="id_Viernes_Man_Hasta">- Hasta: </label>
+                        <input type="number" name="viernes_to" id="id_Viernes_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
+                    {% endif %}
+                </td>
+                <td><input class="form-check-input" name="viernes" type="checkbox" id="id_Viernes_Habilitado"></td>
+            </tr>
+            <tr>
+                <td>Sábado</td>
+                <td>
+                    {% if Sábado %}
+                        {% with Sábado as turno %}
+                            <label for="id_Sab_Man_Desde">Desde: </label>
+                            <input type="number" name="sabado_from" value="{{ turno.horario_inicio|time:'H' }}" placeholder="{{ turno.horario_inicio|time:'H' }}" id="id_Sab_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
+                            <label for="id_Sab_Man_Hasta">- Hasta: </label>
+                            <input type="number" name="sabado_to" value="{{ turno.horario_fin|time:'H' }}" placeholder="{{ turno.horario_fin|time:'H' }}" id="id_Sab_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
+                        {% endwith %}         
+                    {% else %}
+                        <label for="id_Sab_Man_Desde">Desde: </label>
+                        <input type="number" name="sabado_from" id="id_Sab_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
+                        <label for="id_Sab_Man_Hasta">- Hasta: </label>
+                        <input type="number" name="sabado_to" id="id_Sab_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
+                    {% endif %}
+                </td>
+                <td><input class="form-check-input" name="sabado" type="checkbox" id="id_Sab_Habilitado"></td>
+            </tr>
+             <tr>
+                <td>Domingo</td>
+                <td>
+                    {% if Domingo %}
+                        {% with Domingo as turno %}
+                            <label for="id_Dom_Man_Desde">Desde: </label>
+                            <input type="number" name="domingo_from" value="{{ turno.horario_inicio|time:'H' }}" placeholder="{{ turno.horario_inicio|time:'H' }}" id="id_Dom_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
+                            <label for="id_Dom_Man_Hasta">- Hasta: </label>
+                            <input type="number" name="domingo_to" value="{{ turno.horario_fin|time:'H' }}" placeholder="{{ turno.horario_fin|time:'H' }}" id="id_Dom_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">                
+                        {% endwith %}         
+                    {% else %}
+                        <label for="id_Dom_Man_Desde">Desde: </label>
+                        <input type="number" name="domingo_from" id="id_Dom_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
+                        <label for="id_Dom_Man_Hasta">- Hasta: </label>
+                        <input type="number" name="domingo_to" id="id_Dom_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
+                    {% endif %}
+                </td>
+                <td><input class="form-check-input" name="domingo" type="checkbox" id="id_Dom_Habilitado"></td>
+            </tr>
+    
+        </tbody>
+        </table>
+        </div>
+        <div class="text-center">
+            <a class="btn btn-success" style="margin: 10px;color: #fff;" data-toggle="modal" data-target="#myModalHorario">Guardar</a>
+            <!-- <button type="submit" style="background: #1977cc; border: 0; padding: 10px 35px; color: #fff; transition: 0.4s; border-radius: 50px; " onmouseover="this.style.backgroundColor='#1c84e3'" onmouseout="this.style.backgroundColor='#1977cc'">Guardar turnos</button> -->
+        </div>
+    </form>
+</div>
 </div>
 </div>
 </div>
@@ -212,7 +416,7 @@
 </section>
 </main>
 
-    <div class="modal fade" id="myModalHorario" tabindex="-1" role="dialog" >
+<div class="modal fade" id="myModalHorario" tabindex="-1" role="dialog" >
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -227,12 +431,13 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-          <button type="submit" class="btn btn-success" onclick="">Guardar</button>
+          <button type="button" id="btnSend_horarios" class="btn btn-success" onclick="send_horarios()">Guardar</button>
         </div>
     </div>
   </div>
 </div>
-    <div class="modal fade" id="myModalEspecialidad" tabindex="-1" role="dialog" >
+
+<div class="modal fade" id="myModalEspecialidad" tabindex="-1" role="dialog" >
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -247,11 +452,24 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-          <button type="submit" class="btn btn-success" onclick="">Guardar</button>
+          <button type="submit" id="btnSend_especialidades" class="btn btn-success" onclick="send_especialidades()">Guardar</button>
         </div>
     </div>
   </div>
 </div>
 
 
+
+{% endblock %}
+
+{% block js %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+function send_horarios () {
+    $("#horarios_form").submit();
+};
+function send_especialidades () {
+    $("#especialidades_form").submit();
+};
+</script>
 {% endblock %}

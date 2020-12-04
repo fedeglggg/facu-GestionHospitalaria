@@ -23,8 +23,8 @@
 
 <section id="hero" class="d-flex align-items-center" style="position: unset; ">
     <div class="container">
-      <h1>Registro de Medico</h1>
-      <h2>Ingrese los datos correspondientes al nuevo profesional.</h2>
+      <h1>Datos de medico</h1>
+      <h2>Modifique los datos correspondientes a un profesional</h2>
     </div>
 </section>
 
@@ -46,20 +46,11 @@
 <div class="icon-boxes">
 <div class="icon-box">
 
-{% if turnos_jornada %}
-    <p>Turnos ya registrados de {{ medico.user.first_name }} {{ medico.user.last_name }} (esto en la final lo sacamos) </p>
-    {% for i in turnos_jornada %}
-        <p> {{i.dia}} {{i.horario_inicio}} - {{i.horario_fin}}</p>
-    {% endfor %}
-{% else %}
-    <p>{{ medico.user.first_name }} {{ medico.user.last_name }} no posee turnos actualmente</p>
-{% endif %}
-
 <form method="post" autocomplete="off">
     {% csrf_token %}
     <div style="margin: 15px">
             <div class="section-title" style="padding-bottom: 0;">
-          <h2>Horarios para {{ medico.user.first_name }} {{ medico.user.last_name }}</h2>
+          <h2>Horarios para {{ doctor.user.first_name }} {{ doctor.user.last_name }}</h2>
     </div>
     </div>
         <p>Ingrese horarios de disponibilidad</p>

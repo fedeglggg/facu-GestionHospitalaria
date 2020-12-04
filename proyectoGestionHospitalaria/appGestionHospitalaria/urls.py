@@ -9,7 +9,7 @@ from django.conf import settings
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     path('medicos/', views.medicos, name='lista_medicos'),
-    path('medico/<int:doctor_id>/', views.medico, name='medico'),
+    path('medico/<int:doctor_id>/', views.medico_detail, name='medico_detail'),
     path('error/acceso/', views.error_acceso, name='error_acceso'),
     path('signup/paciente/', views.signup_paciente, name='signup_paciente'),
     path('signup/medico/', views.signup_medico, name='signup_medico'),
