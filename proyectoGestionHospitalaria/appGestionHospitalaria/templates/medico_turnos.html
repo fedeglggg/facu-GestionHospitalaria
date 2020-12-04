@@ -47,7 +47,7 @@
 <div class="icon-box">
 
 {% if turnos_jornada %}
-    <p>Turnos ya registrados de {{ medico.user.first_name }} {{ medico.user.last_name }} (esto ponerlo lindo) </p>
+    <p>Turnos ya registrados de {{ medico.user.first_name }} {{ medico.user.last_name }} (esto en la final lo sacamos) </p>
     {% for i in turnos_jornada %}
         <p> {{i.dia}} {{i.horario_inicio}} - {{i.horario_fin}}</p>
     {% endfor %}
@@ -78,13 +78,13 @@
             <td> 
                 {% if Lunes %}
                     {% with Lunes as turno %}
-                        <label for="id_Lunes_Man_Desde">TDesde: </label>
+                        <label for="id_Lunes_Man_Desde">Desde: </label>
                         <input type="number" value="{{ turno.horario_inicio|time:'H' }}" placeholder="{{ turno.horario_inicio|time:'H' }}" name="lunes_from" id="id_Lunes_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24"> 
                         <label for="id_Lunes_Man_Hasta"> - Hasta:</label>
                         <input type="number" value="{{ turno.horario_fin }}" placeholder="{{ turno.horario_fin|time:'H' }}" name="lunes_to" id="id_Lunes_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
                     {% endwith %}         
                 {% else %}
-                    <label for="id_Lunes_Man_Desde">YDesde: </label>
+                    <label for="id_Lunes_Man_Desde">Desde: </label>
                     <input type="number" name="lunes_from" id="id_Lunes_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24"> 
                     <label for="id_Lunes_Man_Hasta"> - Hasta:</label>
                     <input type="number" name="lunes_to" id="id_Lunes_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">

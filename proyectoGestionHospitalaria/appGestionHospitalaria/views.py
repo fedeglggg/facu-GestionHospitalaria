@@ -52,12 +52,13 @@ def operate_timefields(tf_inicial, tf_final, operation):
         return minutos_numero_final - minutos_numero_inicial 
 
 def hour_to_timefield(hora_number):
-    # hora = int(hora_number)
-    # print(hora_number)
-    if hora_number < '10':
-        return ('0:' + str(hora_number) + '00:00')
+    hora = int(hora_number)
+    print('hora_number: ', hora_number)
+    print('hora: ', hora)
+    if hora < 10:
+        return ('0' + str(hora) + ':00:00')
     else:
-        return (str(hora_number) + ':00:00')
+        return (str(hora) + ':00:00')
 
 
 def index(request):
@@ -458,7 +459,9 @@ def medico_turnos(request, doctor_id):
             hora_inicio = request.POST.get('lunes_from')
             hora_fin = request.POST.get('lunes_to')
             hora_inicio = hour_to_timefield(hora_inicio)
+            print(hora_inicio)
             hora_fin = hour_to_timefield(hora_fin)
+            print(hora_fin)
             new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
             new_turno_jornada.save()
         
