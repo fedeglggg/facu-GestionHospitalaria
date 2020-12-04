@@ -249,9 +249,10 @@
 <div class="icon-box" style="padding: 10px;margin: 25px 0px 25px 0px;">
     <form method="post" id="horarios_form" autocomplete="off">
         {% csrf_token %}
+        <input type="hidden" name="horarios" value="1">
         <div style="margin: 15px">
                 <div class="section-title" style="padding-bottom: 0;">
-              <h2>Horarios para {{ doctor.user.first_name }} {{ doctor.user.last_name }}</h2>
+              <h2>Horarios </h2>
         </div>
         </div>
             <p>Ingrese horarios de disponibilidad</p>
@@ -282,7 +283,12 @@
                         <input type="number" name="lunes_to" id="id_Lunes_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
                     {% endif %}
                 </td>
-                <td><input type="checkbox" name="lunes" class="form-check-input" id="id_Lunes_Habilitado"></td>
+                {% if Lunes %}
+                    <td><input type="checkbox" checked="" name="lunes" class="form-check-input" id="id_Lunes_Habilitado"></td>
+                {% else %}
+                    <td><input type="checkbox" name="lunes" class="form-check-input" id="id_Lunes_Habilitado"></td>
+                {% endif %}
+                
             </tr>
             <tr>
                 <td>Martes</td>
@@ -301,7 +307,12 @@
                         <input type="number" name="martes_to" id="id_Martes_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24"> 
                     {% endif %}    
                 </td>
+                
+                {% if Martes %} 
+                <td><input class="form-check-input" checked="" name="martes" type="checkbox" id="id_Martes_Habilitado"></td>
+                {% else %}
                 <td><input class="form-check-input" name="martes" type="checkbox" id="id_Martes_Habilitado"></td>
+                {% endif %}
             </tr>
              <tr>
                 <td>Miércoles</td>
@@ -320,7 +331,12 @@
                         <input type="number" name="miercoles_to" id="id_Mier_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
                     {% endif %} 
                 </td>
+                {% if Miércoles %} 
+                <td><input class="form-check-input" checked="" name="miercoles" type="checkbox" id="id_Mier_Habilitado"></td>
+                {% else %}
                 <td><input class="form-check-input" name="miercoles" type="checkbox" id="id_Mier_Habilitado"></td>
+                {% endif %}
+                
             </tr>
             <tr>
                 <td>Jueves</td>
@@ -339,7 +355,12 @@
                         <input type="number" name="jueves_to" id="id_Jueves_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
                     {% endif %}
                 </td>
+                {% if Jueves %} 
+                <td><input class="form-check-input" checked="" name="jueves" type="checkbox" id="id_Jueves_Habilitado"></td>
+                {% else %}
                 <td><input class="form-check-input" name="jueves" type="checkbox" id="id_Jueves_Habilitado"></td>
+                {% endif %}
+                
             </tr>
             <tr>
                 <td>Viernes</td>
@@ -358,7 +379,12 @@
                         <input type="number" name="viernes_to" id="id_Viernes_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
                     {% endif %}
                 </td>
+                {% if Viernes %}
+                <td><input class="form-check-input" checked="" name="viernes" type="checkbox" id="id_Viernes_Habilitado"></td>
+                {% else %}
                 <td><input class="form-check-input" name="viernes" type="checkbox" id="id_Viernes_Habilitado"></td>
+                {% endif %}
+                
             </tr>
             <tr>
                 <td>Sábado</td>
@@ -377,7 +403,12 @@
                         <input type="number" name="sabado_to" id="id_Sab_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
                     {% endif %}
                 </td>
+                {% if Sábado %} 
+                <td><input class="form-check-input" checked="" name="sabado" type="checkbox" id="id_Sab_Habilitado"></td>
+                {% else %}
                 <td><input class="form-check-input" name="sabado" type="checkbox" id="id_Sab_Habilitado"></td>
+                {% endif %}
+                
             </tr>
              <tr>
                 <td>Domingo</td>
@@ -396,7 +427,12 @@
                         <input type="number" name="domingo_to" id="id_Dom_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
                     {% endif %}
                 </td>
+                {% if Domingo %} 
+                <td><input class="form-check-input" checked="" name="domingo" type="checkbox" id="id_Dom_Habilitado"></td>
+                {% else %}
                 <td><input class="form-check-input" name="domingo" type="checkbox" id="id_Dom_Habilitado"></td>
+                {% endif %}
+                
             </tr>
     
         </tbody>

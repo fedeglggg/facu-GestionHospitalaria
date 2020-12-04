@@ -117,121 +117,171 @@ def medico_detail(request, doctor_id):
     except Doctor.DoesNotExist:
         raise Http404("El doctor no existe")
 
-    # si el usuario esta autorizado a ver la vista sigue
+    
     if request.method == 'POST':   
-        # añadiendo los horarios del medico
-        if request.POST.get('lunes'):
-            dia = DiaJornada.objects.get(nombre='Lunes')
-            hora_inicio = request.POST.get('lunes_from')
-            hora_fin = request.POST.get('lunes_to')
-            hora_inicio = hour_to_timefield(hora_inicio)
-            hora_fin = hour_to_timefield(hora_fin) 
-            turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia).exists() # get porq estamos haciendo 1 sola jornada por medico
-            if turno_jor:
-                turno_jor = TurnoJornada.objects.get(doctor=doc,dia=dia)
-                turno_jor.horario_inicio = hora_inicio
-                turno_jor.horario_fin = hora_fin
-                turno_jor.save()
-            else:
-                new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
-                new_turno_jornada.save()
-        
-        if request.POST.get('martes'):
-            dia = DiaJornada.objects.get(nombre='Martes')
-            hora_inicio = request.POST.get('martes_from')
-            hora_fin = request.POST.get('martes_to')
-            hora_inicio = hour_to_timefield(hora_inicio)
-            hora_fin = hour_to_timefield(hora_fin)
-            turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia).exists()
-            if turno_jor:
-                turno_jor = TurnoJornada.objects.get(doctor=doc,dia=dia)
-                turno_jor.horario_inicio = hora_inicio
-                turno_jor.horario_fin = hora_fin
-                turno_jor.save()
-            else:
-                new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
-                new_turno_jornada.save()
 
-        if request.POST.get('miercoles'):
-            dia = DiaJornada.objects.get(nombre='Miércoles')
-            hora_inicio = request.POST.get('miercoles_from')
-            hora_fin = request.POST.get('miercoles_to')
-            hora_inicio = hour_to_timefield(hora_inicio)
-            hora_fin = hour_to_timefield(hora_fin)
-            turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia).exists()
-            if turno_jor:
-                turno_jor = TurnoJornada.objects.get(doctor=doc,dia=dia)
-                turno_jor.horario_inicio = hora_inicio
-                turno_jor.horario_fin = hora_fin
-                turno_jor.save()
+        if request.POST.get('horarios') == '1':
+            if request.POST.get('lunes'):
+                dia = DiaJornada.objects.get(nombre='Lunes')
+                hora_inicio = request.POST.get('lunes_from')
+                hora_fin = request.POST.get('lunes_to')
+                hora_inicio = hour_to_timefield(hora_inicio)
+                hora_fin = hour_to_timefield(hora_fin) 
+                turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia).exists() # get porq estamos haciendo 1 sola jornada por medico
+                if turno_jor:
+                    turno_jor = TurnoJornada.objects.get(doctor=doc,dia=dia)
+                    turno_jor.horario_inicio = hora_inicio
+                    turno_jor.horario_fin = hora_fin
+                    turno_jor.save()
+                else:
+                    new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
+                    new_turno_jornada.save()
             else:
-                new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
-                new_turno_jornada.save()
-        
-        if request.POST.get('jueves'):
-            dia = DiaJornada.objects.get(nombre='Jueves')
-            hora_inicio = request.POST.get('jueves_from')
-            hora_fin = request.POST.get('jueves_to')
-            hora_inicio = hour_to_timefield(hora_inicio)
-            hora_fin = hour_to_timefield(hora_fin)
-            turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia).exists()
-            if turno_jor:
-                turno_jor = TurnoJornada.objects.get(doctor=doc,dia=dia)
-                turno_jor.horario_inicio = hora_inicio
-                turno_jor.horario_fin = hora_fin
-                turno_jor.save()
+                dia = DiaJornada.objects.get(nombre='Lunes')
+                turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia)
+                if TurnoJornada.objects.filter(doctor=doc,dia=dia).exists():
+                    for i in turno_jor:
+                        # print('borrando la jornada:', i.dia.nombre, i.horario_inicio, i.horario_fin)
+                        i.delete()
+
+            
+            if request.POST.get('martes'):
+                dia = DiaJornada.objects.get(nombre='Martes')
+                hora_inicio = request.POST.get('martes_from')
+                hora_fin = request.POST.get('martes_to')
+                hora_inicio = hour_to_timefield(hora_inicio)
+                hora_fin = hour_to_timefield(hora_fin)
+                turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia).exists()
+                if turno_jor:
+                    turno_jor = TurnoJornada.objects.get(doctor=doc,dia=dia)
+                    turno_jor.horario_inicio = hora_inicio
+                    turno_jor.horario_fin = hora_fin
+                    turno_jor.save()
+                else:
+                    new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
+                    new_turno_jornada.save()
             else:
-                new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
-                new_turno_jornada.save()
-        
-        if request.POST.get('viernes'):
-            dia = DiaJornada.objects.get(nombre='Viernes')
-            hora_inicio = request.POST.get('viernes_from')
-            hora_fin = request.POST.get('viernes_to')
-            hora_inicio = hour_to_timefield(hora_inicio)
-            hora_fin = hour_to_timefield(hora_fin)
-            turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia).exists()
-            if turno_jor:
-                turno_jor = TurnoJornada.objects.get(doctor=doc,dia=dia)
-                turno_jor.horario_inicio = hora_inicio
-                turno_jor.horario_fin = hora_fin
-                turno_jor.save()
+                dia = DiaJornada.objects.get(nombre='Martes')
+                turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia)
+                if TurnoJornada.objects.filter(doctor=doc,dia=dia).exists():
+                    for i in turno_jor:
+                        # print('borrando la jornada:', i.dia.nombre, i.horario_inicio, i.horario_fin)
+                        i.delete()
+
+            if request.POST.get('miercoles'):
+                dia = DiaJornada.objects.get(nombre='Miércoles')
+                hora_inicio = request.POST.get('miercoles_from')
+                hora_fin = request.POST.get('miercoles_to')
+                hora_inicio = hour_to_timefield(hora_inicio)
+                hora_fin = hour_to_timefield(hora_fin)
+                turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia).exists()
+                if turno_jor:
+                    turno_jor = TurnoJornada.objects.get(doctor=doc,dia=dia)
+                    turno_jor.horario_inicio = hora_inicio
+                    turno_jor.horario_fin = hora_fin
+                    turno_jor.save()
+                else:
+                    new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
+                    new_turno_jornada.save()
             else:
-                new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
-                new_turno_jornada.save()
-        
-        if request.POST.get('sabado'):
-            dia = DiaJornada.objects.get(nombre='Sábado')
-            hora_inicio = request.POST.get('sabado_from')
-            hora_fin = request.POST.get('sabado_to')
-            hora_inicio = hour_to_timefield(hora_inicio)
-            hora_fin = hour_to_timefield(hora_fin)
-            turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia).exists()
-            if turno_jor:
-                turno_jor = TurnoJornada.objects.get(doctor=doc,dia=dia)
-                turno_jor.horario_inicio = hora_inicio
-                turno_jor.horario_fin = hora_fin
-                turno_jor.save()
+                dia = DiaJornada.objects.get(nombre='Miércoles')
+                turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia)
+                if TurnoJornada.objects.filter(doctor=doc,dia=dia).exists():
+                    for i in turno_jor:
+                        # print('borrando la jornada:', i.dia.nombre, i.horario_inicio, i.horario_fin)
+                        i.delete()
+            
+            if request.POST.get('jueves'):
+                dia = DiaJornada.objects.get(nombre='Jueves')
+                hora_inicio = request.POST.get('jueves_from')
+                hora_fin = request.POST.get('jueves_to')
+                hora_inicio = hour_to_timefield(hora_inicio)
+                hora_fin = hour_to_timefield(hora_fin)
+                turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia).exists()
+                if turno_jor:
+                    turno_jor = TurnoJornada.objects.get(doctor=doc,dia=dia)
+                    turno_jor.horario_inicio = hora_inicio
+                    turno_jor.horario_fin = hora_fin
+                    turno_jor.save()
+                else:
+                    new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
+                    new_turno_jornada.save()
             else:
-                new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
-                new_turno_jornada.save()
-        
-        if request.POST.get('domingo'):
-            dia = DiaJornada.objects.get(nombre='Domingo')
-            hora_inicio = request.POST.get('domingo_from')
-            hora_fin = request.POST.get('domingo_to')
-            hora_inicio = hour_to_timefield(hora_inicio)
-            hora_fin = hour_to_timefield(hora_fin)
-            turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia).exists()
-            if turno_jor:
-                turno_jor = TurnoJornada.objects.get(doctor=doc,dia=dia)
-                turno_jor.horario_inicio = hora_inicio
-                turno_jor.horario_fin = hora_fin
-                turno_jor.save()
+                dia = DiaJornada.objects.get(nombre='Jueves')
+                turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia)
+                if TurnoJornada.objects.filter(doctor=doc,dia=dia).exists():
+                    for i in turno_jor:
+                        # print('borrando la jornada:', i.dia.nombre, i.horario_inicio, i.horario_fin)
+                        i.delete()
+            
+            if request.POST.get('viernes'):
+                dia = DiaJornada.objects.get(nombre='Viernes')
+                hora_inicio = request.POST.get('viernes_from')
+                hora_fin = request.POST.get('viernes_to')
+                hora_inicio = hour_to_timefield(hora_inicio)
+                hora_fin = hour_to_timefield(hora_fin)
+                turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia).exists()
+                if turno_jor:
+                    turno_jor = TurnoJornada.objects.get(doctor=doc,dia=dia)
+                    turno_jor.horario_inicio = hora_inicio
+                    turno_jor.horario_fin = hora_fin
+                    turno_jor.save()
+                else:
+                    new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
+                    new_turno_jornada.save()
             else:
-                new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
-                new_turno_jornada.save()
-        
+                dia = DiaJornada.objects.get(nombre='Viernes')
+                turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia)
+                if TurnoJornada.objects.filter(doctor=doc,dia=dia).exists():
+                    for i in turno_jor:
+                        # print('borrando la jornada:', i.dia.nombre, i.horario_inicio, i.horario_fin)
+                        i.delete()
+            
+            if request.POST.get('sabado'):
+                dia = DiaJornada.objects.get(nombre='Sábado')
+                hora_inicio = request.POST.get('sabado_from')
+                hora_fin = request.POST.get('sabado_to')
+                hora_inicio = hour_to_timefield(hora_inicio)
+                hora_fin = hour_to_timefield(hora_fin)
+                turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia).exists()
+                if turno_jor:
+                    turno_jor = TurnoJornada.objects.get(doctor=doc,dia=dia)
+                    turno_jor.horario_inicio = hora_inicio
+                    turno_jor.horario_fin = hora_fin
+                    turno_jor.save()
+                else:
+                    new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
+                    new_turno_jornada.save()
+            else:
+                dia = DiaJornada.objects.get(nombre='Sábado')
+                turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia)
+                if TurnoJornada.objects.filter(doctor=doc,dia=dia).exists():
+                    for i in turno_jor:
+                        # print('borrando la jornada:', i.dia.nombre, i.horario_inicio, i.horario_fin)
+                        i.delete()
+            
+            if request.POST.get('domingo'):
+                dia = DiaJornada.objects.get(nombre='Domingo')
+                hora_inicio = request.POST.get('domingo_from')
+                hora_fin = request.POST.get('domingo_to')
+                hora_inicio = hour_to_timefield(hora_inicio)
+                hora_fin = hour_to_timefield(hora_fin)
+                turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia).exists()
+                if turno_jor:
+                    turno_jor = TurnoJornada.objects.get(doctor=doc,dia=dia)
+                    turno_jor.horario_inicio = hora_inicio
+                    turno_jor.horario_fin = hora_fin
+                    turno_jor.save()
+                else:
+                    new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
+                    new_turno_jornada.save()
+            else:
+                dia = DiaJornada.objects.get(nombre='Domingo')
+                turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia)
+                if TurnoJornada.objects.filter(doctor=doc,dia=dia).exists():
+                    for i in turno_jor:
+                        # print('borrando la jornada:', i.dia.nombre, i.horario_inicio, i.horario_fin)
+                        i.delete()
 
         if request.POST.get('especialidades') == '1':
             form = UpdateMedicoEspecialidadForm(request.POST)
@@ -275,6 +325,7 @@ def medico_detail(request, doctor_id):
                 context.update({esp:'1'})
                 # print(i, esp)
         else:
+            # por ahora no pasa nada pero arreglarlo despues
             print('esto no debería pasar, hay especialidades cargadas que no estan en el form: ', i.name)
 
     for i in li_dias:
