@@ -50,6 +50,24 @@ class SignUpFormMedico(UserCreationForm):
         'neumonologia',
         'password1', 'password2')
 
+class UpdateMedicoEspecialidadForm(forms.Form):
+ # al postear los checkboxes si no esta lleno no lo manda directamente, por eso required false
+    traumatologia = forms.BooleanField(required = False)
+    clinica_medica = forms.BooleanField(required = False)
+    cardiologia = forms.BooleanField(required = False)
+    dermatologia = forms.BooleanField(required = False)
+    oftalmologia = forms.BooleanField(required = False)
+    endocrinologia = forms.BooleanField(required = False)
+    ginecologia = forms.BooleanField(required = False)
+    obstetricia = forms.BooleanField(required = False)
+    psicologia = forms.BooleanField(required = False)
+    diagnostico_por_imagenes = forms.BooleanField(required = False)
+    nutricion = forms.BooleanField(required = False)
+    pediatria = forms.BooleanField(required = False)
+    psiquiatria = forms.BooleanField(required = False)
+    neumonologia = forms.BooleanField(required = False)
+
+
 class SignUpFormPaciente(UserCreationForm):
     first_name = forms.CharField(max_length=30)
     last_name = forms.CharField(max_length=30)

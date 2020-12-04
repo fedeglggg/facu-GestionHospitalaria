@@ -9,7 +9,7 @@ from django.conf import settings
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     path('medicos/', views.medicos, name='lista_medicos'),
-    path('medico/<int:doctor_id>/', views.medico, name='medico'),
+    path('medico/<int:doctor_id>/', views.medico_detail, name='medico_detail'),
     path('error/acceso/', views.error_acceso, name='error_acceso'),
     path('signup/paciente/', views.signup_paciente, name='signup_paciente'),
     path('signup/medico/', views.signup_medico, name='signup_medico'),
@@ -24,7 +24,8 @@ urlpatterns = [
     path('turnos/crear/3/', views.create_turno_3, name='create_turno_3'),
     path('turnos/crear/4/', views.create_turno_4, name='create_turno_4'),
     path('mis-historias/', views.historias_medicas_pacientes,name='historia_list_paciente'),
-    path('mis-turnos/', views.turnos_paciente, name='lista_turno_paciente')
+    path('mis-turnos/', views.turnos_paciente, name='lista_turno_paciente'),
+    path('d-mis-turnos/', views.turnos_medico, name='lista_turno_medico')
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

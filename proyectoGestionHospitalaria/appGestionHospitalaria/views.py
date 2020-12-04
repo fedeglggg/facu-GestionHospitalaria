@@ -53,8 +53,8 @@ def operate_timefields(tf_inicial, tf_final, operation):
 
 def hour_to_timefield(hora_number):
     hora = int(hora_number)
-    print('hora_number: ', hora_number)
-    print('hora: ', hora)
+    # print('hora_number: ', hora_number)
+    # print('hora: ', hora)
     if hora < 10:
         return ('0' + str(hora) + ':00:00')
     else:
@@ -108,22 +108,233 @@ def pacientes(request):
     }
     return render(request, 'paciente_list.html', context)
 
-def medico(request, doctor_id):
-    if not is_user_auth(request.user, ('secretarios', 'medicos', 'sarasa')):
+def medico_detail(request, doctor_id):
+    if not is_user_auth(request.user, ('secretarios','sarasa')):
         return redirect('error_acceso')
 
     try:
-        doctor = Doctor.objects.get(pk=doctor_id)
-        especialidades = doctor.especialidad.all()
-        context = {
-        'doctor': doctor,
-        'especialidades': especialidades
-        }
-    
+        doc = Doctor.objects.get(pk=doctor_id)
     except Doctor.DoesNotExist:
-        raise Http404("El paciente no existe")
-    return render(request, 'medico_detail.html', context)
+        raise Http404("El doctor no existe")
 
+    
+    if request.method == 'POST':   
+
+        if request.POST.get('horarios') == '1':
+            if request.POST.get('lunes'):
+                dia = DiaJornada.objects.get(nombre='Lunes')
+                hora_inicio = request.POST.get('lunes_from')
+                hora_fin = request.POST.get('lunes_to')
+                hora_inicio = hour_to_timefield(hora_inicio)
+                hora_fin = hour_to_timefield(hora_fin) 
+                turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia).exists() # get porq estamos haciendo 1 sola jornada por medico
+                if turno_jor:
+                    turno_jor = TurnoJornada.objects.get(doctor=doc,dia=dia)
+                    turno_jor.horario_inicio = hora_inicio
+                    turno_jor.horario_fin = hora_fin
+                    turno_jor.save()
+                else:
+                    new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
+                    new_turno_jornada.save()
+            else:
+                dia = DiaJornada.objects.get(nombre='Lunes')
+                turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia)
+                if TurnoJornada.objects.filter(doctor=doc,dia=dia).exists():
+                    for i in turno_jor:
+                        # print('borrando la jornada:', i.dia.nombre, i.horario_inicio, i.horario_fin)
+                        i.delete()
+
+            
+            if request.POST.get('martes'):
+                dia = DiaJornada.objects.get(nombre='Martes')
+                hora_inicio = request.POST.get('martes_from')
+                hora_fin = request.POST.get('martes_to')
+                hora_inicio = hour_to_timefield(hora_inicio)
+                hora_fin = hour_to_timefield(hora_fin)
+                turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia).exists()
+                if turno_jor:
+                    turno_jor = TurnoJornada.objects.get(doctor=doc,dia=dia)
+                    turno_jor.horario_inicio = hora_inicio
+                    turno_jor.horario_fin = hora_fin
+                    turno_jor.save()
+                else:
+                    new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
+                    new_turno_jornada.save()
+            else:
+                dia = DiaJornada.objects.get(nombre='Martes')
+                turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia)
+                if TurnoJornada.objects.filter(doctor=doc,dia=dia).exists():
+                    for i in turno_jor:
+                        # print('borrando la jornada:', i.dia.nombre, i.horario_inicio, i.horario_fin)
+                        i.delete()
+
+            if request.POST.get('miercoles'):
+                dia = DiaJornada.objects.get(nombre='Miércoles')
+                hora_inicio = request.POST.get('miercoles_from')
+                hora_fin = request.POST.get('miercoles_to')
+                hora_inicio = hour_to_timefield(hora_inicio)
+                hora_fin = hour_to_timefield(hora_fin)
+                turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia).exists()
+                if turno_jor:
+                    turno_jor = TurnoJornada.objects.get(doctor=doc,dia=dia)
+                    turno_jor.horario_inicio = hora_inicio
+                    turno_jor.horario_fin = hora_fin
+                    turno_jor.save()
+                else:
+                    new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
+                    new_turno_jornada.save()
+            else:
+                dia = DiaJornada.objects.get(nombre='Miércoles')
+                turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia)
+                if TurnoJornada.objects.filter(doctor=doc,dia=dia).exists():
+                    for i in turno_jor:
+                        # print('borrando la jornada:', i.dia.nombre, i.horario_inicio, i.horario_fin)
+                        i.delete()
+            
+            if request.POST.get('jueves'):
+                dia = DiaJornada.objects.get(nombre='Jueves')
+                hora_inicio = request.POST.get('jueves_from')
+                hora_fin = request.POST.get('jueves_to')
+                hora_inicio = hour_to_timefield(hora_inicio)
+                hora_fin = hour_to_timefield(hora_fin)
+                turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia).exists()
+                if turno_jor:
+                    turno_jor = TurnoJornada.objects.get(doctor=doc,dia=dia)
+                    turno_jor.horario_inicio = hora_inicio
+                    turno_jor.horario_fin = hora_fin
+                    turno_jor.save()
+                else:
+                    new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
+                    new_turno_jornada.save()
+            else:
+                dia = DiaJornada.objects.get(nombre='Jueves')
+                turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia)
+                if TurnoJornada.objects.filter(doctor=doc,dia=dia).exists():
+                    for i in turno_jor:
+                        # print('borrando la jornada:', i.dia.nombre, i.horario_inicio, i.horario_fin)
+                        i.delete()
+            
+            if request.POST.get('viernes'):
+                dia = DiaJornada.objects.get(nombre='Viernes')
+                hora_inicio = request.POST.get('viernes_from')
+                hora_fin = request.POST.get('viernes_to')
+                hora_inicio = hour_to_timefield(hora_inicio)
+                hora_fin = hour_to_timefield(hora_fin)
+                turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia).exists()
+                if turno_jor:
+                    turno_jor = TurnoJornada.objects.get(doctor=doc,dia=dia)
+                    turno_jor.horario_inicio = hora_inicio
+                    turno_jor.horario_fin = hora_fin
+                    turno_jor.save()
+                else:
+                    new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
+                    new_turno_jornada.save()
+            else:
+                dia = DiaJornada.objects.get(nombre='Viernes')
+                turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia)
+                if TurnoJornada.objects.filter(doctor=doc,dia=dia).exists():
+                    for i in turno_jor:
+                        # print('borrando la jornada:', i.dia.nombre, i.horario_inicio, i.horario_fin)
+                        i.delete()
+            
+            if request.POST.get('sabado'):
+                dia = DiaJornada.objects.get(nombre='Sábado')
+                hora_inicio = request.POST.get('sabado_from')
+                hora_fin = request.POST.get('sabado_to')
+                hora_inicio = hour_to_timefield(hora_inicio)
+                hora_fin = hour_to_timefield(hora_fin)
+                turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia).exists()
+                if turno_jor:
+                    turno_jor = TurnoJornada.objects.get(doctor=doc,dia=dia)
+                    turno_jor.horario_inicio = hora_inicio
+                    turno_jor.horario_fin = hora_fin
+                    turno_jor.save()
+                else:
+                    new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
+                    new_turno_jornada.save()
+            else:
+                dia = DiaJornada.objects.get(nombre='Sábado')
+                turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia)
+                if TurnoJornada.objects.filter(doctor=doc,dia=dia).exists():
+                    for i in turno_jor:
+                        # print('borrando la jornada:', i.dia.nombre, i.horario_inicio, i.horario_fin)
+                        i.delete()
+            
+            if request.POST.get('domingo'):
+                dia = DiaJornada.objects.get(nombre='Domingo')
+                hora_inicio = request.POST.get('domingo_from')
+                hora_fin = request.POST.get('domingo_to')
+                hora_inicio = hour_to_timefield(hora_inicio)
+                hora_fin = hour_to_timefield(hora_fin)
+                turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia).exists()
+                if turno_jor:
+                    turno_jor = TurnoJornada.objects.get(doctor=doc,dia=dia)
+                    turno_jor.horario_inicio = hora_inicio
+                    turno_jor.horario_fin = hora_fin
+                    turno_jor.save()
+                else:
+                    new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
+                    new_turno_jornada.save()
+            else:
+                dia = DiaJornada.objects.get(nombre='Domingo')
+                turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia)
+                if TurnoJornada.objects.filter(doctor=doc,dia=dia).exists():
+                    for i in turno_jor:
+                        # print('borrando la jornada:', i.dia.nombre, i.horario_inicio, i.horario_fin)
+                        i.delete()
+
+        if request.POST.get('especialidades') == '1':
+            form = UpdateMedicoEspecialidadForm(request.POST)
+            if form.is_valid():
+                index = 0
+                especialidades_que_ya_tiene = Especialidad.objects.filter(doctor=doc)
+                for i in lista_especialidades_nombres:
+                    # si el checkbox no se marco directamente no se manda y da falso aca
+                    nombre = dict_especialidades[i]
+                    especialidad = Especialidad.objects.get(name=nombre)
+                    if form.cleaned_data.get(i):                    
+                        if especialidad in especialidades_que_ya_tiene:                                                         
+                            #print('el doc ya tiene la especialidad: ', especialidad.name)
+                            pass
+                        else:
+                            #print('el doc no tiene la especialidad - agregandola...', especialidad.name)
+                            doc.especialidad.add(especialidad)
+                            doc.save()
+                    else:
+                        #print('falta la especialidad:', i)
+                        if especialidad in especialidades_que_ya_tiene:
+                            #print('el doctor posee la especialidad', especialidad.name, 'pero no esta tildada, borrando...')
+                            doc.especialidad.remove(especialidad)
+                    index = index + 1
+    
+    especialidades_que_ya_tiene = Especialidad.objects.filter(doctor=doc)
+    especialidades = Especialidad.objects.all()
+    turnos_jornada = TurnoJornada.objects.filter(doctor=doc)
+    # acaa
+    dias = DiaJornada.objects.all()
+    context = {
+        'turnos_jornada': turnos_jornada,
+        'especialidades': especialidades,
+        'doctor': doc
+    }
+
+    for i in especialidades:      
+        if i.name in dict_especialidades_back:
+            esp = dict_especialidades_back[i.name]
+            if i in especialidades_que_ya_tiene:
+                context.update({esp:'1'})
+                # print(i, esp)
+        else:
+            # por ahora no pasa nada pero arreglarlo despues
+            print('esto no debería pasar, hay especialidades cargadas que no estan en el form: ', i.name)
+
+    for i in li_dias:
+        dia = DiaJornada.objects.get(nombre=i)
+        for x in turnos_jornada:
+            if x.dia == dia:
+                context.update({dia.nombre:x})
+
+    return render(request, 'medico_detail.html', context)
 
 # @login_required en vez de usar esto chequeamos si el user pertenece a un grupo y mandamos
 # el si o no por el context - mas facil asi parece
@@ -143,7 +354,7 @@ def medicos(request):
     return render(request, 'medico_list.html', context)
 
 def turnos(request):
-    if not is_user_auth(request.user, ('secretarios', 'sarasa')):
+    if not is_user_auth(request.user, ('secretarios', 'medicos', 'sarasa')):
         return redirect('error_acceso')
       
     if request.method == 'POST':
@@ -216,7 +427,39 @@ def turnos_paciente(request):
         turnosPks.add(turno_aux.pk)
 
     turnosPaciente = Turno.objects.filter(pk__in = turnosPks)
+    #aca seguilo vos
     myFilter = TurnoPacienteFilter(request.GET, queryset=turnosPaciente)
+    turnos = myFilter.qs
+
+    context = {
+        'turnos': turnos,
+        'myFilter': myFilter
+    }
+    return render(request, 'turno_list_paciente.html', context)
+
+def turnos_medico(request):
+    if not is_user_auth(request.user, ('medicos', 'sarasa')):
+        return redirect('error_acceso')    
+      
+    if request.method == 'POST':
+        turno_pk = request.POST.get('turno_id')
+        try:
+            turno = Turno.objects.get(pk=turno_pk)
+        except Turno.DoesNotExist:
+            raise Http404("El turno no existe")
+
+    medico = Doctor.objects.get(user=request.user)
+    estudios = Estudio.objects.filter(doctor=medico)
+
+    # de aca salgo con la lista de turnos
+    turnosPks = set()
+    for i in estudios:
+        turno_aux = Turno.objects.get(estudio=i)
+        turnosPks.add(turno_aux.pk)
+
+    turnosMedicos = Turno.objects.filter(pk__in = turnosPks)
+    # 
+    myFilter = TurnoMedicoFilter(request.GET, queryset=turnosMedicos)
     turnos = myFilter.qs
 
     #for i in turnos:
@@ -227,8 +470,7 @@ def turnos_paciente(request):
         'turnos': turnos,
         'myFilter': myFilter
     }
-    return render(request, 'turno_list_paciente.html', context)
-
+    return render(request, 'turno_list_medico.html', context)
 
 def historiasMedicas(request):
     if not is_user_auth(request.user, ('secretarios', 'medicos', 'sarasa')):
@@ -349,6 +591,23 @@ dict_especialidades = {
     'pediatria': 'Pediatría',
     'psiquiatria': 'Psiquiatría',
     'neumonologia': 'Neumonología'
+}
+
+dict_especialidades_back = {
+    'Traumatología': 'traumatologia',
+    'Clínica médica': 'clinica_medica',
+    'Cardiología': 'cardiologia',
+    'Dermatología': 'dermatologia',
+    'Oftalmologia': 'oftalmologia',
+    'Endocrinología': 'endocrinologia',
+    'Ginecología': 'ginecologia',
+    'Obstetricia': 'obstetricia',
+    'Psicología': 'psicologia',
+    'Diagnóstico por Imágenes': 'diagnostico_por_imagenes',
+    'Nutrición': 'nutricion',
+    'Pediatría': 'pediatria',
+    'Psiquiatría': 'psiquiatria',
+    'Neumonología': 'neumonologia', 
 }
 
 lista_especialidades_nombres = [
@@ -583,8 +842,8 @@ def medico_turnos(request, doctor_id):
 
 # todos los comentarios de signup_medico aplican aca
 def signup_paciente(request):
-    # if not is_user_auth(request.user, ('pacientes')):
-    #     return redirect('error_acceso')
+    if not is_user_auth(request.user, ('secretarios')):
+        return redirect('error_acceso')
 
     if request.method == 'POST':
         form = SignUpFormPaciente(request.POST)
