@@ -5,6 +5,7 @@ from django.http import Http404
 from .forms import *
 from django.contrib.auth.models import Group, User
 from .filters import *
+from django.http import HttpResponseRedirect
 
 
 
@@ -198,7 +199,7 @@ def turnos_paciente(request):
 
     paciente = Paciente.objects.get(user=request.user)
     estudios = Estudio.objects.filter(paciente=paciente)
-    
+
     # de aca salgo con la lista de turnos
     turnosPks = set()
     for i in estudios:
@@ -394,52 +395,6 @@ def signup_medico(request):
                     print('especialidad seleccionada:', especialidad.name)
                 index = index + 1
 
-            # añadiendo los horarios del medico
-            #Lunes
-            lunManDesde = form.cleaned_data.get('id_Lunes_Man_Desde') #HoraDesde del lunes a la mañana
-            lunManHasta = form.cleaned_data.get('id_Lunes_Man_Hasta') #HoraHasta del lunes a la mañana
-            lunTarDesde = form.cleaned_data.get('id_Lunes_Tar_Desde') #HoraDesde del lunes a la tarde
-            lunTarDesde = form.cleaned_data.get('id_Lunes_Tar_Hasta') #HoraHasta del lunes a la tarde
-            lunHabilitado = form.cleaned_data.get('id_Lunes_Habilitado') #Lo primero que haces es verificar si este dato viene con un check (VERIFICA SI ESTA HABILITADO EL DIA LUNES)
-            # if lunHabilitado:
-                    # habria que crear el TurnoJornada del lunes a la mañana (en caso de ser distinto de null) y/o a la tarde(en caso de ser distinto de null) para el medico
-            #Martes
-            marManDesde = form.cleaned_data.get('id_Martes_Man_Desde')
-            marManHasta = form.cleaned_data.get('id_Martes_Man_Hasta')
-            marTarDesde = form.cleaned_data.get('id_Martes_Tar_Desde')
-            marTarDesde = form.cleaned_data.get('id_Martes_Tar_Hasta')
-            marHabilitado = form.cleaned_data.get('id_Martes_Habilitado')
-            #Miercoles
-            mieManDesde = form.cleaned_data.get('id_Mier_Man_Desde')
-            mieManHasta = form.cleaned_data.get('id_Mier_Man_Hasta')
-            mieTarDesde = form.cleaned_data.get('id_Mier_Tar_Desde')
-            mieTarDesde = form.cleaned_data.get('id_Mier_Tar_Hasta')
-            mieHabilitado = form.cleaned_data.get('id_Mier_Habilitado')
-            #Jueves
-            jueManDesde = form.cleaned_data.get('id_Jueves_Man_Desde')
-            jueManHasta = form.cleaned_data.get('id_Jueves_Man_Hasta')
-            jueTarDesde = form.cleaned_data.get('id_Jueves_Tar_Desde')
-            jueTarDesde = form.cleaned_data.get('id_Jueves_Tar_Hasta')
-            jueHabilitado = form.cleaned_data.get('id_Jueves_Habilitado')
-            #Viernes
-            vieManDesde = form.cleaned_data.get('id_Viernes_Man_Desde')
-            vieManHasta = form.cleaned_data.get('id_Viernes_Man_Hasta')
-            vieTarDesde = form.cleaned_data.get('id_Viernes_Tar_Desde')
-            vieTarDesde = form.cleaned_data.get('id_Viernes_Tar_Hasta')
-            vieHabilitado = form.cleaned_data.get('id_Viernes_Habilitado')
-            #Sabado
-            sabManDesde = form.cleaned_data.get('id_Sab_Man_Desde')
-            sabManHasta = form.cleaned_data.get('id_Sab_Man_Hasta')
-            sabTarDesde = form.cleaned_data.get('id_Sab_Tar_Desde')
-            sabTarDesde = form.cleaned_data.get('id_Sab_Tar_Hasta')
-            sabHabilitado = form.cleaned_data.get('id_Sab_Habilitado')
-            #Domingo
-            domManDesde = form.cleaned_data.get('id_Dom_Man_Desde')
-            domManHasta = form.cleaned_data.get('id_Dom_Man_Hasta')
-            domTarDesde = form.cleaned_data.get('id_Dom_Tar_Desde')
-            domTarDesde = form.cleaned_data.get('id_Dom_Tar_Hasta')
-            domHabilitado = form.cleaned_data.get('id_Dom_Habilitado')
-
             new_user.save() 
             new_doctor.save()
             # me paso que necesitaba guardar antes de agregar especialidades, anda pero verificar
@@ -447,10 +402,13 @@ def signup_medico(request):
             # doctor.refresh_from_db()
             # doctor.especialidad.add(especialidad) 
             # new_user.save() # no hace falta guardar devuelta el usuario al final de todo x ahora aparentemente
-            return redirect('index')
+
+            # hardcoded por ahora, habría que buscar alguna forma de tomar la url de urls.py que es dinamica en vez de poner /sigup/med...
+            return HttpResponseRedirect('/signup/medico/' + str(new_doctor.pk) + '/turnos/')
+            # return render(request, 'signup_medico_turnos.html', context)
         else:
             # falta agregar error por si el form es invalid
-            print('form fail')
+            print('form fail errors:')
             print(form.errors)
             return redirect('index')
             
@@ -460,6 +418,77 @@ def signup_medico(request):
             'especialidades': Especialidad.objects.order_by('name')
         }       
         return render(request, 'signup_medico.html', context)
+
+def signup_medico_turnos(request, doctor_id):
+    # le damos a is_auth los grupos permitidos en la vista
+    # is auth devuelve true si el usuario tiene permisos en la vista
+    if not is_user_auth(request.user, ('secretarios', 'sarasa')):
+        return redirect('error_acceso')
+
+    # si el usuario esta autorizado a ver la vista sigue
+    if request.method == 'POST':   
+        # añadiendo los horarios del medico
+        #Lunes
+        lunManDesde = form.cleaned_data.get('id_Lunes_Man_Desde') #HoraDesde del lunes a la mañana
+        lunManHasta = form.cleaned_data.get('id_Lunes_Man_Hasta') #HoraHasta del lunes a la mañana
+        lunTarDesde = form.cleaned_data.get('id_Lunes_Tar_Desde') #HoraDesde del lunes a la tarde
+        lunTarDesde = form.cleaned_data.get('id_Lunes_Tar_Hasta') #HoraHasta del lunes a la tarde
+        lunHabilitado = form.cleaned_data.get('id_Lunes_Habilitado') #Lo primero que haces es verificar si este dato viene con un check (VERIFICA SI ESTA HABILITADO EL DIA LUNES)
+        # if lunHabilitado:
+                # habria que crear el TurnoJornada del lunes a la mañana (en caso de ser distinto de null) y/o a la tarde(en caso de ser distinto de null) para el medico
+        #Martes
+        marManDesde = form.cleaned_data.get('id_Martes_Man_Desde')
+        marManHasta = form.cleaned_data.get('id_Martes_Man_Hasta')
+        marTarDesde = form.cleaned_data.get('id_Martes_Tar_Desde')
+        marTarDesde = form.cleaned_data.get('id_Martes_Tar_Hasta')
+        marHabilitado = form.cleaned_data.get('id_Martes_Habilitado')
+        #Miercoles
+        mieManDesde = form.cleaned_data.get('id_Mier_Man_Desde')
+        mieManHasta = form.cleaned_data.get('id_Mier_Man_Hasta')
+        mieTarDesde = form.cleaned_data.get('id_Mier_Tar_Desde')
+        mieTarDesde = form.cleaned_data.get('id_Mier_Tar_Hasta')
+        mieHabilitado = form.cleaned_data.get('id_Mier_Habilitado')
+        #Jueves
+        jueManDesde = form.cleaned_data.get('id_Jueves_Man_Desde')
+        jueManHasta = form.cleaned_data.get('id_Jueves_Man_Hasta')
+        jueTarDesde = form.cleaned_data.get('id_Jueves_Tar_Desde')
+        jueTarDesde = form.cleaned_data.get('id_Jueves_Tar_Hasta')
+        jueHabilitado = form.cleaned_data.get('id_Jueves_Habilitado')
+        #Viernes
+        vieManDesde = form.cleaned_data.get('id_Viernes_Man_Desde')
+        vieManHasta = form.cleaned_data.get('id_Viernes_Man_Hasta')
+        vieTarDesde = form.cleaned_data.get('id_Viernes_Tar_Desde')
+        vieTarDesde = form.cleaned_data.get('id_Viernes_Tar_Hasta')
+        vieHabilitado = form.cleaned_data.get('id_Viernes_Habilitado')
+        #Sabado
+        sabManDesde = form.cleaned_data.get('id_Sab_Man_Desde')
+        sabManHasta = form.cleaned_data.get('id_Sab_Man_Hasta')
+        sabTarDesde = form.cleaned_data.get('id_Sab_Tar_Desde')
+        sabTarDesde = form.cleaned_data.get('id_Sab_Tar_Hasta')
+        sabHabilitado = form.cleaned_data.get('id_Sab_Habilitado')
+        #Domingo
+        domManDesde = form.cleaned_data.get('id_Dom_Man_Desde')
+        domManHasta = form.cleaned_data.get('id_Dom_Man_Hasta')
+        domTarDesde = form.cleaned_data.get('id_Dom_Tar_Desde')
+        domTarDesde = form.cleaned_data.get('id_Dom_Tar_Hasta')
+        domHabilitado = form.cleaned_data.get('id_Dom_Habilitado')
+
+        # me paso que necesitaba guardar antes de agregar especialidades, anda pero verificar
+        # si es necesario el codigo restante, talvez no lo sea
+        # doctor.refresh_from_db()
+        # doctor.especialidad.add(especialidad) 
+        # new_user.save() # no hace falta guardar devuelta el usuario al final de todo x ahora aparentemente
+        return redirect('index')
+            
+    else:          
+        try:
+            doc = Doctor.objects.get(pk=doctor_id)
+        except Doctor.DoesNotExist:
+            raise Http404("El paciente no existe")
+        context = { 
+            'medico': doc
+        }       
+        return render(request, 'signup_medico_turnos.html', context)    
 
 # todos los comentarios de signup_medico aplican aca
 def signup_paciente(request):

@@ -4,6 +4,7 @@
 
 {% block content %}
 
+<!-- Elimina las flechas de los campos number -->
 <head>
     <style>
         /* Chrome, Safari, Edge, Opera */
@@ -58,14 +59,14 @@
     <div class="form-group">
         <input type="password" placeholder="Contraseña" class="form-control" name="password1" autocomplete="new-password" required="" id="id_password1">
     </div>
-    <small id="passwordHelpBlock" class="form-text text-muted" style="text-align: left">
+    <!-- <small id="passwordHelpBlock" class="form-text text-muted" style="text-align: left">
         <ul>
             <li>Your password can’t be too similar to your other personal information.</li>
             <li>Your password must contain at least 8 characters.</li>
             <li>Your password can’t be a commonly used password.</li>
             <li>Your password can’t be entirely numeric.</li>
         </ul>
-    </small>
+    </small> -->
     <div class="form-group">
         <input type="password" placeholder="Confirmación de contraseña" class="form-control" name="password2" autocomplete="new-password" required="" id="id_password2">
     </div>
@@ -206,95 +207,15 @@
             </ul>
         </small>
     {% endif %}
-    <div style="margin: 15px">
-            <div class="section-title" style="padding-bottom: 0;">
-          <h2>Horario</h2>
+    <div class="text-center">
+        <button style="background: #1977cc; border: 0; padding: 10px 35px; color: #fff; transition: 0.4s; border-radius: 50px; " onmouseover="this.style.backgroundColor='#1c84e3'" onmouseout="this.style.backgroundColor='#1977cc'" onclick="history.back()">Volver</button>
+        <button type="submit" style="background: #1977cc; border: 0; padding: 10px 35px; color: #fff; transition: 0.4s; border-radius: 50px; " onmouseover="this.style.backgroundColor='#1c84e3'" onmouseout="this.style.backgroundColor='#1977cc'">Siguiente</button>
     </div>
-    </div>
-        <p>Ingrese horarios de disponibilidad</p>
-    <div style="margin: 15px">
-    <table id="table_id"  class="table table-bordered"> <!--list-group -->
-    <thead>
-        <tr>
-            <td>Dia</td>
-            <td>Horario Mañana</td>
-            <td>Horario Tarde</td>
-            <td>Habilitado</td>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>Lunes</td>
-            <td>Desde: <input type="number" id="id_Lunes_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"> AM - Hasta: <input type="number" id="id_Lunes_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"> AM</td>
-            <td>Desde: <input type="number"  id="id_Lunes_Tar_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"> PM - Hasta: <input type="number"  id="id_Lunes_Tar_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"> PM</td>
-            <td><input class="form-check-input" type="checkbox" id="id_Lunes_Habilitado"></td>
-        </tr>
-        <tr>
-            <td>Lunes</td>
-            <td>Desde: <input type="number" id="id_Lunes_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"> AM - Hasta: <input type="number" id="id_Lunes_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"> AM</td>
-            <td>Desde: <input type="number"  id="id_Lunes_Tar_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"> PM - Hasta: <input type="number"  id="id_Lunes_Tar_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"> PM</td>
-            <td><input class="form-check-input" type="checkbox" id="id_Lunes_Habilitado"></td>
-        </tr>
-         <tr>
-            <td>Martes</td>
-             <td>Desde: <input type="number" id="id_Martes_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"> AM - Hasta: <input type="number" id="id_Martes_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"> AM</td>
-            <td>Desde: <input type="number" id="id_Martes_Tar_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"> PM - Hasta: <input type="number" id="id_Martes_Tar_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"> PM</td>
-            <td><input class="form-check-input" type="checkbox" id="id_Martes_Habilitado"></td>
-        </tr>
-         <tr>
-            <td>Miercoles</td>
-             <td>Desde: <input type="number" id="id_Mier_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"> AM - Hasta: <input type="number" id="id_Mier_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"> AM</td>
-            <td>Desde: <input type="number" id="id_Mier_Tar_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"> PM - Hasta: <input type="number" id="id_Mier_Tar_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"> PM</td>
-            <td><input class="form-check-input" type="checkbox" id="id_Mier_Habilitado"></td>
-        </tr>
-        <tr>
-            <td>Jueves</td>
-            <td>Desde: <input type="number" id="id_Jueves_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"> AM - Hasta: <input type="number" id="id_Jueves_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"> AM</td>
-            <td>Desde: <input type="number" id="id_Jueves_Tar_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"> PM - Hasta: <input type="number" id="id_Jueves_Tar_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"> PM</td>
-            <td><input class="form-check-input" type="checkbox" id="id_Jueves_Habilitado"></td>
-        </tr>
-        <tr>
-            <td>Viernes</td>
-            <td>Desde: <input type="number" id="id_Viernes_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"> AM - Hasta: <input type="number" id="id_Viernes_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"> AM</td>
-            <td>Desde: <input type="number" id="id_Viernes_Tar_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"> PM - Hasta: <input type="number" id="id_Viernes_Tar_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"> PM</td>
-            <td><input class="form-check-input" type="checkbox" id="id_Viernes_Habilitado"></td>
-        </tr>
-        <tr>
-            <td>Sabado</td>
-            <td>Desde: <input type="number" id="id_Sab_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"> AM - Hasta: <input type="number" id="id_Sab_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"> AM</td>
-            <td>Desde: <input type="number" id="id_Sab_Tar_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"> PM - Hasta: <input type="number" id="id_Sab_Tar_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"> PM</td>
-            <td><input class="form-check-input" type="checkbox" id="id_Sab_Habilitado"></td>
-        </tr>
-         <tr>
-            <td>Domingo</td>
-             <td>Desde: <input type="number" id="id_Dom_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"> AM - Hasta: <input type="number" id="id_Dom_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"> AM</td>
-            <td>Desde: <input type="number" id="id_Dom_Tar_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"> PM - Hasta: <input type="number" id="id_Dom_Tar_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"> PM</td>
-            <td><input class="form-check-input" type="checkbox" id="id_Dom_Habilitado"></td>
-        </tr>
-
-    </tbody>
-    </table>
-    </div>
-    <div class="text-center"><button type="submit" style="background: #1977cc; border: 0; padding: 10px 35px; color: #fff; transition: 0.4s; border-radius: 50px; " onmouseover="this.style.backgroundColor='#1c84e3'" onmouseout="this.style.backgroundColor='#1977cc'">Registrar</button></div>
+    
 </form>
-<!--<div class="text-center"></div>-->
-  <!--la otra form
-  <p>OTRO FORM</p>
-  <h2>Sign up</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Sign up</button>
-  </form>
-  -->
-
- <!-- </div>
-   </div>
-</div>
-</section>-->
 </div>
 </div>
- </div>
+</div>
 </section>
 </section>
 </main>

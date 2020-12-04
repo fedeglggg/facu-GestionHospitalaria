@@ -1,0 +1,139 @@
+{% extends "baseTemplate.html" %}
+<title>{% block title %}Sistema de Gestion{% endblock %}</title>
+
+
+{% block content %}
+
+<!-- Elimina las flechas de los campos number -->
+<head>
+    <style>
+        /* Chrome, Safari, Edge, Opera */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+        
+        /* Firefox */
+        input[type=number] {
+          -moz-appearance: textfield;
+        }
+        </style>
+</head>
+
+<section id="hero" class="d-flex align-items-center" style="position: unset; ">
+    <div class="container">
+      <h1>Registro de Medico</h1>
+      <h2>Ingrese los datos correspondientes al nuevo profesional.</h2>
+    </div>
+</section>
+
+<!--<main id="main">
+<section id="hero" class="d-flex " style="margin-bottom: -100px; position: unset;">
+
+
+<section id="why-us" class="why-us" style="all: inherit; margin-top: 8%;">
+
+<div class="container"  style="alignment: center; inline-size: fit-content; padding-bottom: 100px" >
+  <div class="icon-boxes">
+
+  <div class="icon-box">
+-->
+<main id="main">
+<section id="appointment" class="appointment section-bg" style="padding: 3%;">
+<section id="why-us" class="why-us" style="all: inherit;padding: 0">
+<div class="container" style="inline-size: fit-content; text-align: center" >
+<div class="icon-boxes">
+<div class="icon-box">
+
+<form method="post">
+    {% csrf_token %}
+ 
+    <div style="margin: 15px">
+            <div class="section-title" style="padding-bottom: 0;">
+          <h2>Horarios para {{ medico.user.first_name }} {{ medico.user.last_name }}</h2>
+    </div>
+    </div>
+        <p>Ingrese horarios de disponibilidad</p>
+    <div style="margin: 15px">
+    <table id="table_id"  class="table table-bordered"> <!--list-group -->
+    <thead>
+        <tr>
+            <td>Dia</td>
+            <td>Horario</td>
+            <td>Habilitado</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Lunes</td>
+            <td> 
+                <label for="id_Lunes_Man_Desde">Desde: </label>
+                <input type="number" id="id_Lunes_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"> 
+                <label for="id_Lunes_Man_Hasta"> - Hasta:</label>
+                <input type="number" id="id_Lunes_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12">
+            </td>
+            <td><input type="checkbox" class="form-check-input" id="id_Lunes_Habilitado"></td>
+        </tr>
+        <tr>
+            <td>Martes</td>
+            <td>Desde: <input type="number" id="id_Martes_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"> - Hasta: <input type="number" id="id_Martes_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"> </td>
+            <td><input class="form-check-input" type="checkbox" id="id_Martes_Habilitado"></td>
+        </tr>
+         <tr>
+            <td>Miercoles</td>
+            <td>Desde: <input type="number" id="id_Mier_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"> - Hasta: <input type="number" id="id_Mier_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"> </td>
+            <td><input class="form-check-input" type="checkbox" id="id_Mier_Habilitado"></td>
+        </tr>
+        <tr>
+            <td>Jueves</td>
+            <td>Desde: <input type="number" id="id_Jueves_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"> - Hasta: <input type="number" id="id_Jueves_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"></td>
+            <td><input class="form-check-input" type="checkbox" id="id_Jueves_Habilitado"></td>
+        </tr>
+        <tr>
+            <td>Viernes</td>
+            <td>Desde: <input type="number" id="id_Viernes_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"> - Hasta: <input type="number" id="id_Viernes_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"></td>
+            <td><input class="form-check-input" type="checkbox" id="id_Viernes_Habilitado"></td>
+        </tr>
+        <tr>
+            <td>Sabado</td>
+            <td>Desde: <input type="number" id="id_Sab_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12">  - Hasta: <input type="number" id="id_Sab_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"></td>
+            <td><input class="form-check-input" type="checkbox" id="id_Sab_Habilitado"></td>
+        </tr>
+         <tr>
+            <td>Domingo</td>
+            <td>Desde: <input type="number" id="id_Dom_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12">  - Hasta: <input type="number" id="id_Dom_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="1" max="12"></td>
+            <td><input class="form-check-input" type="checkbox" id="id_Dom_Habilitado"></td>
+        </tr>
+
+    </tbody>
+    </table>
+    </div>
+    <div class="text-center">
+        <button style="background: #1977cc; border: 0; padding: 10px 35px; color: #fff; transition: 0.4s; border-radius: 50px; " onmouseover="this.style.backgroundColor='#1c84e3'" onmouseout="this.style.backgroundColor='#1977cc'" onclick="history.back()">Volver</button>
+        <button type="submit" style="background: #1977cc; border: 0; padding: 10px 35px; color: #fff; transition: 0.4s; border-radius: 50px; " onmouseover="this.style.backgroundColor='#1c84e3'" onmouseout="this.style.backgroundColor='#1977cc'">Siguiente</button>
+    </div>
+    
+</form>
+<!--<div class="text-center"></div>-->
+  <!--la otra form
+  <p>OTRO FORM</p>
+  <h2>Sign up</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Sign up</button>
+  </form>
+  -->
+
+ <!-- </div>
+   </div>
+</div>
+</section>-->
+</div>
+</div>
+ </div>
+</section>
+</section>
+</main>
+{% endblock %}
