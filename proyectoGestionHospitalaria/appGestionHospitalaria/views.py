@@ -51,6 +51,14 @@ def operate_timefields(tf_inicial, tf_final, operation):
     else:
         return minutos_numero_final - minutos_numero_inicial 
 
+def hour_to_timefield(hora_number):
+    # hora = int(hora_number)
+    print(hora_number)
+    if hora_number < '10':
+        return ('0:' + str(hora_number) + '00:00')
+    else:
+        return (str(hora_number) + ':00:00')
+
 
 def index(request):
     # chequeo si el user pertenece a un grupo y en base a eso defino si esta autorizado o no
@@ -425,66 +433,95 @@ def signup_medico_turnos(request, doctor_id):
     if not is_user_auth(request.user, ('secretarios', 'sarasa')):
         return redirect('error_acceso')
 
+    try:
+        doc = Doctor.objects.get(pk=doctor_id)
+    except Doctor.DoesNotExist:
+         raise Http404("El paciente no existe")
+
     # si el usuario esta autorizado a ver la vista sigue
     if request.method == 'POST':   
         # añadiendo los horarios del medico
-        #Lunes
-        lunManDesde = form.cleaned_data.get('id_Lunes_Man_Desde') #HoraDesde del lunes a la mañana
-        lunManHasta = form.cleaned_data.get('id_Lunes_Man_Hasta') #HoraHasta del lunes a la mañana
-        lunTarDesde = form.cleaned_data.get('id_Lunes_Tar_Desde') #HoraDesde del lunes a la tarde
-        lunTarDesde = form.cleaned_data.get('id_Lunes_Tar_Hasta') #HoraHasta del lunes a la tarde
-        lunHabilitado = form.cleaned_data.get('id_Lunes_Habilitado') #Lo primero que haces es verificar si este dato viene con un check (VERIFICA SI ESTA HABILITADO EL DIA LUNES)
-        # if lunHabilitado:
-                # habria que crear el TurnoJornada del lunes a la mañana (en caso de ser distinto de null) y/o a la tarde(en caso de ser distinto de null) para el medico
-        #Martes
-        marManDesde = form.cleaned_data.get('id_Martes_Man_Desde')
-        marManHasta = form.cleaned_data.get('id_Martes_Man_Hasta')
-        marTarDesde = form.cleaned_data.get('id_Martes_Tar_Desde')
-        marTarDesde = form.cleaned_data.get('id_Martes_Tar_Hasta')
-        marHabilitado = form.cleaned_data.get('id_Martes_Habilitado')
-        #Miercoles
-        mieManDesde = form.cleaned_data.get('id_Mier_Man_Desde')
-        mieManHasta = form.cleaned_data.get('id_Mier_Man_Hasta')
-        mieTarDesde = form.cleaned_data.get('id_Mier_Tar_Desde')
-        mieTarDesde = form.cleaned_data.get('id_Mier_Tar_Hasta')
-        mieHabilitado = form.cleaned_data.get('id_Mier_Habilitado')
-        #Jueves
-        jueManDesde = form.cleaned_data.get('id_Jueves_Man_Desde')
-        jueManHasta = form.cleaned_data.get('id_Jueves_Man_Hasta')
-        jueTarDesde = form.cleaned_data.get('id_Jueves_Tar_Desde')
-        jueTarDesde = form.cleaned_data.get('id_Jueves_Tar_Hasta')
-        jueHabilitado = form.cleaned_data.get('id_Jueves_Habilitado')
-        #Viernes
-        vieManDesde = form.cleaned_data.get('id_Viernes_Man_Desde')
-        vieManHasta = form.cleaned_data.get('id_Viernes_Man_Hasta')
-        vieTarDesde = form.cleaned_data.get('id_Viernes_Tar_Desde')
-        vieTarDesde = form.cleaned_data.get('id_Viernes_Tar_Hasta')
-        vieHabilitado = form.cleaned_data.get('id_Viernes_Habilitado')
-        #Sabado
-        sabManDesde = form.cleaned_data.get('id_Sab_Man_Desde')
-        sabManHasta = form.cleaned_data.get('id_Sab_Man_Hasta')
-        sabTarDesde = form.cleaned_data.get('id_Sab_Tar_Desde')
-        sabTarDesde = form.cleaned_data.get('id_Sab_Tar_Hasta')
-        sabHabilitado = form.cleaned_data.get('id_Sab_Habilitado')
-        #Domingo
-        domManDesde = form.cleaned_data.get('id_Dom_Man_Desde')
-        domManHasta = form.cleaned_data.get('id_Dom_Man_Hasta')
-        domTarDesde = form.cleaned_data.get('id_Dom_Tar_Desde')
-        domTarDesde = form.cleaned_data.get('id_Dom_Tar_Hasta')
-        domHabilitado = form.cleaned_data.get('id_Dom_Habilitado')
+        # acaa
+
+        if request.POST.get('lunes'):
+            dia = DiaJornada.objects.get(nombre='Lunes')
+            hora_inicio = request.POST.get('lunes_from')
+            hora_fin = request.POST.get('lunes_to')
+            hora_inicio = hour_to_timefield(hora_inicio)
+            hora_fin = hour_to_timefield(hora_fin)
+            new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
+            new_turno_jornada.save()
+        
+        if request.POST.get('martes'):
+            dia = DiaJornada.objects.get(nombre='Martes')
+            hora_inicio = request.POST.get('martes_from')
+            hora_fin = request.POST.get('martes_to')
+            hora_inicio = hour_to_timefield(hora_inicio)
+            hora_fin = hour_to_timefield(hora_fin)
+            new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
+            new_turno_jornada.save()
+
+        if request.POST.get('miercoles'):
+            dia = DiaJornada.objects.get(nombre='Miércoles')
+            hora_inicio = request.POST.get('miercoles_from')
+            hora_fin = request.POST.get('miercoles_to')
+            hora_inicio = hour_to_timefield(hora_inicio)
+            hora_fin = hour_to_timefield(hora_fin)
+            new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
+            new_turno_jornada.save()
+        
+        if request.POST.get('jueves'):
+            dia = DiaJornada.objects.get(nombre='Jueves')
+            hora_inicio = request.POST.get('jueves_from')
+            hora_fin = request.POST.get('jueves_to')
+            hora_inicio = hour_to_timefield(hora_inicio)
+            hora_fin = hour_to_timefield(hora_fin)
+            new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
+            new_turno_jornada.save()
+        
+        if request.POST.get('viernes'):
+            dia = DiaJornada.objects.get(nombre='Viernes')
+            hora_inicio = request.POST.get('viernes_from')
+            hora_fin = request.POST.get('viernes_to')
+            hora_inicio = hour_to_timefield(hora_inicio)
+            hora_fin = hour_to_timefield(hora_fin)
+            new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
+            new_turno_jornada.save()
+        
+        if request.POST.get('sabado'):
+            dia = DiaJornada.objects.get(nombre='Sábado')
+            hora_inicio = request.POST.get('sabado_from')
+            hora_fin = request.POST.get('sabado_to')
+            hora_inicio = hour_to_timefield(hora_inicio)
+            hora_fin = hour_to_timefield(hora_fin)
+            new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
+            new_turno_jornada.save()
+        
+        if request.POST.get('domingo'):
+            dia = DiaJornada.objects.get(nombre='Domingo')
+            hora_inicio = request.POST.get('domingo_from')
+            hora_fin = request.POST.get('domingo_to')
+            hora_inicio = hour_to_timefield(hora_inicio)
+            hora_fin = hour_to_timefield(hora_fin)
+            new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
+            new_turno_jornada.save()
+        
+        turnos_jornada = TurnoJornada.objects.filter(doctor=doc)
+     
+        context = {
+            'turnos_jornada': turnos_jornada
+        }
+        
 
         # me paso que necesitaba guardar antes de agregar especialidades, anda pero verificar
         # si es necesario el codigo restante, talvez no lo sea
         # doctor.refresh_from_db()
-        # doctor.especialidad.add(especialidad) 
+
         # new_user.save() # no hace falta guardar devuelta el usuario al final de todo x ahora aparentemente
-        return redirect('index')
+        return render(request, 'signup_medico_turnos.html', context)  
             
     else:          
-        try:
-            doc = Doctor.objects.get(pk=doctor_id)
-        except Doctor.DoesNotExist:
-            raise Http404("El paciente no existe")
+        
         context = { 
             'medico': doc
         }       
