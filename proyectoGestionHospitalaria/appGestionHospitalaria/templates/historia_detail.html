@@ -50,9 +50,10 @@
     <h3><strong>Comentarios</strong></h3>
     <hr>
     <textarea style="width: inherit;height: 190px" disabled>{{estudio.comments}}</textarea>
-
-<a class="btn btn-success" style="margin: 10px;color: #fff;" data-toggle="modal" data-target="#myModalComments">Modificar</a>
-
+    {% if perms.appGestionHospitalaria.view_paciente %}
+     
+     <a class="btn btn-success" style="margin: 10px;color: #fff;" data-toggle="modal" data-target="#myModalComments">Modificar</a>
+    {% endif %}
 </div>
 
 

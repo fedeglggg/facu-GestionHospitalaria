@@ -1,0 +1,239 @@
+{% extends "baseTemplate.html" %}
+<title>{% block title %}Sistema de Gestion{% endblock %}</title>
+
+
+{% block content %}
+
+<!-- Elimina las flechas de los campos number -->
+<head>
+    <style>
+        /* Chrome, Safari, Edge, Opera */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+        
+        /* Firefox */
+        input[type=number] {
+          -moz-appearance: textfield;
+        }
+        </style>
+</head>
+
+<section id="hero" class="d-flex align-items-center" style="position: unset; ">
+    <div class="container">
+      <h1>Registro de Medico</h1>
+      <h2>Ingrese los datos correspondientes al nuevo profesional.</h2>
+    </div>
+</section>
+
+<!--<main id="main">
+<section id="hero" class="d-flex " style="margin-bottom: -100px; position: unset;">
+
+
+<section id="why-us" class="why-us" style="all: inherit; margin-top: 8%;">
+
+<div class="container"  style="alignment: center; inline-size: fit-content; padding-bottom: 100px" >
+  <div class="icon-boxes">
+
+  <div class="icon-box">
+-->
+<main id="main">
+<section id="appointment" class="appointment section-bg" style="padding: 3%;">
+<section id="why-us" class="why-us" style="all: inherit;padding: 0">
+<div class="container" style="inline-size: fit-content; text-align: center" >
+<div class="icon-boxes">
+<div class="icon-box">
+
+{% if turnos_jornada %}
+    <p>Turnos ya registrados de {{ medico.user.first_name }} {{ medico.user.last_name }} (esto en la final lo sacamos) </p>
+    {% for i in turnos_jornada %}
+        <p> {{i.dia}} {{i.horario_inicio}} - {{i.horario_fin}}</p>
+    {% endfor %}
+{% else %}
+    <p>{{ medico.user.first_name }} {{ medico.user.last_name }} no posee turnos actualmente</p>
+{% endif %}
+
+<form method="post" autocomplete="off">
+    {% csrf_token %}
+    <div style="margin: 15px">
+            <div class="section-title" style="padding-bottom: 0;">
+          <h2>Horarios para {{ medico.user.first_name }} {{ medico.user.last_name }}</h2>
+    </div>
+    </div>
+        <p>Ingrese horarios de disponibilidad</p>
+    <div style="margin: 15px">
+    <table id="table_id"  class="table table-bordered"> <!--list-group -->
+    <thead>
+        <tr>
+            <td>Dia</td>
+            <td>Horario</td>
+            <td>Habilitado</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Lunes</td>
+            <td> 
+                {% if Lunes %}
+                    {% with Lunes as turno %}
+                        <label for="id_Lunes_Man_Desde">Desde: </label>
+                        <input type="number" value="{{ turno.horario_inicio|time:'H' }}" placeholder="{{ turno.horario_inicio|time:'H' }}" name="lunes_from" id="id_Lunes_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24"> 
+                        <label for="id_Lunes_Man_Hasta"> - Hasta:</label>
+                        <input type="number" value="{{ turno.horario_fin }}" placeholder="{{ turno.horario_fin|time:'H' }}" name="lunes_to" id="id_Lunes_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
+                    {% endwith %}         
+                {% else %}
+                    <label for="id_Lunes_Man_Desde">Desde: </label>
+                    <input type="number" name="lunes_from" id="id_Lunes_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24"> 
+                    <label for="id_Lunes_Man_Hasta"> - Hasta:</label>
+                    <input type="number" name="lunes_to" id="id_Lunes_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
+                {% endif %}
+            </td>
+            <td><input type="checkbox" name="lunes" class="form-check-input" id="id_Lunes_Habilitado"></td>
+        </tr>
+        <tr>
+            <td>Martes</td>
+            <td>
+                {% if Martes %}
+                    {% with Martes as turno %}
+                        <label for="id_Martes_Man_Desde">Desde: </label>
+                        <input type="number" name="martes_from" value="{{ turno.horario_inicio|time:'H' }}" placeholder="{{ turno.horario_inicio|time:'H' }}" id="id_Martes_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
+                        <label for="id_Martes_Man_Hasta">- Hasta: </label>
+                        <input type="number" name="martes_to" value="{{ turno.horario_fin }}" placeholder="{{ turno.horario_fin|time:'H' }}" id="id_Martes_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24"> 
+                    {% endwith %}         
+                {% else %}
+                    <label for="id_Martes_Man_Desde">Desde: </label>
+                    <input type="number" name="martes_from" id="id_Martes_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
+                    <label for="id_Martes_Man_Hasta">- Hasta: </label>
+                    <input type="number" name="martes_to" id="id_Martes_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24"> 
+                {% endif %}    
+            </td>
+            <td><input class="form-check-input" name="martes" type="checkbox" id="id_Martes_Habilitado"></td>
+        </tr>
+         <tr>
+            <td>Miércoles</td>
+            <td>
+                {% if Miércoles %}
+                    {% with Miércoles as turno %}
+                        <label for="id_Mier_Man_Desde">Desde: </label>
+                        <input type="number" name="miercoles_from" value="{{ turno.horario_inicio|time:'H' }}" placeholder="{{ turno.horario_inicio|time:'H' }}" id="id_Mier_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
+                        <label for="id_Mier_Man_Hasta">- Hasta: </label>
+                        <input type="number" name="miercoles_to" value="{{ turno.horario_fin }}" placeholder="{{ turno.horario_fin|time:'H' }}" id="id_Mier_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24"> 
+                    {% endwith %}         
+                {% else %}
+                    <label for="id_Mier_Man_Desde">Desde: </label>
+                    <input type="number" name="miercoles_from" id="id_Mier_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
+                    <label for="id_Mier_Man_Hasta">- Hasta: </label>
+                    <input type="number" name="miercoles_to" id="id_Mier_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
+                {% endif %} 
+            </td>
+            <td><input class="form-check-input" name="miercoles" type="checkbox" id="id_Mier_Habilitado"></td>
+        </tr>
+        <tr>
+            <td>Jueves</td>
+            <td>
+                {% if Jueves %}
+                    {% with Jueves as turno %}
+                        <label for="id_Jueves_Man_Desde">Desde: </label>
+                        <input type="number" name="jueves_from" value="{{ turno.horario_inicio|time:'H' }}" placeholder="{{ turno.horario_inicio|time:'H' }}" id="id_Jueves_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
+                        <label for="id_Jueves_Man_Hasta">- Hasta: </label>
+                        <input type="number" name="jueves_to" value="{{ turno.horario_fin }}" placeholder="{{ turno.horario_fin|time:'H' }}" id="id_Jueves_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">            
+                    {% endwith %}         
+                {% else %}
+                    <label for="id_Jueves_Man_Desde">Desde: </label>
+                    <input type="number" name="jueves_from" id="id_Jueves_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
+                    <label for="id_Jueves_Man_Hasta">- Hasta: </label>
+                    <input type="number" name="jueves_to" id="id_Jueves_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
+                {% endif %}
+            </td>
+            <td><input class="form-check-input" name="jueves" type="checkbox" id="id_Jueves_Habilitado"></td>
+        </tr>
+        <tr>
+            <td>Viernes</td>
+            <td>
+                {% if Viernes %}
+                    {% with Viernes as turno %}
+                        <label for="id_Viernes_Man_Desde">Desde: </label>
+                        <input type="number" name="viernes_from" value="{{ turno.horario_inicio|time:'H' }}" placeholder="{{ turno.horario_inicio|time:'H' }}" id="id_Viernes_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
+                        <label for="id_Viernes_Man_Hasta">- Hasta: </label>
+                        <input type="number" name="viernes_to" value="{{ turno.horario_fin }}" placeholder="{{ turno.horario_fin|time:'H' }}" id="id_Viernes_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">                    
+                    {% endwith %}         
+                {% else %}
+                    <label for="id_Viernes_Man_Desde">Desde: </label>
+                    <input type="number" name="viernes_from" id="id_Viernes_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
+                    <label for="id_Viernes_Man_Hasta">- Hasta: </label>
+                    <input type="number" name="viernes_to" id="id_Viernes_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
+                {% endif %}
+            </td>
+            <td><input class="form-check-input" name="viernes" type="checkbox" id="id_Viernes_Habilitado"></td>
+        </tr>
+        <tr>
+            <td>Sábado</td>
+            <td>
+                {% if Sábado %}
+                    {% with Sábado as turno %}
+                        <label for="id_Sab_Man_Desde">Desde: </label>
+                        <input type="number" name="sabado_from" value="{{ turno.horario_inicio|time:'H' }}" placeholder="{{ turno.horario_inicio|time:'H' }}" id="id_Sab_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
+                        <label for="id_Sab_Man_Hasta">- Hasta: </label>
+                        <input type="number" name="sabado_to" value="{{ turno.horario_fin }}" placeholder="{{ turno.horario_fin|time:'H' }}" id="id_Sab_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
+                    {% endwith %}         
+                {% else %}
+                    <label for="id_Sab_Man_Desde">Desde: </label>
+                    <input type="number" name="sabado_from" id="id_Sab_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
+                    <label for="id_Sab_Man_Hasta">- Hasta: </label>
+                    <input type="number" name="sabado_to" id="id_Sab_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
+                {% endif %}
+            </td>
+            <td><input class="form-check-input" name="sabado" type="checkbox" id="id_Sab_Habilitado"></td>
+        </tr>
+         <tr>
+            <td>Domingo</td>
+            <td>
+                {% if Domingo %}
+                    {% with Domingo as turno %}
+                        <label for="id_Dom_Man_Desde">Desde: </label>
+                        <input type="number" name="domingo_from" value="{{ turno.horario_inicio|time:'H' }}" placeholder="{{ turno.horario_inicio|time:'H' }}" id="id_Dom_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
+                        <label for="id_Dom_Man_Hasta">- Hasta: </label>
+                        <input type="number" name="domingo_to" value="{{ turno.horario_fin }}" placeholder="{{ turno.horario_fin|time:'H' }}" id="id_Dom_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">                
+                    {% endwith %}         
+                {% else %}
+                    <label for="id_Dom_Man_Desde">Desde: </label>
+                    <input type="number" name="domingo_from" id="id_Dom_Man_Desde" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
+                    <label for="id_Dom_Man_Hasta">- Hasta: </label>
+                    <input type="number" name="domingo_to" id="id_Dom_Man_Hasta" style="width: 45px" onkeypress="return event.charCode >= 48" min="0" max="24">
+                {% endif %}
+            </td>
+            <td><input class="form-check-input" name="domingo" type="checkbox" id="id_Dom_Habilitado"></td>
+        </tr>
+
+    </tbody>
+    </table>
+    </div>
+    <div class="text-center">
+        <button type="submit" style="background: #1977cc; border: 0; padding: 10px 35px; color: #fff; transition: 0.4s; border-radius: 50px; " onmouseover="this.style.backgroundColor='#1c84e3'" onmouseout="this.style.backgroundColor='#1977cc'">Guardar turnos</button>
+    </div>
+    
+</form>
+<!--<div class="text-center"></div>-->
+  <!--la otra form
+  <p>OTRO FORM</p>
+  <h2>Sign up</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Sign up</button>
+  </form>
+  -->
+
+ <!-- </div>
+   </div>
+</div>
+</section>-->
+</div>
+</div>
+</div>
+</section>
+</section>
+</main>
+{% endblock %}

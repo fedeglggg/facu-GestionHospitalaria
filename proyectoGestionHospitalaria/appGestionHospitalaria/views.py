@@ -52,12 +52,13 @@ def operate_timefields(tf_inicial, tf_final, operation):
         return minutos_numero_final - minutos_numero_inicial 
 
 def hour_to_timefield(hora_number):
-    # hora = int(hora_number)
-    print(hora_number)
-    if hora_number < '10':
-        return ('0:' + str(hora_number) + '00:00')
+    hora = int(hora_number)
+    print('hora_number: ', hora_number)
+    print('hora: ', hora)
+    if hora < 10:
+        return ('0' + str(hora) + ':00:00')
     else:
-        return (str(hora_number) + ':00:00')
+        return (str(hora) + ':00:00')
 
 
 def index(request):
@@ -412,7 +413,7 @@ def signup_medico(request):
             # new_user.save() # no hace falta guardar devuelta el usuario al final de todo x ahora aparentemente
 
             # hardcoded por ahora, habría que buscar alguna forma de tomar la url de urls.py que es dinamica en vez de poner /sigup/med...
-            return HttpResponseRedirect('/signup/medico/' + str(new_doctor.pk) + '/turnos/')
+            return HttpResponseRedirect('/medico/' + str(new_doctor.pk) + '/turnos/')
             # return render(request, 'signup_medico_turnos.html', context)
         else:
             # falta agregar error por si el form es invalid
@@ -427,7 +428,17 @@ def signup_medico(request):
         }       
         return render(request, 'signup_medico.html', context)
 
-def signup_medico_turnos(request, doctor_id):
+li_dias = [
+    'Lunes',
+    'Martes',
+    'Miércoles',
+    'Jueves',
+    'Viernes',
+    'Sábado',
+    'Domingo'
+]
+
+def medico_turnos(request, doctor_id):
     # le damos a is_auth los grupos permitidos en la vista
     # is auth devuelve true si el usuario tiene permisos en la vista
     if not is_user_auth(request.user, ('secretarios', 'sarasa')):
@@ -436,21 +447,28 @@ def signup_medico_turnos(request, doctor_id):
     try:
         doc = Doctor.objects.get(pk=doctor_id)
     except Doctor.DoesNotExist:
-         raise Http404("El paciente no existe")
+        raise Http404("El doctor no existe")
 
     # si el usuario esta autorizado a ver la vista sigue
     if request.method == 'POST':   
         # añadiendo los horarios del medico
-        # acaa
+        
 
         if request.POST.get('lunes'):
             dia = DiaJornada.objects.get(nombre='Lunes')
             hora_inicio = request.POST.get('lunes_from')
             hora_fin = request.POST.get('lunes_to')
             hora_inicio = hour_to_timefield(hora_inicio)
-            hora_fin = hour_to_timefield(hora_fin)
-            new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
-            new_turno_jornada.save()
+            hora_fin = hour_to_timefield(hora_fin) 
+            turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia).exists() # get porq estamos haciendo 1 sola jornada por medico
+            if turno_jor:
+                turno_jor = TurnoJornada.objects.get(doctor=doc,dia=dia)
+                turno_jor.horario_inicio = hora_inicio
+                turno_jor.horario_fin = hora_fin
+                turno_jor.save()
+            else:
+                new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
+                new_turno_jornada.save()
         
         if request.POST.get('martes'):
             dia = DiaJornada.objects.get(nombre='Martes')
@@ -458,8 +476,15 @@ def signup_medico_turnos(request, doctor_id):
             hora_fin = request.POST.get('martes_to')
             hora_inicio = hour_to_timefield(hora_inicio)
             hora_fin = hour_to_timefield(hora_fin)
-            new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
-            new_turno_jornada.save()
+            turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia).exists()
+            if turno_jor:
+                turno_jor = TurnoJornada.objects.get(doctor=doc,dia=dia)
+                turno_jor.horario_inicio = hora_inicio
+                turno_jor.horario_fin = hora_fin
+                turno_jor.save()
+            else:
+                new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
+                new_turno_jornada.save()
 
         if request.POST.get('miercoles'):
             dia = DiaJornada.objects.get(nombre='Miércoles')
@@ -467,8 +492,15 @@ def signup_medico_turnos(request, doctor_id):
             hora_fin = request.POST.get('miercoles_to')
             hora_inicio = hour_to_timefield(hora_inicio)
             hora_fin = hour_to_timefield(hora_fin)
-            new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
-            new_turno_jornada.save()
+            turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia).exists()
+            if turno_jor:
+                turno_jor = TurnoJornada.objects.get(doctor=doc,dia=dia)
+                turno_jor.horario_inicio = hora_inicio
+                turno_jor.horario_fin = hora_fin
+                turno_jor.save()
+            else:
+                new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
+                new_turno_jornada.save()
         
         if request.POST.get('jueves'):
             dia = DiaJornada.objects.get(nombre='Jueves')
@@ -476,8 +508,15 @@ def signup_medico_turnos(request, doctor_id):
             hora_fin = request.POST.get('jueves_to')
             hora_inicio = hour_to_timefield(hora_inicio)
             hora_fin = hour_to_timefield(hora_fin)
-            new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
-            new_turno_jornada.save()
+            turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia).exists()
+            if turno_jor:
+                turno_jor = TurnoJornada.objects.get(doctor=doc,dia=dia)
+                turno_jor.horario_inicio = hora_inicio
+                turno_jor.horario_fin = hora_fin
+                turno_jor.save()
+            else:
+                new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
+                new_turno_jornada.save()
         
         if request.POST.get('viernes'):
             dia = DiaJornada.objects.get(nombre='Viernes')
@@ -485,8 +524,15 @@ def signup_medico_turnos(request, doctor_id):
             hora_fin = request.POST.get('viernes_to')
             hora_inicio = hour_to_timefield(hora_inicio)
             hora_fin = hour_to_timefield(hora_fin)
-            new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
-            new_turno_jornada.save()
+            turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia).exists()
+            if turno_jor:
+                turno_jor = TurnoJornada.objects.get(doctor=doc,dia=dia)
+                turno_jor.horario_inicio = hora_inicio
+                turno_jor.horario_fin = hora_fin
+                turno_jor.save()
+            else:
+                new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
+                new_turno_jornada.save()
         
         if request.POST.get('sabado'):
             dia = DiaJornada.objects.get(nombre='Sábado')
@@ -494,8 +540,15 @@ def signup_medico_turnos(request, doctor_id):
             hora_fin = request.POST.get('sabado_to')
             hora_inicio = hour_to_timefield(hora_inicio)
             hora_fin = hour_to_timefield(hora_fin)
-            new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
-            new_turno_jornada.save()
+            turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia).exists()
+            if turno_jor:
+                turno_jor = TurnoJornada.objects.get(doctor=doc,dia=dia)
+                turno_jor.horario_inicio = hora_inicio
+                turno_jor.horario_fin = hora_fin
+                turno_jor.save()
+            else:
+                new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
+                new_turno_jornada.save()
         
         if request.POST.get('domingo'):
             dia = DiaJornada.objects.get(nombre='Domingo')
@@ -503,29 +556,30 @@ def signup_medico_turnos(request, doctor_id):
             hora_fin = request.POST.get('domingo_to')
             hora_inicio = hour_to_timefield(hora_inicio)
             hora_fin = hour_to_timefield(hora_fin)
-            new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
-            new_turno_jornada.save()
+            turno_jor = TurnoJornada.objects.filter(doctor=doc,dia=dia).exists()
+            if turno_jor:
+                turno_jor = TurnoJornada.objects.get(doctor=doc,dia=dia)
+                turno_jor.horario_inicio = hora_inicio
+                turno_jor.horario_fin = hora_fin
+                turno_jor.save()
+            else:
+                new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
+                new_turno_jornada.save()
         
-        turnos_jornada = TurnoJornada.objects.filter(doctor=doc)
-     
-        context = {
-            'turnos_jornada': turnos_jornada
-        }
-        
+    turnos_jornada = TurnoJornada.objects.filter(doctor=doc)
+    dias = DiaJornada.objects.all()
+    context = {
+        'turnos_jornada': turnos_jornada,
+    }
 
-        # me paso que necesitaba guardar antes de agregar especialidades, anda pero verificar
-        # si es necesario el codigo restante, talvez no lo sea
-        # doctor.refresh_from_db()
+    for i in li_dias:
+        dia = DiaJornada.objects.get(nombre=i)
+        for x in turnos_jornada:
+            if x.dia == dia:
+                context.update({dia.nombre:x})
 
-        # new_user.save() # no hace falta guardar devuelta el usuario al final de todo x ahora aparentemente
-        return render(request, 'signup_medico_turnos.html', context)  
+    return render(request, 'medico_turnos.html', context)  
             
-    else:          
-        
-        context = { 
-            'medico': doc
-        }       
-        return render(request, 'signup_medico_turnos.html', context)    
 
 # todos los comentarios de signup_medico aplican aca
 def signup_paciente(request):
@@ -624,6 +678,7 @@ dict_dias = {
     '5': 'Sábado',
     '6': 'Domingo'
 }
+
 
 def create_turno_4(request):
     if not is_user_auth(request.user, ('secretarios', 'pacientes')):
