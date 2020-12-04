@@ -19,7 +19,7 @@
 <main id="main">
 <section id="appointment" class="appointment section-bg" style="padding: 3%;">
 <section id="why-us" class="why-us" style="all: inherit;padding: 0">
-<div class="container" style="inline-size: fit-content; text-align: center" >
+<div class="container" style=" text-align: center; padding: 1% 18%" >
 <div class="icon-boxes">
 <div class="icon-box">
 
@@ -30,7 +30,7 @@
     </div>  
     {% if lista_pacientes %}
         {% if user.is_superuser %} <!-- o si es secretario-->
-        <div class="form-group">
+        <div class="form-group" style="margin: 25px">
             <label for="id_paciente_name">Seleccionar paciente para ser atendido</label>
             <select class="form-control" id="id_paciente" name="dni" required="" >
                 <option value="" selected disabled hidden>Elija un paciente</option>
@@ -51,8 +51,8 @@
 
         {% endif %}
         <label for="id_date">Seleccione una fecha para el turno</label>
-        <div class="form-group">
-            <input type="date" required="" placeholder="Fecha" class="form-control " name="date" id="id_date">
+        <div class="form-group" style="text-align: center">
+            <input type="date" required="" placeholder="Fecha" class="form-control " name="date" id="id_date" style="width: 45%;display: inline" >
         </div>
 
         <div class="form-group">
@@ -82,6 +82,10 @@
 
 </form>
 
+<script>
+var today = new Date().toISOString().split('T')[0];
+document.getElementsByName("date")[0].setAttribute('min', today);
+</script>
 
 </div>
 </div>

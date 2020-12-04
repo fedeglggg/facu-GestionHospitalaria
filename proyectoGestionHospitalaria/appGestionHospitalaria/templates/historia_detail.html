@@ -16,7 +16,7 @@
 <main id="main">
 <section id="appointment" class="appointment section-bg" style="padding: 3%;">
 <section id="why-us" class="why-us" style="all: inherit;padding: 0">
-<div class="container" style="text-align: center" >
+<div class="container" style="text-align: center;padding: 1% 10%" " >
 <div class="icon-boxes">
   
 <div class="icon-box" style="padding: 10px;margin: 25px 0px 25px 0px;">
@@ -28,7 +28,8 @@
 
 <div class="icon-box" style="padding: 10px;margin: 25px 0px 25px 0px;">
 
-    <p><strong>Datos:</strong></p>
+    <h3><strong>Datos</strong></h3>
+    <hr>
   <p><strong>Paciente:</strong> {{ estudio.paciente }} --
   <strong>Médico:</strong> {{ estudio.doctor }} --
    <strong>Dia:</strong> {{estudio.turno.date}} --
@@ -37,7 +38,8 @@
 
 {% if perms.appGestionHospitalaria.view_paciente %}
 <div class="icon-box" style="padding: 10px; margin: 25px 0px 25px 0px;">
-    <p><strong>Diagnostico</strong></p>
+    <h3><strong>Diagnostico</strong></h3>
+    <hr>
     <textarea style="width: inherit;height: 190px" disabled>{{estudio.diagnostic}}</textarea>
 
 <a class="btn btn-success" style="margin: 10px;color: #fff;" data-toggle="modal" data-target="#myModalDiagnostic">Modificar</a>
@@ -45,7 +47,8 @@
 {% endif %}
 
 <div class="icon-box" style="padding: 10px; margin: 25px 0px 25px 0px;">
-    <p><strong>Comentarios</strong></p>
+    <h3><strong>Comentarios</strong></h3>
+    <hr>
     <textarea style="width: inherit;height: 190px" disabled>{{estudio.comments}}</textarea>
 
 <a class="btn btn-success" style="margin: 10px;color: #fff;" data-toggle="modal" data-target="#myModalComments">Modificar</a>
@@ -59,7 +62,8 @@
 
 
   
-    <p><strong>Adjuntos</strong></p>
+    <h3><strong>Adjuntos</strong></h3>
+<hr>
 <div class="container border">
 
 <div class="row">

@@ -1,7 +1,26 @@
 {% extends "baseTemplate.html" %}
+
 <title>{% block title %}Médicos{% endblock %}</title>
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
 {% block content %}
+
+<!-- Elimina las flechas de los campos number -->
+<head>
+    <style>
+        /* Chrome, Safari, Edge, Opera */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+        
+        /* Firefox */
+        input[type=number] {
+          -moz-appearance: textfield;
+        }
+        </style>
+</head>
+
 
 <section id="hero" class="d-flex align-items-center" style="position: unset; ">
     <div class="container">
