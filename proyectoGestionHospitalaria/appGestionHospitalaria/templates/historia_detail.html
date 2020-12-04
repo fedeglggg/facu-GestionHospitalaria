@@ -47,9 +47,10 @@
 <div class="icon-box" style="padding: 10px; margin: 25px 0px 25px 0px;">
     <p><strong>Comentarios</strong></p>
     <textarea style="width: inherit;height: 190px" disabled>{{estudio.comments}}</textarea>
-
-<a class="btn btn-success" style="margin: 10px;color: #fff;" data-toggle="modal" data-target="#myModalComments">Modificar</a>
-
+    {% if perms.appGestionHospitalaria.view_paciente %}
+     
+     <a class="btn btn-success" style="margin: 10px;color: #fff;" data-toggle="modal" data-target="#myModalComments">Modificar</a>
+    {% endif %}
 </div>
 
 
