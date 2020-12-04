@@ -53,7 +53,7 @@ def operate_timefields(tf_inicial, tf_final, operation):
 
 def hour_to_timefield(hora_number):
     # hora = int(hora_number)
-    print(hora_number)
+    # print(hora_number)
     if hora_number < '10':
         return ('0:' + str(hora_number) + '00:00')
     else:
@@ -412,7 +412,7 @@ def signup_medico(request):
             # new_user.save() # no hace falta guardar devuelta el usuario al final de todo x ahora aparentemente
 
             # hardcoded por ahora, habría que buscar alguna forma de tomar la url de urls.py que es dinamica en vez de poner /sigup/med...
-            return HttpResponseRedirect('/signup/medico/' + str(new_doctor.pk) + '/turnos/')
+            return HttpResponseRedirect('/medico/' + str(new_doctor.pk) + '/turnos/')
             # return render(request, 'signup_medico_turnos.html', context)
         else:
             # falta agregar error por si el form es invalid
@@ -427,7 +427,17 @@ def signup_medico(request):
         }       
         return render(request, 'signup_medico.html', context)
 
-def signup_medico_turnos(request, doctor_id):
+li_dias = [
+    'Lunes',
+    'Martes',
+    'Miércoles',
+    'Jueves',
+    'Viernes',
+    'Sábado',
+    'Domingo'
+]
+
+def medico_turnos(request, doctor_id):
     # le damos a is_auth los grupos permitidos en la vista
     # is auth devuelve true si el usuario tiene permisos en la vista
     if not is_user_auth(request.user, ('secretarios', 'sarasa')):
@@ -436,12 +446,12 @@ def signup_medico_turnos(request, doctor_id):
     try:
         doc = Doctor.objects.get(pk=doctor_id)
     except Doctor.DoesNotExist:
-         raise Http404("El paciente no existe")
+        raise Http404("El doctor no existe")
 
     # si el usuario esta autorizado a ver la vista sigue
     if request.method == 'POST':   
         # añadiendo los horarios del medico
-        # acaa
+        
 
         if request.POST.get('lunes'):
             dia = DiaJornada.objects.get(nombre='Lunes')
@@ -506,26 +516,32 @@ def signup_medico_turnos(request, doctor_id):
             new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
             new_turno_jornada.save()
         
-        turnos_jornada = TurnoJornada.objects.filter(doctor=doc)
-     
-        context = {
-            'turnos_jornada': turnos_jornada
-        }
-        
+    turnos_jornada = TurnoJornada.objects.filter(doctor=doc)
+    dias = DiaJornada.objects.all()
 
-        # me paso que necesitaba guardar antes de agregar especialidades, anda pero verificar
-        # si es necesario el codigo restante, talvez no lo sea
-        # doctor.refresh_from_db()
+    context = {
+        'turnos_jornada': turnos_jornada,
+    }
 
-        # new_user.save() # no hace falta guardar devuelta el usuario al final de todo x ahora aparentemente
-        return render(request, 'signup_medico_turnos.html', context)  
+    for i in li_dias:
+        dia = DiaJornada.objects.get(nombre=i)
+        for x in turnos_jornada:
+            if x.dia == dia:
+                context.update({dia.nombre:x})
+
+    print(context)
+    
+    # de lista con timefield a lista sin time field
+    # acaa
+    # turnos_dias = []
+    # for i in dias:
+    #     turnos_del_dia = turnos_jornada.filter(dia=i)
+    #     turnos_dias.append(turnos_del_dia)
+    #     # turnos_dias.insert(0, turnos_del_dia)
+    # print(turnos_dias)
+
+    return render(request, 'medico_turnos.html', context)  
             
-    else:          
-        
-        context = { 
-            'medico': doc
-        }       
-        return render(request, 'signup_medico_turnos.html', context)    
 
 # todos los comentarios de signup_medico aplican aca
 def signup_paciente(request):
@@ -624,6 +640,7 @@ dict_dias = {
     '5': 'Sábado',
     '6': 'Domingo'
 }
+
 
 def create_turno_4(request):
     if not is_user_auth(request.user, ('secretarios', 'pacientes')):
