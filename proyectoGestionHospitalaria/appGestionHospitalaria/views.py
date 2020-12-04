@@ -273,7 +273,7 @@ def medico_detail(request, doctor_id):
             esp = dict_especialidades_back[i.name]
             if i in especialidades_que_ya_tiene:
                 context.update({esp:'1'})
-                print(i, esp)
+                # print(i, esp)
         else:
             print('esto no debería pasar, hay especialidades cargadas que no estan en el form: ', i.name)
 
@@ -303,7 +303,7 @@ def medicos(request):
     return render(request, 'medico_list.html', context)
 
 def turnos(request):
-    if not is_user_auth(request.user, ('secretarios', 'sarasa')):
+    if not is_user_auth(request.user, ('secretarios', 'medicos', 'sarasa')):
         return redirect('error_acceso')
       
     if request.method == 'POST':
@@ -376,7 +376,39 @@ def turnos_paciente(request):
         turnosPks.add(turno_aux.pk)
 
     turnosPaciente = Turno.objects.filter(pk__in = turnosPks)
+    #aca seguilo vos
     myFilter = TurnoPacienteFilter(request.GET, queryset=turnosPaciente)
+    turnos = myFilter.qs
+
+    context = {
+        'turnos': turnos,
+        'myFilter': myFilter
+    }
+    return render(request, 'turno_list_paciente.html', context)
+
+def turnos_medico(request):
+    if not is_user_auth(request.user, ('medicos', 'sarasa')):
+        return redirect('error_acceso')    
+      
+    if request.method == 'POST':
+        turno_pk = request.POST.get('turno_id')
+        try:
+            turno = Turno.objects.get(pk=turno_pk)
+        except Turno.DoesNotExist:
+            raise Http404("El turno no existe")
+
+    medico = Doctor.objects.get(user=request.user)
+    estudios = Estudio.objects.filter(doctor=medico)
+
+    # de aca salgo con la lista de turnos
+    turnosPks = set()
+    for i in estudios:
+        turno_aux = Turno.objects.get(estudio=i)
+        turnosPks.add(turno_aux.pk)
+
+    turnosMedicos = Turno.objects.filter(pk__in = turnosPks)
+    # 
+    myFilter = TurnoMedicoFilter(request.GET, queryset=turnosMedicos)
     turnos = myFilter.qs
 
     #for i in turnos:
@@ -387,8 +419,7 @@ def turnos_paciente(request):
         'turnos': turnos,
         'myFilter': myFilter
     }
-    return render(request, 'turno_list_paciente.html', context)
-
+    return render(request, 'turno_list_medico.html', context)
 
 def historiasMedicas(request):
     if not is_user_auth(request.user, ('secretarios', 'medicos', 'sarasa')):
