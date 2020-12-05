@@ -57,12 +57,9 @@
 </div>
 
 
-{% if perms.appGestionHospitalaria.view_paciente %}
 
 <div class="icon-box " style="padding: 10px; margin: 25px 0px 25px 0px;">
 
-
-  
     <h3><strong>Adjuntos</strong></h3>
 <hr>
 <div class="container border">
@@ -74,7 +71,7 @@
           <strong>{{ file }}</strong>
           </p><p>
           <a class="btn btn-secondary" href="{{ file.file.url }}" download>Descargar</a>
-          {% if perms.appGestionHospitalaria.modify_estudio or user.is_superuser %}
+          {% if perms.appGestionHospitalaria.view_paciente or user.is_superuser %}
             <a class="open-AddBookDialog btn btn-danger" data-id="{{ file.pk }}" data-toggle="modal" data-target="#myModalBorrar" style="color: #fff">Borrar</a>
           {% endif %}
         </p>
@@ -86,12 +83,17 @@
 
 </div>
 </div>
-
+{% if perms.appGestionHospitalaria.view_paciente or user.is_superuser %}
 <a class="btn btn-success" style="margin: 10px;color: #fff;" data-toggle="modal" data-target="#myModalFile">Nuevo</a>
-
+{% endif %}
 </div>
 
+{% if perms.appGestionHospitalaria.view_paciente %}
+<div class="icon-box " style="padding: 10px; margin: 25px 0px 25px 0px;">
+       <a class="btn btn-primary" href="{% url 'index' %}"  style="color: #fff">Guardar</a>
+</div>
 {% endif %}
+
 <!--
   <div style="margin-left:20px;margin-top:20px">
     <h4>Estudios</h4>

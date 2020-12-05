@@ -69,7 +69,7 @@ class TurnoFilter(django_filters.FilterSet):
 
     def __init__(self, *args, **kwargs):
         super(TurnoFilter, self).__init__(*args, **kwargs)
-        self.filters['estudio__paciente'].label = "Paciente "
+        #self.filters['estudio__paciente'].label = "Paciente "
         self.filters['estudio__doctor'].label = "Médico "
         self.filters['date'].label = "Día "
 
@@ -77,7 +77,7 @@ class TurnoFilter(django_filters.FilterSet):
 
     class Meta:
         model = Turno
-        fields = ['estudio__paciente', 'estudio__doctor','date'] #'turno__timeFrom'
+        fields = [ 'estudio__doctor','date'] #'turno__timeFrom'
 
 
 class TurnoPacienteFilter(django_filters.FilterSet):
@@ -119,3 +119,24 @@ class EstudioPacienteFilter(django_filters.FilterSet):
     class Meta:
         model = Estudio
         fields = ['tipo__especialidad', 'doctor','turno__date'] #'turno__timeFrom'
+
+
+class TurnoMedicoFilter(django_filters.FilterSet):
+
+    date = DateFilter("date", widget=forms.DateInput(
+            attrs={
+                'class': 'datepicker'
+            }))
+
+
+    def __init__(self, *args, **kwargs):
+        super(TurnoMedicoFilter, self).__init__(*args, **kwargs)
+        self.filters['estudio__paciente'].label = "Paciente "
+        #self.filters['estudio__doctor'].label = "Médico "
+        self.filters['date'].label = "Día "
+
+
+
+    class Meta:
+        model = Turno
+        fields = ['estudio__paciente','date'] #'turno__timeFrom'

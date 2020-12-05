@@ -94,7 +94,11 @@
 
             <!-- por ahora uso view_paciente para ver si es paciente o no -->
             {% if perms.appGestionHospitalaria.view_paciente %}
-              <li><a href="{% url 'lista_turno'%}"> Turnos</a></li>
+                {% if perms.appGestionHospitalaria.add_doctor %} <!--Temporal solo para que no muestre que medico puede agregar paciente-->
+                    <li><a href="{% url 'lista_turno'%}"> Turnos</a></li>
+                {% else %}
+                    <li><a href="{% url 'lista_turno_medico'%}"> Mis Turnos</a></li>
+                {% endif %}
               <li><a href="{% url 'lista_historia'%}">Historias medicas</a></li>
             {% else %}
               <li><a href="{% url 'lista_turno_paciente'%}">Mis Turnos</a></li>
@@ -115,7 +119,9 @@
             {% if perms.appGestionHospitalaria.add_paciente %}
             <li class="drop-down"><a href="">Pacientes</a>
               <ul>
+                  {% if perms.appGestionHospitalaria.add_doctor %} <!--Temporal solo para que no muestre que medico puede agregar paciente-->
                 <li><a href="{% url 'signup_paciente'%}">Registrar</a></li>
+                       {% endif %}
                 <li><a href="{% url 'lista_pacientes'%}">Listar</a></li>
               </ul>
             </li>

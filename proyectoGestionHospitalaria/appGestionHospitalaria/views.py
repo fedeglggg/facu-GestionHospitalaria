@@ -808,6 +808,7 @@ def medico_turnos(request, doctor_id):
             else:
                 new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
                 new_turno_jornada.save()
+
         
         if request.POST.get('domingo'):
             dia = DiaJornada.objects.get(nombre='Domingo')
@@ -824,10 +825,11 @@ def medico_turnos(request, doctor_id):
             else:
                 new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
                 new_turno_jornada.save()
-        
+        return redirect('index')
     turnos_jornada = TurnoJornada.objects.filter(doctor=doc)
     dias = DiaJornada.objects.all()
     context = {
+        'doctor': doc,
         'turnos_jornada': turnos_jornada,
     }
 
