@@ -48,7 +48,7 @@
     <tbody>
     {% for turno in turnos %}
         <tr>
-        <td>{{ turno.date }} </td>
+        <td>{{ turno.date|date:"d/m/y" }} </td>
         <td>{{ turno.timeFrom|time:"H:i"}}  </td>
         <td>{{turno.estudio.paciente}} ({{turno.estudio.paciente.dni}}) </td>
         <td>{{turno.estudio.doctor}} ({{turno.estudio.doctor.matricula}})</td>
@@ -57,8 +57,8 @@
         {% else %}
             <td>
               <!-- here1 -->
-              <a class="aceptar_turno btn btn-success" data-id="{{ turno.pk }}" style="margin: 3px;color: #fff;" data-toggle="modal" data-target="#myModalConfirmar" >Confirmar</a> 
-              <a class="rechazar_turno btn btn-danger" data-id="{{ turno.pk }}" style="margin: 3px;color: #fff;" data-toggle="modal" data-target="#myModalRechazar" >Rechazar</a> 
+              <a class="aceptar_turno btn btn-success" data-id="{{ turno.pk }}" style="margin: 3px;color: #fff;" data-toggle="modal" data-target="#myModalConfirmar" >Validar</a>
+              <a class="rechazar_turno btn btn-danger" data-id="{{ turno.pk }}" style="margin: 3px;color: #fff;" data-toggle="modal" data-target="#myModalRechazar" >Cancelar</a>
             </td>
         {% endif %}
         </tr>
@@ -93,7 +93,7 @@
         {% csrf_token %}
         <div class="modal-body">
           <div style="text-align: center">
-            <input type="text" class="form-control" name="tipo_estudio_name" placeholder="Ingrese el nombre de la práctica para confirmar el turno" maxlength="25" required="required"> <!--Debe poner nombre de estudio (Nombre del tipoEstudio) sino que ponga un nombre default-->
+            <input type="text" class="form-control" name="tipo_estudio_name" placeholder="Ingrese el nombre de la práctica para validar el turno" maxlength="25" required="required"> <!--Debe poner nombre de estudio (Nombre del tipoEstudio) sino que ponga un nombre default-->
           </div>
         </div>
         <div class="modal-footer">
@@ -117,7 +117,7 @@
       </div>
       <div class="modal-body">
             <div style="text-align: center">
-                <p>¿Desea rechazar este turno?</p>
+                <p>¿Desea cancelar este turno?</p>
           </div>
       </div>
       <div class="modal-footer">
@@ -126,7 +126,7 @@
           <input type="hidden" name="turno_id" id="turno_id" value=""/>
           <input type="hidden" name="confirmar" id="confirmar" value="0"/>
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-          <button type="submit" class="btn btn-success">Confirmar</button>
+          <button type="submit" class="btn btn-danger">Confirmar</button>
         </form>  
       </div>
     </div>
@@ -148,15 +148,12 @@
 <script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.10.19/sorting/datetime-moment.js"></script>
 
 
-
-
 <!-- the second way to do it to integrate our buttons for export-->
 
 <script>
     $(document).ready( function () {
 
-    $.fn.dataTable.moment( 'MMM D, YYYY' );
-    $.fn.dataTable.moment( 'D-MMM-YY' );
+    $.fn.dataTable.moment( 'DD/MM/YY' );
     $('#table_id').DataTable({
             "order": [[ 0, "desc" ]],
             "autoWidth": false,

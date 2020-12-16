@@ -50,7 +50,7 @@
     <tbody>
     {% for estudio in estudios %}
         <tr>
-        <td>{{estudio.turno.date}} </td>
+        <td>{{estudio.turno.date|date:"d/m/y" }} </td>
         <td>{{estudio.turno.timeFrom|time:"H:i"}} </td>
         <td>{{estudio.tipo.especialidad}} </td>
         <td>{{estudio.tipo.name}} </td>
@@ -96,8 +96,7 @@
 <script>
     $(document).ready( function () {
 
-    $.fn.dataTable.moment( 'MMM D, YYYY' );
-    $.fn.dataTable.moment( 'D-MMM-YY' );
+    $.fn.dataTable.moment( 'DD/MM/YY' );
     $('#table_id').DataTable({
             "order": [[ 0, "desc" ]],
             "autoWidth": false,

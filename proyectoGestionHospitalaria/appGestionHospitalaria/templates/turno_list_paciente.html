@@ -48,7 +48,7 @@
     <tbody>
     {% for turno in turnos %}
         <tr>
-        <td>{{turno.date }} </td>
+        <td>{{turno.date|date:"d/m/y" }} </td>
         <td>{{turno.timeFrom|time:"H:i"}}  </td>
         <td>{{turno.estudio.doctor}} </td>
         <td>{{turno.estudio.tipo.especialidad}} </td>
@@ -154,8 +154,7 @@
 <script>
     $(document).ready( function () {
 
-    $.fn.dataTable.moment( 'MMM D, YYYY' );
-    $.fn.dataTable.moment( 'D-MMM-YY' );
+    $.fn.dataTable.moment( 'DD/MM/YY' );
     $('#table_id').DataTable({
             "order": [[ 0, "desc" ]],
             "autoWidth": false,
