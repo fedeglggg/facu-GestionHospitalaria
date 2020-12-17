@@ -310,7 +310,7 @@ def medico_detail(request, doctor_id):
     especialidades_que_ya_tiene = Especialidad.objects.filter(doctor=doc)
     especialidades = Especialidad.objects.all()
     turnos_jornada = TurnoJornada.objects.filter(doctor=doc)
-    # acaa
+
     dias = DiaJornada.objects.all()
     context = {
         'turnos_jornada': turnos_jornada,
@@ -633,10 +633,11 @@ def signup_medico(request):
     if not is_user_auth(request.user, ('secretarios', 'sarasa')):
         return redirect('error_acceso')
 
+    form = SignUpFormMedico(request.POST)
     # si el usuario esta autorizado a ver la vista sigue
     if request.method == 'POST':
         # Create a form instance from POST data.
-        form = SignUpFormMedico(request.POST)
+        # form = SignUpFormMedico(request.POST)
         if form.is_valid(): # sino el cleaned data get no funca - dependiendo del tipo de form chequea que las instancais no sea repetidas en la bd también
             print(request.POST) # para ver la post data
             # Save a new User object from the form's data.
@@ -678,7 +679,11 @@ def signup_medico(request):
             # falta agregar error por si el form es invalid
             print('form fail errors:')
             print(form.errors)
-            return redirect('index')
+            context = { 
+                'especialidades': Especialidad.objects.order_by('name'),
+                'form': form
+            }  
+            return render(request, 'signup_medico.html', context)
             
     else:
         # envio las especialidades al front para mostrarlas en el desplegable del alta
@@ -826,6 +831,7 @@ def medico_turnos(request, doctor_id):
                 new_turno_jornada = TurnoJornada(doctor=doc, dia=dia, horario_inicio=hora_inicio, horario_fin=hora_fin)
                 new_turno_jornada.save()
         return redirect('index')
+
     turnos_jornada = TurnoJornada.objects.filter(doctor=doc)
     dias = DiaJornada.objects.all()
     context = {
@@ -843,29 +849,71 @@ def medico_turnos(request, doctor_id):
             
 
 # todos los comentarios de signup_medico aplican aca
+# def signup_pacienteOld(request):
+#     if not is_user_auth(request.user, ('secretarios')):
+#         return redirect('error_acceso')
+
+#     form = SignUpFormPaciente(request.POST)
+#     if request.method == 'POST':
+#         # form = SignUpFormPaciente(request.POST)
+#         print(form.errors)
+#         if form.is_valid():
+#             new_user = form.save() 
+#             numero_telefono_form = form.cleaned_data.get('phone_number') 
+#             dni_form = form.cleaned_data.get('dni')
+#             date_of_birth_form = form.cleaned_data.get('date_of_birth')
+#             obra_social_form = form.cleaned_data.get('obra_social')
+#             grupo = Group.objects.get(name='pacientes')
+#             new_user.groups.add(grupo)
+#             new_user.save()
+#             paciente = Paciente(dni=dni_form, date_of_birth=date_of_birth_form, phone_number=numero_telefono_form, user=new_user)
+#             paciente.obra_social = Obra_social.objects.get(name=obra_social_form)
+#             paciente.save()
+#             return redirect('index')  
+#         else:
+#             context = { 
+#                 'obras_sociales': Obra_social.objects.order_by('name'),
+#                 'form': form
+#             }  
+#             return render(request, 'signup_paciente.html', context)
+#     else:
+#         context = {
+#             'obras_sociales': Obra_social.objects.order_by('name'),
+#         }
+#         return render(request, 'signup_paciente.html', context)
+
 def signup_paciente(request):
     if not is_user_auth(request.user, ('secretarios')):
         return redirect('error_acceso')
 
+    form = SignUpFormPaciente(request.POST)
+    form_paciente = PacienteForm(request.POST)
     if request.method == 'POST':
-        form = SignUpFormPaciente(request.POST)
+        # form = SignUpFormPaciente(request.POST)
         print(form.errors)
-        if form.is_valid():
+        print(form_paciente.errors)
+        if form.is_valid() and form_paciente.is_valid():
             new_user = form.save() 
-            numero_telefono_form = form.cleaned_data.get('phone_number') 
-            dni_form = form.cleaned_data.get('dni')
-            date_of_birth_form = form.cleaned_data.get('date_of_birth')
-            obra_social_form = form.cleaned_data.get('obra_social')
             grupo = Group.objects.get(name='pacientes')
             new_user.groups.add(grupo)
             new_user.save()
-            paciente = Paciente(dni=dni_form, date_of_birth=date_of_birth_form, phone_number=numero_telefono_form, user=new_user)
-            paciente.obra_social = Obra_social.objects.get(name=obra_social_form)
-            paciente.save()
+
+            new_paciente = form_paciente.save(commit=False)
+            dni = Obra_social.objects.get(name=form_paciente.cleaned_data.get('dni'))
+
+            obra_social = Obra_social.objects.get(name=form_paciente.cleaned_data.get('obra_social'))
+            new_paciente.obra_social = obra_social 
+            new_paciente.user = new_user           
+            new_paciente.save()
+
             return redirect('index')  
         else:
-            # invalid form
-            pass
+            context = { 
+                'obras_sociales': Obra_social.objects.order_by('name'),
+                'form': form,
+                'form_paciente': form_paciente
+            }  
+            return render(request, 'signup_paciente.html', context)
     else:
         context = {
             'obras_sociales': Obra_social.objects.order_by('name'),

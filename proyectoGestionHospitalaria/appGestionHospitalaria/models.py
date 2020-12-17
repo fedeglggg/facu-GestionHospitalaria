@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse # Used to generate URLs by reversing the URL patterns
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -26,10 +27,10 @@ class Doctor(models.Model):
     """
     Modelo que representa un Medico
     """
-    user = models.ForeignKey(User, on_delete=models.CASCADE) #
-    matricula = models.CharField(max_length=100)
-    # especialidad = models.ManyToManyField(Especialidad, help_text="Seleccione una especialidad")
-    especialidad = models.ManyToManyField(Especialidad)
+    user = models.ForeignKey(User, on_delete=models.CASCADE) 
+    matricula = models.CharField(max_length=100, unique=True)
+    # Puede registrarse sin especialidad 
+    especialidad = models.ManyToManyField(Especialidad, help_text="Seleccione una especialidad", blank=True)
 
     def __str__(self):
         """
@@ -66,6 +67,12 @@ class Paciente(models.Model):
         # solo si tiene que tener obligatoriamente un usuario, sino esto rompe todo
         # return '{} {} {}'.format(self.user.get_full_name())
         return self.user.get_full_name()
+
+    def clean(self):
+        dni = self.dni
+        does_exist = Paciente.objects.filter(dni=dni).exists()
+        if does_exist:
+            raise ValidationError('Ya existe un paciente con este DNI')
 
 class TipoEstudio(models.Model):
     """

@@ -47,7 +47,22 @@
 <div class="icon-box">
 
 
-<form method="post" action="/signup/medico/" > <!-- class="php-email-form"  class="FormButton"-->
+{% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<form method="post" id="form" action="/signup/medico/" onsubmit="event.preventDefault(); validate_form();"> <!-- class="php-email-form"  class="FormButton"-->
     {% csrf_token %}
         <div class="section-title" style="padding-bottom: 0;">
           <h2>Datos de usuario</h2>
@@ -56,28 +71,31 @@
         <!--<label for="id_username">Usuario:</label>-->
         <input type="text" placeholder="Usuario" class="form-control" name="username" maxlength="150" autofocus="" required="" id="id_username">
     </div>
+    
     <div class="form-group">
-        <input type="password" placeholder="Contraseña" class="form-control" name="password1" autocomplete="new-password" required="" id="id_password1">
+        <input type="password" placeholder="Contraseña" class="form-control" name="password1" autocomplete="new-password" required="" id="id_password1" onchange="validate_pass()">
     </div>
-    <!-- <small id="passwordHelpBlock" class="form-text text-muted" style="text-align: left">
+    <div class="invalid-feedback">
+        Las contraseñas son distintas
+    </div>
+    <small id="passwordHelpBlock" class="form-text text-muted" style="text-align: left">
         <ul>
-            <li>Your password can’t be too similar to your other personal information.</li>
-            <li>Your password must contain at least 8 characters.</li>
-            <li>Your password can’t be a commonly used password.</li>
-            <li>Your password can’t be entirely numeric.</li>
+            <li>La contraseña debe contener almenos 8 caracteres</li>
+            <li>La contraseña no puede ser enteramente numerica</li>
+
         </ul>
-    </small> -->
+    </small>
     <div class="form-group">
-        <input type="password" placeholder="Confirmación de contraseña" class="form-control" name="password2" autocomplete="new-password" required="" id="id_password2">
+        <input type="password" placeholder="Confirmación de contraseña" class="form-control" name="password2" autocomplete="new-password" required="" id="id_password2" onchange="validate_pass()">
     </div>
     <div class="section-title" style="padding-bottom: 0;">
           <h2>Datos personales</h2>
     </div>
     <div class="form-group">
-            <input type="text" placeholder="Nombre" class="form-control" name="first_name" maxlength="30" id="id_first_name">
+            <input type="text" placeholder="Nombre" class="form-control" name="first_name" maxlength="30" id="id_first_name" required="">
     </div>
     <div class="form-group">
-        <input type="text"  placeholder="Apellido" Apellido="" class="form-control" name="last_name" maxlength="30" id="id_last_name">
+        <input type="text"  placeholder="Apellido" Apellido="" class="form-control" name="last_name" maxlength="30" id="id_last_name" required="">
     </div>
     <div class="form-group">
         <input type="email" class="form-control" placeholder="Email" name="email" maxlength="30" required="" id="id_email">
@@ -224,6 +242,9 @@
     <div class="text-center">
         <button style="background: #1977cc; border: 0; padding: 10px 35px; color: #fff; transition: 0.4s; border-radius: 50px; " onmouseover="this.style.backgroundColor='#1c84e3'" onmouseout="this.style.backgroundColor='#1977cc'" onclick="history.back()">Volver</button>
         <button type="submit" style="background: #1977cc; border: 0; padding: 10px 35px; color: #fff; transition: 0.4s; border-radius: 50px; " onmouseover="this.style.backgroundColor='#1c84e3'" onmouseout="this.style.backgroundColor='#1977cc'">Siguiente</button>
+    
+    <!-- <button onclick="validate_form()" style="background: #1977cc; border: 0; padding: 10px 35px; color: #fff; transition: 0.4s; border-radius: 50px; " onmouseover="this.style.backgroundColor='#1c84e3'" onmouseout="this.style.backgroundColor='#1977cc'">Siguiente</button>
+     -->
     </div>
     
 </form>
@@ -233,4 +254,75 @@
 </section>
 </section>
 </main>
+{% endblock %}
+
+{% block js %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script>
+
+has_a_number = (element) => {
+    var matches = element.value.match(/\d+/g);
+    if (matches != null) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+validate_pass = () => {
+    let pass1 = document.getElementById('id_password1');
+    let pass2 = document.getElementById('id_password2');
+    if ((pass1.value == '') || (pass2.value == '')) {
+        pass1.classList.remove("is-invalid");
+        pass2.classList.remove("is-invalid");
+        pass1.classList.remove("is-valid");
+        pass2.classList.remove("is-valid");
+        return;
+    }
+    
+    let form_is_valid = false;
+
+    let match = pass1.value == pass2.value;
+    if (match) {    
+        if (has_a_number(pass1) && (isNaN(pass1))) {
+            if (pass1.value.length >= 8){
+                form_is_valid = true;
+            } 
+        } 
+    } 
+
+    if (form_is_valid) {
+        pass1.classList.remove("is-invalid");
+        pass2.classList.remove("is-invalid");
+        pass1.classList.add("is-valid");
+        pass2.classList.add("is-valid");
+        return true;
+    } else {
+        pass1.classList.remove("is-valid");
+        pass2.classList.remove("is-valid");
+        pass1.classList.add("is-invalid");
+        pass2.classList.add("is-invalid");
+        return false;
+    }
+
+}
+
+// validate_number = (element) => {
+//     if (!isNaN(element.value)){
+//         print('hay letras')
+//     }
+// }
+
+validate_form = () => {
+    is_pass_valid = validate_pass();
+    if (is_pass_valid) {
+        document.getElementById("form").submit(); 
+    }
+}
+
+
+</script>
+   
 {% endblock %}

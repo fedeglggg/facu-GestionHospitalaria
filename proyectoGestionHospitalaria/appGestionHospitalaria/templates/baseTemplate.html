@@ -108,7 +108,7 @@
             <!-- forma de chequear los permisos en el front - estos permisos estan asignados por default
             a los grupos -->
             {% if perms.appGestionHospitalaria.add_doctor %}
-            <li class="drop-down"><a href="">Medicos</a>
+            <li class="drop-down"><a>Medicos</a>
               <ul>
                 <li><a href="{% url 'signup_medico'%}">Registrar</a></li>
                 <li><a href="{% url 'lista_medicos'%}">Listar</a></li>
@@ -117,7 +117,7 @@
             {% endif %}
 
             {% if perms.appGestionHospitalaria.add_paciente %}
-            <li class="drop-down"><a href="">Pacientes</a>
+            <li class="drop-down"><a>Pacientes</a>
               <ul>
                   {% if perms.appGestionHospitalaria.add_doctor %} <!--Temporal solo para que no muestre que medico puede agregar paciente-->
                 <li><a href="{% url 'signup_paciente'%}">Registrar</a></li>

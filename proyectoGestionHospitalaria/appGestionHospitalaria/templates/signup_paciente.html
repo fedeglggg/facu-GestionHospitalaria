@@ -16,9 +16,38 @@
 <div class="icon-boxes">
 <div class="icon-box">
 
+{% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+    {% endfor %}
+{% endif %}
 
+{% if form_paciente.errors %}
+    <!-- Este da el generico
+         {% for field in form_paciente %}
+        {% for error in field.errors %}
+            <div class="alert alert-danger">1
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %} -->
+    {% for error in form_paciente.non_field_errors %}
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+    {% endfor %}
+{% endif %}
 
-<form method="POST" action="/signup/paciente/" >  <!--class="php-email-form" class="FormButton"-->
+<form method="POST" id="form" action="/signup/paciente/" onsubmit="event.preventDefault(); validate_form();">  <!--class="php-email-form" class="FormButton"-->
     {% csrf_token %}
     <div class="section-title" style="padding-bottom: 0;">
           <h2>Datos de usuario</h2>
@@ -27,7 +56,7 @@
         <input type="text" placeholder="Usuario" class="form-control" name="username" maxlength="150" autofocus="" required="" id="id_username">
     </div>
     <div class="form-group">
-        <input type="password" placeholder="Contraseña" class="form-control" name="password1" autocomplete="new-password" required="" id="id_password1">
+        <input type="password" placeholder="Contraseña" class="form-control" name="password1" autocomplete="new-password" required="" id="id_password1" onchange="validate_pass()">
     </div>
     <!-- <small id="passwordHelpBlock" class="form-text text-muted" style="text-align: left">
         <ul>
@@ -38,8 +67,7 @@
         </ul>
     </small> -->
     <div class="form-group">
-        <input type="password" placeholder="Confirmación de contraseña" class="form-control" name="password2" autocomplete="new-password" required=""
-            id="id_password2">
+        <input type="password" placeholder="Confirmación de contraseña" class="form-control" name="password2" autocomplete="new-password" required="" id="id_password2" onchange="validate_pass()">
     </div>
     <div class="section-title" style="padding-bottom: 0;">
           <h2>Datos personales</h2>
@@ -51,10 +79,10 @@
         <input type="text" placeholder="Apellido" class="form-control" name="last_name" maxlength="30" id="id_last_name">
     </div>
     <div class="form-group">
-        <input type="text" placeholder="Numero de telefono" class="form-control" name="phone_number" maxlength="30" id="id_phone_number">
+        <input type="text" placeholder="Numero de telefono" class="form-control" name="phone_number" maxlength="30" id="id_phone_number" onchange="validate_telefono('id_phone_number')">
     </div>
     <div class="form-group">
-        <input type="text" placeholder="DNI" class="form-control" name="dni" maxlength="30" id="id_dni">
+        <input type="text" placeholder="DNI" class="form-control" name="dni" maxlength="8" minlength="8" id="id_dni" required="" onchange="validate_dni('id_dni')">
     </div>
     {% if obras_sociales %}
     <div class="form-group">
@@ -92,4 +120,100 @@
 </section>
 </section>
 </main>
+{% endblock %}
+
+
+{% block js %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script>
+
+has_a_number = (element) => {
+    var matches = element.value.match(/\d+/g);
+    if (matches != null) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+validate_pass = () => {
+    let pass1 = document.getElementById('id_password1');
+    let pass2 = document.getElementById('id_password2');
+    if ((pass1.value == '') || (pass2.value == '')) {
+        pass1.classList.remove("is-invalid");
+        pass2.classList.remove("is-invalid");
+        pass1.classList.remove("is-valid");
+        pass2.classList.remove("is-valid");
+        return;
+    }
+    
+    let form_is_valid = false;
+
+    let match = pass1.value == pass2.value;
+    if (match) {    
+        if (has_a_number(pass1) && (isNaN(pass1))) {
+            if (pass1.value.length >= 8){
+                form_is_valid = true;
+            } 
+        } 
+    } 
+
+    if (form_is_valid) {
+        pass1.classList.remove("is-invalid");
+        pass2.classList.remove("is-invalid");
+        pass1.classList.add("is-valid");
+        pass2.classList.add("is-valid");
+        return true;
+    } else {
+        pass1.classList.remove("is-valid");
+        pass2.classList.remove("is-valid");
+        pass1.classList.add("is-invalid");
+        pass2.classList.add("is-invalid");
+        return false;
+    }
+
+}
+
+validate_telefono = (id) => {
+    let element = document.getElementById(id);
+    if (!isNaN(element.value)){
+        element.classList.remove("is-invalid");
+        element.classList.add("is-valid");
+    } else {
+        element.classList.remove("is-valid");
+        element.classList.add("is-invalid");
+    }
+}
+
+validate_dni = (id) => {
+    let element = document.getElementById(id);
+
+    if (element.value == '') {
+        element.classList.remove("is-invalid");
+        element.classList.remove("is-valid");
+        return;
+    }
+    
+    // if ((!isNaN(element.value)) && (element.value.length = 8)){
+    if ((!isNaN(element.value)) && (element.value.length == 8)){
+        element.classList.remove("is-invalid");
+        element.classList.add("is-valid");
+    } else {
+        element.classList.remove("is-valid");
+        element.classList.add("is-invalid");
+    }
+ 
+}
+
+validate_form = () => {
+    is_pass_valid = validate_pass();
+    if (is_pass_valid) {
+        document.getElementById("form").submit(); 
+    }
+}
+
+</script>
+   
 {% endblock %}

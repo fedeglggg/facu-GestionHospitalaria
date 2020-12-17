@@ -67,19 +67,44 @@ class UpdateMedicoEspecialidadForm(forms.Form):
     psiquiatria = forms.BooleanField(required = False)
     neumonologia = forms.BooleanField(required = False)
 
+class ValidationForm(forms.Form):
+    email = forms.EmailField(label = 'Email', error_messages = {'invalid': 'Your Email Confirmation Not Equal With Your Email'})
+    email_confirmation = forms.EmailField(label = 'Email Confirmation')
+
+    def clean_email(self):
+       if email != email_confirmation:
+          raise ValidationError(self.fields['email'].error_messages['invalid'])
+       return email  
+
+
+# class SignUpFormPacienteOld(UserCreationForm):
+#     first_name = forms.CharField(max_length=30)
+#     last_name = forms.CharField(max_length=30)
+#     email = forms.EmailField(max_length=254)
+#     dni = forms.IntegerField()
+#     date_of_birth = forms.DateField()
+#     obra_social = forms.CharField(max_length=32)
+#     phone_number  = forms.IntegerField()
+
+#     class Meta:
+#         model = User
+#         fields = ('username', 'first_name', 'last_name', 'phone_number' , 'dni', 'obra_social', 'date_of_birth', 'email', 'password1', 'password2')
+
 
 class SignUpFormPaciente(UserCreationForm):
     first_name = forms.CharField(max_length=30)
     last_name = forms.CharField(max_length=30)
     email = forms.EmailField(max_length=254)
-    dni = forms.IntegerField()
-    date_of_birth = forms.DateField()
-    obra_social = forms.CharField(max_length=32)
-    phone_number  = forms.IntegerField()
-
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'phone_number' , 'dni', 'obra_social', 'date_of_birth', 'email', 'password1', 'password2')
+        fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2')
+
+class PacienteForm(ModelForm):
+    # DNI = forms.CharField(error_messages={'required': 'El DNI no es valido'})
+    class Meta:
+        model = Paciente
+        fields = ['dni', 'date_of_birth', 'phone_number']
+
 
 # para que pase el .is_valid()
 class CreateFormTurno(ModelForm):
