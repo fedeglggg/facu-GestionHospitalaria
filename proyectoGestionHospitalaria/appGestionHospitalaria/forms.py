@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 import datetime
 from django.db import models
-from .models import Especialidad, Doctor, TipoEstudio, Turno, Paciente, EstudioFile
+from .models import *
 
 # los fields se usan en el is_valid() matcheandolos con los names de los input 
 # no se usa los id_nombredefield ej id_username para algo, no recuerdo -> chequear esto dsp
@@ -72,9 +72,9 @@ class ValidationForm(forms.Form):
     email_confirmation = forms.EmailField(label = 'Email Confirmation')
 
     def clean_email(self):
-       if email != email_confirmation:
-          raise ValidationError(self.fields['email'].error_messages['invalid'])
-       return email  
+        if email != email_confirmation:
+            raise ValidationError(self.fields['email'].error_messages['invalid'])
+        return email  
 
 
 # class SignUpFormPacienteOld(UserCreationForm):
@@ -101,9 +101,10 @@ class SignUpFormPaciente(UserCreationForm):
 
 class PacienteForm(ModelForm):
     # DNI = forms.CharField(error_messages={'required': 'El DNI no es valido'})
+    obra_social = forms.ModelChoiceField(queryset=Obra_social.objects.all(), to_field_name='name',)
     class Meta:
         model = Paciente
-        fields = ['dni', 'date_of_birth', 'phone_number']
+        fields = ['dni', 'obra_social', 'date_of_birth', 'phone_number']
 
 
 # para que pase el .is_valid()

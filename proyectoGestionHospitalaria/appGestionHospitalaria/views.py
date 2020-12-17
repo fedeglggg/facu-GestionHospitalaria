@@ -888,6 +888,8 @@ def signup_paciente(request):
 
     form = SignUpFormPaciente(request.POST)
     form_paciente = PacienteForm(request.POST)
+    pacienes_dni = Paciente.objects.values_list('dni')
+    usuarios_username = User.objects.values_list('username')
     if request.method == 'POST':
         # form = SignUpFormPaciente(request.POST)
         print(form.errors)
@@ -899,9 +901,9 @@ def signup_paciente(request):
             new_user.save()
 
             new_paciente = form_paciente.save(commit=False)
-            dni = Obra_social.objects.get(name=form_paciente.cleaned_data.get('dni'))
 
-            obra_social = Obra_social.objects.get(name=form_paciente.cleaned_data.get('obra_social'))
+            obra_social_form = form_paciente.cleaned_data['obra_social']
+            obra_social = Obra_social.objects.get(name=obra_social_form)
             new_paciente.obra_social = obra_social 
             new_paciente.user = new_user           
             new_paciente.save()
@@ -911,13 +913,19 @@ def signup_paciente(request):
             context = { 
                 'obras_sociales': Obra_social.objects.order_by('name'),
                 'form': form,
-                'form_paciente': form_paciente
+                'form_paciente': form_paciente,
+                'pacienes_dni': pacienes_dni,
+                'usuarios_username': usuarios_username
             }  
             return render(request, 'signup_paciente.html', context)
     else:
         context = {
             'obras_sociales': Obra_social.objects.order_by('name'),
+            'pacienes_dni': pacienes_dni,
+            'usuarios_username': usuarios_username
         }
+        print('aaaaaaaa')
+        print(pacienes_dni)
         return render(request, 'signup_paciente.html', context)
 
 def create_turno_1(request):

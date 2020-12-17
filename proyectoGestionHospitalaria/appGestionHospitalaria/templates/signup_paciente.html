@@ -1,5 +1,6 @@
 {% extends 'baseTemplate.html' %}
 <title>{% block title %}Registro{% endblock %}</title>
+
 {% block content %}
 
 <section id="hero" class="d-flex align-items-center" style="position: unset; ">
@@ -53,7 +54,7 @@
           <h2>Datos de usuario</h2>
     </div>
     <div class="form-group">
-        <input type="text" placeholder="Usuario" class="form-control" name="username" maxlength="150" autofocus="" required="" id="id_username">
+        <input type="text" placeholder="Usuario" class="form-control" name="username" maxlength="150" autofocus="" required="" id="id_username" onchange="validate_username('id_username')">
     </div>
     <div class="form-group">
         <input type="password" placeholder="Contraseña" class="form-control" name="password1" autocomplete="new-password" required="" id="id_password1" onchange="validate_pass()">
@@ -207,6 +208,17 @@ validate_dni = (id) => {
  
 }
 
+// validate_username = (id) => {
+//     let username_exists = false;
+//     let pacientes_dni;
+//     var my_dict = {{ pacientes_dni|safe }}
+//     let i;
+
+//     for (i = 0; i < pacientes_dni.length; i++) {
+//         alert('d');
+//     } 
+// }
+
 validate_form = () => {
     is_pass_valid = validate_pass();
     if (is_pass_valid) {
@@ -216,4 +228,6 @@ validate_form = () => {
 
 </script>
    
+<script id="hello-data" type="application/json">{"hello": "world"}</script>
+
 {% endblock %}
