@@ -449,6 +449,10 @@ def turnos_medico(request):
         except Turno.DoesNotExist:
             raise Http404("El turno no existe")
 
+    if request.POST.get('confirmar') == '0':
+        print('borrando el turno:', turno.date)
+        turno.estudio.delete()
+    
     medico = Doctor.objects.get(user=request.user)
     estudios = Estudio.objects.filter(doctor=medico)
 
