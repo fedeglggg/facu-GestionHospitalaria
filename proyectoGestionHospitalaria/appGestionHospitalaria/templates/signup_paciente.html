@@ -3,6 +3,9 @@
 
 {% block content %}
 
+<!-- acaa -->
+
+
 <section id="hero" class="d-flex align-items-center" style="position: unset; ">
     <div class="container">
       <h1>Registro de Paciente</h1>
@@ -54,7 +57,13 @@
           <h2>Datos de usuario</h2>
     </div>
     <div class="form-group">
-        <input type="text" placeholder="Usuario" class="form-control" name="username" maxlength="150" autofocus="" required="" id="id_username" onchange="validate_username('id_username')">
+        <input type="text" placeholder="Usuario" minlength="6" class="form-control" name="username" maxlength="150" autofocus="" required="" id="id_username" onchange="validate_username()">
+    </div>
+    <div id="username_error_tomado" class="alert alert-warning" role="alert" style="display: none;">
+        El nombre de usuario ya esta tomado.
+    </div>
+    <div id="username_error_corto" class="alert alert-warning" role="alert" style="display: none;">
+        El nombre de usuario debe contener al menos 6 carácteres.
     </div>
     <div class="form-group">
         <input type="password" placeholder="Contraseña" class="form-control" name="password1" autocomplete="new-password" required="" id="id_password1" onchange="validate_pass()">
@@ -70,6 +79,12 @@
     <div class="form-group">
         <input type="password" placeholder="Confirmación de contraseña" class="form-control" name="password2" autocomplete="new-password" required="" id="id_password2" onchange="validate_pass()">
     </div>
+    <div id="password_error_match" class="alert alert-warning" role="alert" style="display: none;">
+        Las contraseñas no coinciden.
+    </div>
+    <div id="password_error_format" class="alert alert-warning" role="alert" style="display: none;">
+        La contraseña debe contener al menos 8 carácteres y no puede ser enteramente numérica.
+    </div>
     <div class="section-title" style="padding-bottom: 0;">
           <h2>Datos personales</h2>
     </div>
@@ -80,10 +95,19 @@
         <input type="text" placeholder="Apellido" class="form-control" name="last_name" maxlength="30" id="id_last_name">
     </div>
     <div class="form-group">
-        <input type="text" placeholder="Numero de telefono" class="form-control" name="phone_number" maxlength="30" id="id_phone_number" onchange="validate_telefono('id_phone_number')">
+        <input type="text" placeholder="Numero de telefono" class="form-control" name="phone_number" maxlength="30" id="id_phone_number" onchange="validate_telefono()">
+    </div>
+    <div id="telefono_error_invalido" class="alert alert-warning" role="alert" style="display: none;">
+        Ingrese un número de teléfono válido.
     </div>
     <div class="form-group">
-        <input type="text" placeholder="DNI" class="form-control" name="dni" maxlength="8" minlength="8" id="id_dni" required="" onchange="validate_dni('id_dni')">
+        <input type="text" placeholder="DNI" class="form-control" name="dni" maxlength="8" minlength="8" id="id_dni" required="" onchange="validate_dni()">
+    </div>
+    <div id="dni_error_invalido" class="alert alert-warning" role="alert" style="display: none;">
+        Ingrese un número de DNI válido.
+    </div>
+    <div id="dni_error_tomado" class="alert alert-warning" role="alert" style="display: none;">
+        El DNI ingresado ya existe, ingrese otro.
     </div>
     {% if obras_sociales %}
     <div class="form-group">
@@ -124,11 +148,46 @@
 {% endblock %}
 
 
+
 {% block js %}
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
+{{ usuarios_username|json_script:"usuarios_username" }}
+{{ pacientes_dni|json_script:"pacientes_dni" }}
+
 <script>
+
+validate_username = () => {
+    let username_is_valid = false;
+    const usuarios_username = JSON.parse(document.getElementById("usuarios_username").textContent);
+    let username = document.getElementById("id_username");
+
+    if (username.value.length <= 6){
+        username.classList.remove("is-valid");
+        username.classList.add("is-invalid");
+        document.getElementById("username_error_corto").style.display = "block";
+        document.getElementById("username_error_tomado").style.display = "none";
+        return false;
+    } else {
+        document.getElementById("username_error_corto").style.display = "none";
+    }
+
+    if (usuarios_username.includes(username.value)){
+        // username ya tomado
+        username.classList.remove("is-valid");
+        username.classList.add("is-invalid");
+        document.getElementById("username_error_tomado").style.display = "block";
+        return false;
+    } else {
+        // username disponible
+        username.classList.remove("is-invalid");
+        username.classList.add("is-valid");
+        document.getElementById("username_error_tomado").style.display = "none";
+        return true;
+    }
+
+}
 
 has_a_number = (element) => {
     var matches = element.value.match(/\d+/g);
@@ -140,13 +199,15 @@ has_a_number = (element) => {
 }
 
 validate_pass = () => {
-    let pass1 = document.getElementById('id_password1');
-    let pass2 = document.getElementById('id_password2');
+    let pass1 = document.getElementById("id_password1");
+    let pass2 = document.getElementById("id_password2");
     if ((pass1.value == '') || (pass2.value == '')) {
         pass1.classList.remove("is-invalid");
         pass2.classList.remove("is-invalid");
         pass1.classList.remove("is-valid");
         pass2.classList.remove("is-valid");
+        document.getElementById("password_error_format").style.display = "none";   
+        document.getElementById("password_error_match").style.display = "none";   
         return;
     }
     
@@ -154,12 +215,16 @@ validate_pass = () => {
 
     let match = pass1.value == pass2.value;
     if (match) {    
-        if (has_a_number(pass1) && (isNaN(pass1))) {
-            if (pass1.value.length >= 8){
-                form_is_valid = true;
-            } 
-        } 
-    } 
+        document.getElementById("password_error_match").style.display = "none";    
+        if (has_a_number(pass1) && (isNaN(pass1)) && (pass1.value.length >= 8) ) {
+            document.getElementById("password_error_format").style.display = "none";    
+            form_is_valid = true;
+        } else {
+            document.getElementById("password_error_format").style.display = "block";   
+        }
+    } else {
+        document.getElementById("password_error_match").style.display = "block";  
+    }
 
     if (form_is_valid) {
         pass1.classList.remove("is-invalid");
@@ -177,57 +242,66 @@ validate_pass = () => {
 
 }
 
-validate_telefono = (id) => {
-    let element = document.getElementById(id);
-    if (!isNaN(element.value)){
+validate_telefono = () => {
+    let element = document.getElementById("id_phone_number");
+    if (!isNaN(element.value) && (element.value != "")) {
         element.classList.remove("is-invalid");
         element.classList.add("is-valid");
+        document.getElementById("telefono_error_invalido").style.display = "none";
+        return true;
     } else {
         element.classList.remove("is-valid");
         element.classList.add("is-invalid");
+        document.getElementById("telefono_error_invalido").style.display = "block";
+        return false;
     }
 }
 
-validate_dni = (id) => {
-    let element = document.getElementById(id);
+validate_dni = () => {
+    let element = document.getElementById("id_dni");
 
     if (element.value == '') {
         element.classList.remove("is-invalid");
         element.classList.remove("is-valid");
-        return;
+        document.getElementById("dni_error_invalido").style.display = "none";
+        return false;
     }
+
+    const pacientes_dni = JSON.parse(document.getElementById("pacientes_dni").textContent);
+    // include no anda aca asi que veo manual
+
+    for (i = 0, len = pacientes_dni.length; i < len; i++) {
+        if (pacientes_dni[i] == element.value){
+            document.getElementById("dni_error_tomado").style.display = "block"; 
+            element.classList.remove("is-valid");
+            element.classList.add("is-invalid");
+            return false;
+        } else{
+            document.getElementById("dni_error_tomado").style.display = "none";
+        }
+    } 
     
     // if ((!isNaN(element.value)) && (element.value.length = 8)){
     if ((!isNaN(element.value)) && (element.value.length == 8)){
         element.classList.remove("is-invalid");
         element.classList.add("is-valid");
+        document.getElementById("dni_error_invalido").style.display = "none";
+        return true;
     } else {
         element.classList.remove("is-valid");
         element.classList.add("is-invalid");
+        document.getElementById("dni_error_invalido").style.display = "block";
+        return false;
     }
- 
 }
 
-// validate_username = (id) => {
-//     let username_exists = false;
-//     let pacientes_dni;
-//     var my_dict = {{ pacientes_dni|safe }}
-//     let i;
-
-//     for (i = 0; i < pacientes_dni.length; i++) {
-//         alert('d');
-//     } 
-// }
-
 validate_form = () => {
-    is_pass_valid = validate_pass();
-    if (is_pass_valid) {
+    if ((validate_pass()) && (validate_dni()) && (validate_telefono()) && (validate_username()) ) {
         document.getElementById("form").submit(); 
     }
 }
 
 </script>
    
-<script id="hello-data" type="application/json">{"hello": "world"}</script>
 
 {% endblock %}

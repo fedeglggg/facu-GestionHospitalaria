@@ -6,6 +6,7 @@ from .forms import *
 from django.contrib.auth.models import Group, User
 from .filters import *
 from django.http import HttpResponseRedirect
+import json
 
 
 
@@ -888,8 +889,18 @@ def signup_paciente(request):
 
     form = SignUpFormPaciente(request.POST)
     form_paciente = PacienteForm(request.POST)
-    pacienes_dni = Paciente.objects.values_list('dni')
-    usuarios_username = User.objects.values_list('username')
+   
+    pacientes = Paciente.objects.all()
+    pacientes_dni = []
+    for i in pacientes:
+        pacientes_dni.append(i.dni)
+    
+    usuarios = User.objects.all()
+    usuarios_username = []
+    for i in usuarios:
+        usuarios_username.append(i.username)
+
+    # usuarios_username = User.objects.values_list('username')
     if request.method == 'POST':
         # form = SignUpFormPaciente(request.POST)
         print(form.errors)
@@ -910,22 +921,24 @@ def signup_paciente(request):
 
             return redirect('index')  
         else:
+
             context = { 
                 'obras_sociales': Obra_social.objects.order_by('name'),
                 'form': form,
                 'form_paciente': form_paciente,
-                'pacienes_dni': pacienes_dni,
+                'pacientes_dni': pacientes_dni,
                 'usuarios_username': usuarios_username
             }  
             return render(request, 'signup_paciente.html', context)
-    else:
+    else:     
+
+        print(pacientes_dni)
+
         context = {
             'obras_sociales': Obra_social.objects.order_by('name'),
-            'pacienes_dni': pacienes_dni,
+            'pacientes_dni': pacientes_dni,
             'usuarios_username': usuarios_username
         }
-        print('aaaaaaaa')
-        print(pacienes_dni)
         return render(request, 'signup_paciente.html', context)
 
 def create_turno_1(request):
