@@ -1140,7 +1140,14 @@ def create_turno_4(request):
             turno = turno_form.cleaned_data.get('turno')
             paciente = Paciente.objects.get(dni=dni)
             doctor = Doctor.objects.get(matricula=matricula)
-            tipo = TipoEstudio.objects.get(name='Consulta',especialidad=especialidad) # todos los turnos crean un estudio de tipo consulta al inicio y despues se cambia
+
+            # si no hay ningun TipoEstudio consulta lo crea
+            if TipoEstudio.objects.filter(name='Consulta').exists():
+                tipo = TipoEstudio.objects.get(name='Consulta',especialidad=especialidad) # todos los turnos crean un estudio de tipo consulta al inicio y despues se cambia
+            else:
+                tipo = TipoEstudio(name="Consulta", especialidad=especialidad)
+                tipo.save()
+
             # Mas adelante hacemos si va a cambiar el tipo de estudio y no tiene especialidad asignada tonces que cree un nuevo tipo estudio con el nobmre correspondiente y su especialidad
             # ya que si solamente le asignamos al tipo estudio una especialidad y cambiar de nombre al ya creado tiraria error la linea de arriba
             aux_1 = str(turno).split(' ')
