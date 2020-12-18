@@ -65,17 +65,10 @@
     <div id="username_error_corto" class="alert alert-warning" role="alert" style="display: none;">
         El nombre de usuario debe contener al menos 6 carácteres.
     </div>
+
     <div class="form-group">
         <input type="password" placeholder="Contraseña" class="form-control" name="password1" autocomplete="new-password" required="" id="id_password1" onchange="validate_pass()">
     </div>
-    <!-- <small id="passwordHelpBlock" class="form-text text-muted" style="text-align: left">
-        <ul>
-            <li>Your password can’t be too similar to your other personal information.</li>
-            <li>Your password must contain at least 8 characters.</li>
-            <li>Your password can’t be a commonly used password.</li>
-            <li>Your password can’t be entirely numeric.</li>
-        </ul>
-    </small> -->
     <div class="form-group">
         <input type="password" placeholder="Confirmación de contraseña" class="form-control" name="password2" autocomplete="new-password" required="" id="id_password2" onchange="validate_pass()">
     </div>
@@ -163,7 +156,7 @@ validate_username = () => {
     const usuarios_username = JSON.parse(document.getElementById("usuarios_username").textContent);
     let username = document.getElementById("id_username");
 
-    if (username.value.length <= 6){
+    if (username.value.length < 6){
         username.classList.remove("is-valid");
         username.classList.add("is-invalid");
         document.getElementById("username_error_corto").style.display = "block";

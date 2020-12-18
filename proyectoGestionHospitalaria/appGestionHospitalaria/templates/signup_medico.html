@@ -68,26 +68,29 @@
           <h2>Datos de usuario</h2>
         </div>
     <div class="form-group">
-        <!--<label for="id_username">Usuario:</label>-->
-        <input type="text" placeholder="Usuario" class="form-control" name="username" maxlength="150" autofocus="" required="" id="id_username">
+        <input type="text" placeholder="Usuario" class="form-control" name="username" maxlength="150" autofocus="" required="" id="id_username" onchange="validate_username()">
+    </div>
+
+    <div id="username_error_tomado" class="alert alert-warning" role="alert" style="display: none;">
+        El nombre de usuario ya esta tomado.
+    </div>
+    <div id="username_error_corto" class="alert alert-warning" role="alert" style="display: none;">
+        El nombre de usuario debe contener al menos 6 carácteres.
     </div>
     
     <div class="form-group">
         <input type="password" placeholder="Contraseña" class="form-control" name="password1" autocomplete="new-password" required="" id="id_password1" onchange="validate_pass()">
     </div>
-    <div class="invalid-feedback">
-        Las contraseñas son distintas
-    </div>
-    <small id="passwordHelpBlock" class="form-text text-muted" style="text-align: left">
-        <ul>
-            <li>La contraseña debe contener almenos 8 caracteres</li>
-            <li>La contraseña no puede ser enteramente numerica</li>
-
-        </ul>
-    </small>
     <div class="form-group">
         <input type="password" placeholder="Confirmación de contraseña" class="form-control" name="password2" autocomplete="new-password" required="" id="id_password2" onchange="validate_pass()">
     </div>
+    <div id="password_error_match" class="alert alert-warning" role="alert" style="display: none;">
+        Las contraseñas no coinciden.
+    </div>
+    <div id="password_error_format" class="alert alert-warning" role="alert" style="display: none;">
+        La contraseña debe contener al menos 8 carácteres y no puede ser enteramente numérica.
+    </div>
+
     <div class="section-title" style="padding-bottom: 0;">
           <h2>Datos personales</h2>
     </div>
@@ -100,21 +103,15 @@
     <div class="form-group">
         <input type="email" class="form-control" placeholder="Email" name="email" maxlength="30" required="" id="id_email">
     </div>
+
     <div class="form-group">
-        <input type="text" placeholder="Matricula" class="form-control" name="matricula" autofocus="" autocapitalize="none" maxlength="30" required="" id="id_matricula">
+        <input type="text" placeholder="Matricula" class="form-control" name="matricula" autofocus="" autocapitalize="none" maxlength="30" required="" id="id_matricula" onchange="validate_matricula()">
+    </div>
+    <div id="matricula_error_tomada" class="alert alert-warning" role="alert" style="display: none;">
+        Ya existe un médico con esta matrícula.
     </div>
 
     {% if especialidades %}
-            <!-- <div class="form-group">
-                <label for="id_especialidades">Seleccionar especialidad</label>
-                <select class="form-control" id="id_especialidad" name="especialidad" required="">
-                <option value="" selected disabled hidden>Elija una especialidad</option>
-                {% for especialidad in especialidades %}
-                    <option> {{ especialidad.name }} </option>
-                {% endfor %}
-
-                </select>
-            </div> -->
         <div style="margin: 15px">
             <div class="section-title" style="padding-bottom: 0;">
           <h2>Especialidades</h2>
@@ -256,11 +253,48 @@
 </main>
 {% endblock %}
 
+
+
 {% block js %}
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
+{{ usuarios_username|json_script:"usuarios_username" }}
+{{ medicos_matricula|json_script:"medicos_matricula" }}
+
+
 <script>
+
+validate_username = () => {
+    let username_is_valid = false;
+    const usuarios_username = JSON.parse(document.getElementById("usuarios_username").textContent);
+    let username = document.getElementById("id_username");
+
+    if (username.value.length < 6){
+        username.classList.remove("is-valid");
+        username.classList.add("is-invalid");
+        document.getElementById("username_error_corto").style.display = "block";
+        document.getElementById("username_error_tomado").style.display = "none";
+        return false;
+    } else {
+        document.getElementById("username_error_corto").style.display = "none";
+    }
+
+    if (usuarios_username.includes(username.value)){
+        // username ya tomado
+        username.classList.remove("is-valid");
+        username.classList.add("is-invalid");
+        document.getElementById("username_error_tomado").style.display = "block";
+        return false;
+    } else {
+        // username disponible
+        username.classList.remove("is-invalid");
+        username.classList.add("is-valid");
+        document.getElementById("username_error_tomado").style.display = "none";
+        return true;
+    }
+
+}
 
 has_a_number = (element) => {
     var matches = element.value.match(/\d+/g);
@@ -272,28 +306,34 @@ has_a_number = (element) => {
 }
 
 validate_pass = () => {
-    let pass1 = document.getElementById('id_password1');
-    let pass2 = document.getElementById('id_password2');
+    let pass1 = document.getElementById("id_password1");
+    let pass2 = document.getElementById("id_password2");
     if ((pass1.value == '') || (pass2.value == '')) {
         pass1.classList.remove("is-invalid");
         pass2.classList.remove("is-invalid");
         pass1.classList.remove("is-valid");
         pass2.classList.remove("is-valid");
+        document.getElementById("password_error_format").style.display = "none";   
+        document.getElementById("password_error_match").style.display = "none";   
         return;
     }
     
-    let form_is_valid = false;
+    let pass_ok = false;
 
     let match = pass1.value == pass2.value;
     if (match) {    
-        if (has_a_number(pass1) && (isNaN(pass1))) {
-            if (pass1.value.length >= 8){
-                form_is_valid = true;
-            } 
-        } 
-    } 
+        document.getElementById("password_error_match").style.display = "none";    
+        if (has_a_number(pass1) && (isNaN(pass1)) && (pass1.value.length >= 8) ) {
+            document.getElementById("password_error_format").style.display = "none";    
+            pass_ok = true;
+        } else {
+            document.getElementById("password_error_format").style.display = "block";   
+        }
+    } else {
+        document.getElementById("password_error_match").style.display = "block";  
+    }
 
-    if (form_is_valid) {
+    if (pass_ok) {
         pass1.classList.remove("is-invalid");
         pass2.classList.remove("is-invalid");
         pass1.classList.add("is-valid");
@@ -309,19 +349,41 @@ validate_pass = () => {
 
 }
 
-// validate_number = (element) => {
-//     if (!isNaN(element.value)){
-//         print('hay letras')
-//     }
-// }
+validate_matricula = () => {
+    let element = document.getElementById("id_matricula");
+
+    if (element.value == '') {
+        element.classList.remove("is-invalid");
+        element.classList.remove("is-valid");
+        document.getElementById("dni_error_invalido").style.display = "none";
+        return false;
+    }
+
+    const medicos_matricula = JSON.parse(document.getElementById("medicos_matricula").textContent);
+    // include no anda aca asi que veo manual
+
+    let match_matricula = false;
+
+    for (i = 0, len = medicos_matricula.length; i < len; i++) {
+        if (medicos_matricula[i] == element.value){
+            document.getElementById("matricula_error_tomada").style.display = "block"; 
+            element.classList.remove("is-valid");
+            element.classList.add("is-invalid");
+            return false;
+        } 
+    } 
+    // si completa el for no encontro match
+    document.getElementById("matricula_error_tomada").style.display = "none";
+    element.classList.remove("is-invalid");
+    element.classList.add("is-valid");
+    return true;
+}
 
 validate_form = () => {
-    is_pass_valid = validate_pass();
-    if (is_pass_valid) {
+    if ((validate_pass()) && (validate_matricula()) && (validate_username()) ) {
         document.getElementById("form").submit(); 
     }
 }
-
 
 </script>
    

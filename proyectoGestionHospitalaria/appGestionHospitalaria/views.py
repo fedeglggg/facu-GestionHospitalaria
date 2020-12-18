@@ -635,6 +635,16 @@ def signup_medico(request):
         return redirect('error_acceso')
 
     form = SignUpFormMedico(request.POST)
+    
+    usuarios = User.objects.all()
+    usuarios_username = []
+    for i in usuarios:
+        usuarios_username.append(i.username)
+
+    medicos = Doctor.objects.all()
+    medicos_matricula = []
+    for i in medicos:
+        medicos_matricula.append(i.matricula)
     # si el usuario esta autorizado a ver la vista sigue
     if request.method == 'POST':
         # Create a form instance from POST data.
@@ -682,14 +692,19 @@ def signup_medico(request):
             print(form.errors)
             context = { 
                 'especialidades': Especialidad.objects.order_by('name'),
-                'form': form
+                'form': form,
+                'medicos_matricula': medicos_matricula,
+                'usuarios_username': usuarios_username
             }  
             return render(request, 'signup_medico.html', context)
             
     else:
         # envio las especialidades al front para mostrarlas en el desplegable del alta
+        print(medicos_matricula)
         context = { 
-            'especialidades': Especialidad.objects.order_by('name')
+            'especialidades': Especialidad.objects.order_by('name'),
+            'medicos_matricula': medicos_matricula,
+            'usuarios_username': usuarios_username
         }       
         return render(request, 'signup_medico.html', context)
 
@@ -931,9 +946,6 @@ def signup_paciente(request):
             }  
             return render(request, 'signup_paciente.html', context)
     else:     
-
-        print(pacientes_dni)
-
         context = {
             'obras_sociales': Obra_social.objects.order_by('name'),
             'pacientes_dni': pacientes_dni,
